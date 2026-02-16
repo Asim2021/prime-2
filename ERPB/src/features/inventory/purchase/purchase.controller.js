@@ -1,38 +1,68 @@
 import { purchaseService } from './purchase.service.js';
-export const getPurchases = async (req, res, next) => {
+import { HTTP_STATUS } from '../../../constant/httpStatus.js';
+import { sendSuccessResponse, sendErrorResponse } from '../../../middleware/sendResponse.js';
+import { getPaginationParams } from '../../../utils/helpers.js';
+
+export const getPurchases = async (req, res) => {
     try {
-        const page = Number(req.query.page) || 1;
-        const limit = Number(req.query.limit) || 10;
-        const result = await purchaseService.getAll({ page, limit });
-        res.json({ success: true, data: result.data, meta: result.meta });
-    }
-    catch (error) {
-        next(error);
+        const { page, limit, offset, sortBy, order } = getPaginationParams({
+            page: req.query.page,
+            limit: req.query.limit,
+            sortBy: req.query.sortBy,
+            order: req.query.order,
+        });
+
+        const result = await purchaseService.getAll({ page, limit, offset, sortBy, order });
+
+        sendSuccessResponse({
+            res,
+            status: HTTP_STATUS.OK,
+            data: {
+                data: result.data,
+                totalCount: result.meta.total,
+                count: result.data.length,
+                currentPage: result.meta.page,
+                totalPages: result.meta.totalPages,
+            },
+        });
+    } catch (error) {
+        sendErrorResponse({ res, status: error.statusCode || HTTP_STATUS.SERVER_ERROR, message: error.message || error });
     }
 };
-export const getPurchaseById = async (req, res, next) => {
+
+export const getPurchaseById = async (req, res) => {
     try {
         const purchase = await purchaseService.getById(req.params.id);
         if (!purchase) {
-            res.status(404).json({ message: 'Purchase not found' });
-            return;
+            return sendErrorResponse({
+                res,
+                status: HTTP_STATUS.NOT_FOUND,
+                message: 'Purchase not found',
+            });
         }
-        res.json(purchase);
-    }
-    catch (error) {
-        next(error);
+        sendSuccessResponse({
+            res,
+            status: HTTP_STATUS.OK,
+            data: purchase,
+        });
+    } catch (error) {
+        sendErrorResponse({ res, status: error.statusCode || HTTP_STATUS.SERVER_ERROR, message: error.message || error });
     }
 };
-export const createPurchase = async (req, res, next) => {
+
+export const createPurchase = async (req, res) => {
     try {
         const purchase = await purchaseService.create({
             ...req.body,
             created_by: req.user.id,
         });
-        res.status(201).json(purchase);
-    }
-    catch (error) {
-        next(error);
+        sendSuccessResponse({
+            res,
+            status: HTTP_STATUS.CREATED,
+            data: purchase,
+            message: 'Purchase created successfully',
+        });
+    } catch (error) {
+        sendErrorResponse({ res, status: error.statusCode || HTTP_STATUS.SERVER_ERROR, message: error.message || error });
     }
 };
-//# sourceMappingURL=purchase.controller.js.map

@@ -25,22 +25,14 @@ class Config {
     this.SQL_PASSWORD = process.env.SQL_PASSWORD;
     this.SQL_PORT = process.env.SQL_PORT;
 
-    this.REDIS_HOST = process.env.REDIS_HOST;
-    this.REDIS_PORT = process.env.REDIS_PORT;
+    // this.REDIS_HOST = process.env.REDIS_HOST;
+    // this.REDIS_PORT = process.env.REDIS_PORT;
 
     this.SMTP_HOST = process.env.SMTP_HOST;
     this.SMTP_PORT = process.env.SMTP_PORT;
     this.SMTP_USER = process.env.SMTP_USER;
     this.SMTP_PASS = process.env.SMTP_PASS;
     this.FROM_EMAIL = process.env.FROM_EMAIL;
-
-    this.EMPLOYEE_CODE_PREFIX = process.env.EMPLOYEE_CODE_PREFIX || 'EMP-';
-
-    // Storage Config
-    this.STORAGE_PROVIDER = process.env.STORAGE_PROVIDER || 'local';
-    this.LOCAL_STORAGE_PATH = process.env.LOCAL_STORAGE_PATH || 'uploads/projects';
-    this.AWS_S3_BUCKET = process.env.AWS_S3_BUCKET;
-    this.AWS_REGION = process.env.AWS_REGION;
   }
 
   validateConfig() {

@@ -1,6 +1,6 @@
 import rateLimit from 'express-rate-limit';
+import { sendErrorResponse } from '#middleware/sendResponse.js';
 
-import { sendErrorResponse } from '../middleware/sendResponse.js';
 
 const appLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes

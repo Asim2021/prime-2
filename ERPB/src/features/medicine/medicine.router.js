@@ -1,18 +1,31 @@
 import { Router } from 'express';
+
+import { verifyAccessToken, verifyUserRole } from '../../middleware/verifyTokens.js';
+import { joiValidate } from '../../utils/joiValidator.js';
+import { ENDPOINT } from '../../constant/endpoints.js';
 import * as medicineController from './medicine.controller.js';
 import { createMedicineSchema, updateMedicineSchema } from './medicine.schema.js';
-import { verifyAccessToken, verifyUserRole } from '#middleware/verifyTokens.js';
-import { joiValidate } from '#utils/joiValidator.js';
-
 
 const router = Router();
+
 // Protect all medicine routes
 router.use(verifyAccessToken);
-router.post('/', verifyUserRole('admin', 'pharmacist'), joiValidate(createMedicineSchema), medicineController.createMedicine);
-router.get('/', medicineController.getAllMedicines);
-router.get('/:id', medicineController.getMedicineById);
-router.get('/:id/batches', medicineController.getMedicineBatches);
-router.put('/:id', verifyUserRole('admin', 'pharmacist'), joiValidate(updateMedicineSchema), medicineController.updateMedicine);
-router.delete('/:id', verifyUserRole('admin'), medicineController.deleteMedicine);
+
+router.post(
+  ENDPOINT.BASE,
+  verifyUserRole('admin', 'pharmacist'),
+  joiValidate(createMedicineSchema),
+  medicineController.createMedicine,
+);
+router.get(ENDPOINT.BASE, medicineController.getAllMedicines);
+router.get(ENDPOINT.ID, medicineController.getMedicineById);
+router.get(ENDPOINT.ID + '/batches', medicineController.getMedicineBatches);
+router.put(
+  ENDPOINT.ID,
+  verifyUserRole('admin', 'pharmacist'),
+  joiValidate(updateMedicineSchema),
+  medicineController.updateMedicine,
+);
+router.delete(ENDPOINT.ID, verifyUserRole('admin'), medicineController.deleteMedicine);
+
 export default router;
-//# sourceMappingURL=medicine.router.js.map

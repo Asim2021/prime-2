@@ -1,14 +1,16 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { randomUUID } from 'node:crypto';
-import { createError } from '../../middleware/errorHandler.middleware.js';
+
+
 import config from '#lib/config.js';
+import { createError } from '#middleware/error.middleware.js';
 import { HTTP_STATUS } from '#constant/httpStatus.js';
-import { Role, User } from '#models/index.js';
+import { User, Role } from '#models/index.js';
 
 // ── Fail-fast: require secrets at startup ──
-const JWT_SECRET = config.JWT_SECRET;
-const JWT_REFRESH_SECRET = config.JWT_REFRESH_SECRET;
+const JWT_SECRET = config.ACCESS_TOKEN_SECRET;
+const JWT_REFRESH_SECRET = config.REFRESH_TOKEN_SECRET;
 if (!JWT_SECRET || !JWT_REFRESH_SECRET) {
     throw new Error('FATAL: JWT_SECRET and JWT_REFRESH_SECRET must be set in environment variables.');
 }
@@ -32,7 +34,7 @@ const generateTokens = (userId) => {
 export const loginUser = async (username, password) => {
     const user = await User.findOne({
         where: { username },
-        include: [{ model: Role, as: 'role', attributes: ['id', 'name', 'code'] }],
+        include: [ { model: Role, as: 'role', attributes: [ 'id', 'name', 'code' ] } ],
     });
     if (!user) {
         throw createError('Invalid credentials', HTTP_STATUS.UNAUTHORIZED);
@@ -99,8 +101,8 @@ export const registerUser = async (data) => {
     const tokens = generateTokens(user.id);
     await user.update({ session_token: tokens.refreshToken });
     const createdUser = await User.findByPk(user.id, {
-        include: [{ model: Role, as: 'role', attributes: ['id', 'name', 'code'] }],
-        attributes: { exclude: ['password_hash', 'session_token'] },
+        include: [ { model: Role, as: 'role', attributes: [ 'id', 'name', 'code' ] } ],
+        attributes: { exclude: [ 'password_hash', 'session_token' ] },
     });
     return {
         user: createdUser,
@@ -141,8 +143,8 @@ export const logoutUser = async (userId) => {
  */
 export const getUserProfile = async (userId) => {
     const user = await User.findByPk(userId, {
-        include: [{ model: Role, as: 'role', attributes: ['id', 'name', 'code'] }],
-        attributes: { exclude: ['password_hash', 'session_token'] },
+        include: [ { model: Role, as: 'role', attributes: [ 'id', 'name', 'code' ] } ],
+        attributes: { exclude: [ 'password_hash', 'session_token' ] },
     });
     if (!user) {
         throw createError('User not found', HTTP_STATUS.NOT_FOUND);

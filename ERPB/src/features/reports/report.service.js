@@ -1,24 +1,27 @@
 import { Op, Sequelize } from 'sequelize';
+import dayjs from 'dayjs';
+
 import { Sale } from '../../models/sale/sale.model.js';
 import { Batch } from '../../models/batch/batch.model.js';
 import { Medicine } from '../../models/medicine/medicine.model.js';
-import dayjs from 'dayjs';
+
 export const reportService = {
     getDashboardMetrics: async () => {
         const todayStart = dayjs().startOf('day').toDate();
         const todayEnd = dayjs().endOf('day').toDate();
         const threeMonthsLater = dayjs().add(90, 'day').toDate(); // Default near-expiry threshold
+
         // 1. Today's Sales Revenue
-        const todaysSales = (await Sale.sum('total_amount', {
-            where: {
-                bill_date: {
-                    [Op.between]: [todayStart, todayEnd],
+        const todaysSales =
+            (await Sale.sum('total_amount', {
+                where: {
+                    bill_date: {
+                        [ Op.between ]: [ todayStart, todayEnd ],
+                    },
                 },
-            },
-        })) || 0;
+            })) || 0;
+
         // 2. Count of Low Stock Medicines
-        // We need to sum batch quantities per medicine and compare with reorder_level
-        // This requires a raw query or complex grouping for efficiency
         const lowStockMedicines = await Medicine.findAll({
             attributes: [
                 'id',
@@ -37,31 +40,34 @@ export const reportService = {
                     required: false,
                     where: {
                         is_active: true,
-                        exp_date: { [Op.gt]: new Date() }, // Only count active, non-expired stock
+                        exp_date: { [ Op.gt ]: new Date() }, // Only count active, non-expired stock
                     },
                 },
             ],
-            group: ['Medicine.id'],
+            group: [ 'Medicine.id' ],
             having: Sequelize.literal('total_stock <= Medicine.reorder_level'),
         });
+
         // 3. Count of Near Expiry Batches
         const nearExpiryBatches = await Batch.count({
             where: {
                 is_active: true,
-                quantity_available: { [Op.gt]: 0 },
+                quantity_available: { [ Op.gt ]: 0 },
                 exp_date: {
-                    [Op.between]: [new Date(), threeMonthsLater],
+                    [ Op.between ]: [ new Date(), threeMonthsLater ],
                 },
             },
         });
+
         // 4. Count of Active Batches (with stock, not expired)
         const activeBatchCount = await Batch.count({
             where: {
                 is_active: true,
-                quantity_available: { [Op.gt]: 0 },
-                exp_date: { [Op.gt]: new Date() },
+                quantity_available: { [ Op.gt ]: 0 },
+                exp_date: { [ Op.gt ]: new Date() },
             },
         });
+
         return {
             todaysSales,
             lowStockCount: lowStockMedicines.length,
@@ -73,10 +79,10 @@ export const reportService = {
         return await Sale.findAll({
             where: {
                 bill_date: {
-                    [Op.between]: [dayjs(startDate).startOf('day').toDate(), dayjs(endDate).endOf('day').toDate()],
+                    [ Op.between ]: [ dayjs(startDate).startOf('day').toDate(), dayjs(endDate).endOf('day').toDate() ],
                 },
             },
-            order: [['bill_date', 'DESC']],
+            order: [ [ 'bill_date', 'DESC' ] ],
         });
     },
     getInventoryReport: async () => {
@@ -93,7 +99,11 @@ export const reportService = {
                     'current_stock',
                 ],
                 [
-                    Sequelize.fn('COALESCE', Sequelize.fn('SUM', Sequelize.literal('batches.quantity_available * batches.purchase_rate')), 0),
+                    Sequelize.fn(
+                        'COALESCE',
+                        Sequelize.fn('SUM', Sequelize.literal('batches.quantity_available * batches.purchase_rate')),
+                        0,
+                    ),
                     'stock_value',
                 ],
             ],
@@ -106,9 +116,8 @@ export const reportService = {
                     where: { is_active: true },
                 },
             ],
-            group: ['Medicine.id'],
-            order: [['brand_name', 'ASC']],
+            group: [ 'Medicine.id' ],
+            order: [ [ 'brand_name', 'ASC' ] ],
         });
     },
 };
-//# sourceMappingURL=report.service.js.map

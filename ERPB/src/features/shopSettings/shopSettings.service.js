@@ -1,4 +1,5 @@
 import { ShopSettings } from '../../models/shopSettings/shopSettings.model.js';
+
 export const shopSettingsService = {
     getSettings: async () => {
         const settings = await ShopSettings.findOne();
@@ -23,10 +24,8 @@ export const shopSettingsService = {
         let settings = await ShopSettings.findOne();
         if (settings) {
             return await settings.update(data);
-        }
-        else {
+        } else {
             return await ShopSettings.create(data);
         }
     },
 };
-//# sourceMappingURL=shopSettings.service.js.map

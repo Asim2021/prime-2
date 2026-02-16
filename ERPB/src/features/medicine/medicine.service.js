@@ -1,8 +1,10 @@
 import { Op } from 'sequelize';
+import { randomUUID } from 'node:crypto';
+
 import { Medicine } from '../../models/medicine/medicine.model.js';
 import { Batch } from '../../models/batch/batch.model.js';
 import { AuditLog } from '../../models/auditLog/auditLog.model.js';
-import { randomUUID } from 'node:crypto';
+
 export const createMedicine = async (data, userId) => {
     const medicine = await Medicine.create({ ...data, id: randomUUID() });
     // Audit log — medicine creation
@@ -24,25 +26,26 @@ export const createMedicine = async (data, userId) => {
     }
     return medicine;
 };
+
 export const getAllMedicines = async (params = {}) => {
-    const page = params.page || 1;
-    const limit = params.limit || 10;
-    const offset = (page - 1) * limit;
-    const search = params.search;
+    const { page, limit, offset, sortBy, order, search } = params;
+
     const whereClause = {};
     if (search) {
-        whereClause[Op.or] = [
-            { brand_name: { [Op.like]: `%${search}%` } },
-            { generic_name: { [Op.like]: `%${search}%` } },
-            { manufacturer: { [Op.like]: `%${search}%` } },
+        whereClause[ Op.or ] = [
+            { brand_name: { [ Op.like ]: `%${search}%` } },
+            { generic_name: { [ Op.like ]: `%${search}%` } },
+            { manufacturer: { [ Op.like ]: `%${search}%` } },
         ];
     }
+
     const { rows, count } = await Medicine.findAndCountAll({
         where: whereClause,
         limit,
         offset,
-        order: [['brand_name', 'ASC']],
+        order: [ [ sortBy || 'brand_name', order || 'ASC' ] ],
     });
+
     return {
         data: rows,
         meta: {
@@ -53,19 +56,21 @@ export const getAllMedicines = async (params = {}) => {
         },
     };
 };
+
 export const getMedicineById = async (id) => {
     return await Medicine.findByPk(id);
 };
+
 export const getBatches = async (medicineId) => {
     return await Batch.findAll({
         where: { medicine_id: medicineId },
-        order: [['exp_date', 'ASC']],
+        order: [ [ 'exp_date', 'ASC' ] ],
     });
 };
+
 export const updateMedicine = async (id, data, userId) => {
     const medicine = await Medicine.findByPk(id);
-    if (!medicine)
-        return null;
+    if (!medicine) return null;
     const oldValues = medicine.toJSON();
     const updated = await medicine.update(data);
     // Audit log — medicine update
@@ -82,10 +87,10 @@ export const updateMedicine = async (id, data, userId) => {
     }
     return updated;
 };
+
 export const deleteMedicine = async (id, userId) => {
     const medicine = await Medicine.findByPk(id);
-    if (!medicine)
-        return null;
+    if (!medicine) return null;
     const oldValues = medicine.toJSON();
     // Audit log — medicine deletion (log BEFORE destroy)
     if (userId) {
@@ -101,4 +106,3 @@ export const deleteMedicine = async (id, userId) => {
     }
     return await medicine.destroy();
 };
-//# sourceMappingURL=medicine.service.js.map

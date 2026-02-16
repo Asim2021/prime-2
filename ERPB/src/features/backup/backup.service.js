@@ -5,7 +5,7 @@ import crypto from 'crypto';
 import util from 'util';
 import { logger } from '../../utils/logger.js';
 import dayjs from 'dayjs';
-import sequelize from '../../config/db.js';
+import sequelize from '#lib/sqlConfig.js';
 import config from '#lib/config.js';
 const execPromise = util.promisify(exec);
 export const backupService = {
@@ -47,9 +47,9 @@ export const backupService = {
                 if (Object.keys(models).length === 0) {
                     throw new Error('No models loaded in Sequelize instance. Cannot perform JSON backup.');
                 }
-                for (const [modelName, model] of Object.entries(models)) {
+                for (const [ modelName, model ] of Object.entries(models)) {
                     const rows = await model.findAll();
-                    dumpData[modelName] = rows.map((r) => r.toJSON());
+                    dumpData[ modelName ] = rows.map((r) => r.toJSON());
                 }
                 fs.writeFileSync(jsonFilePath, JSON.stringify(dumpData, null, 2));
                 logger.info(`✅ JSON Dump successful: ${Object.keys(dumpData).length} tables exported`);

@@ -1,5 +1,5 @@
 import { DataTypes, Model } from 'sequelize';
-import sequelize from '../../config/db.js';
+import sequelize from '#lib/sqlConfig.js';
 export class Medicine extends Model {
 }
 Medicine.init({
@@ -23,14 +23,14 @@ Medicine.init({
         type: DataTypes.STRING(8),
         allowNull: false,
         validate: {
-            len: [4, 8],
+            len: [ 4, 8 ],
         },
     },
     gst_percent: {
         type: DataTypes.DECIMAL(5, 2),
         allowNull: false,
         validate: {
-            isIn: [[0, 5, 12, 18, 28]],
+            isIn: [ [ 0, 5, 12, 18, 28 ] ],
         },
     },
     manufacturer: {
@@ -64,8 +64,8 @@ Medicine.init({
     createdAt: 'created_at',
     updatedAt: 'updated_at',
     indexes: [
-        { fields: ['brand_name'] },
-        { fields: ['generic_name'] }, // Good for search too
+        { fields: [ 'brand_name' ] },
+        { fields: [ 'generic_name' ] }, // Good for search too
     ],
 });
 //# sourceMappingURL=medicine.model.js.map

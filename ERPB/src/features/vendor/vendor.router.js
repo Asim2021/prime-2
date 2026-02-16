@@ -1,18 +1,30 @@
 import { Router } from 'express';
+
+import { verifyAccessToken, verifyUserRole } from '../../middleware/verifyTokens.js';
+import { joiValidate } from '../../utils/joiValidator.js';
 import * as vendorController from './vendor.controller.js';
 import { createVendorSchema, updateVendorSchema } from './vendor.schema.js';
-import { verifyAccessToken, verifyUserRole } from '#middleware/verifyTokens.js';
-import { joiValidate } from '#utils/joiValidator.js';
+import { ENDPOINT } from '../../constant/endpoints.js';
 
 const router = Router();
+
 // Protect all vendor routes
 router.use(verifyAccessToken);
-router.post('/', verifyUserRole('admin', 'pharmacist'), // Only admin/pharmacist can create vendors
-joiValidate(createVendorSchema), vendorController.createVendor);
-router.get('/', vendorController.getAllVendors);
-router.get('/:id', vendorController.getVendorById);
-router.put('/:id', verifyUserRole('admin', 'pharmacist'), joiValidate(updateVendorSchema), vendorController.updateVendor);
-router.delete('/:id', verifyUserRole('admin'), // Only admin can delete vendors
-vendorController.deleteVendor);
+
+router.post(
+  ENDPOINT.BASE,
+  verifyUserRole('admin', 'pharmacist'), // Only admin/pharmacist can create vendors
+  joiValidate(createVendorSchema),
+  vendorController.createVendor,
+);
+router.get(ENDPOINT.BASE, vendorController.getAllVendors);
+router.get(ENDPOINT.ID, vendorController.getVendorById);
+router.put(
+  ENDPOINT.ID,
+  verifyUserRole('admin', 'pharmacist'),
+  joiValidate(updateVendorSchema),
+  vendorController.updateVendor,
+);
+router.delete(ENDPOINT.ID, verifyUserRole('admin'), vendorController.deleteVendor);
+
 export default router;
-//# sourceMappingURL=vendor.router.js.map

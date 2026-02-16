@@ -1,5 +1,5 @@
 import { DataTypes, Model } from 'sequelize';
-import sequelize from '../../config/db.js';
+import sequelize from '#lib/sqlConfig.js';
 export class Batch extends Model {
 }
 Batch.init({
@@ -62,13 +62,13 @@ Batch.init({
     indexes: [
         {
             unique: true,
-            fields: ['medicine_id', 'batch_no'],
+            fields: [ 'medicine_id', 'batch_no' ],
         },
         {
-            fields: ['exp_date'],
+            fields: [ 'exp_date' ],
         },
         {
-            fields: ['batch_no'],
+            fields: [ 'batch_no' ],
         },
     ],
 });

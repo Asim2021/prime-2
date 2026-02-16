@@ -1,64 +1,108 @@
 import * as vendorService from './vendor.service.js';
-import { HTTP_STATUS } from '#constant/httpStatus.js';
-export const createVendor = async (req, res, next) => {
+import { HTTP_STATUS } from '../../constant/httpStatus.js';
+import { sendSuccessResponse, sendErrorResponse } from '../../middleware/sendResponse.js';
+import { getPaginationParams } from '../../utils/helpers.js';
+
+export const createVendor = async (req, res) => {
     try {
         const vendor = await vendorService.createVendor(req.body);
-        res.status(HTTP_STATUS.CREATED).json({ success: true, data: { vendor } });
-    }
-    catch (error) {
-        next(error);
+        sendSuccessResponse({
+            res,
+            status: HTTP_STATUS.CREATED,
+            data: vendor,
+            message: 'Vendor created successfully',
+        });
+    } catch (error) {
+        sendErrorResponse({ res, status: error.statusCode || HTTP_STATUS.SERVER_ERROR, message: error.message || error });
     }
 };
-export const getAllVendors = async (req, res, next) => {
+
+export const getAllVendors = async (req, res) => {
     try {
-        const page = Number(req.query.page) || 1;
-        const limit = Number(req.query.limit) || 10;
+        const { page, limit, offset, sortBy, order } = getPaginationParams({
+            page: req.query.page,
+            limit: req.query.limit,
+            sortBy: req.query.sortBy,
+            order: req.query.order,
+        });
+
         const search = req.query.search;
-        const result = await vendorService.getAllVendors({ page, limit, search });
-        res.status(HTTP_STATUS.OK).json({ success: true, data: result.data, meta: result.meta });
-    }
-    catch (error) {
-        next(error);
+        const result = await vendorService.getAllVendors({ page, limit, offset, sortBy, order, search });
+
+        sendSuccessResponse({
+            res,
+            status: HTTP_STATUS.OK,
+            data: {
+                data: result.data,
+                totalCount: result.meta.total,
+                count: result.data.length,
+                currentPage: result.meta.page,
+                totalPages: result.meta.totalPages,
+            },
+        });
+    } catch (error) {
+        sendErrorResponse({ res, status: error.statusCode || HTTP_STATUS.SERVER_ERROR, message: error.message || error });
     }
 };
-export const getVendorById = async (req, res, next) => {
+
+export const getVendorById = async (req, res) => {
     try {
         const vendor = await vendorService.getVendorById(req.params.id);
         if (!vendor) {
-            res.status(HTTP_STATUS.NOT_FOUND).json({ success: false, message: 'Vendor not found' });
-            return;
+            return sendErrorResponse({
+                res,
+                status: HTTP_STATUS.NOT_FOUND,
+                message: 'Vendor not found',
+            });
         }
-        res.status(HTTP_STATUS.OK).json({ success: true, data: { vendor } });
-    }
-    catch (error) {
-        next(error);
+        sendSuccessResponse({
+            res,
+            status: HTTP_STATUS.OK,
+            data: vendor,
+        });
+    } catch (error) {
+        sendErrorResponse({ res, status: error.statusCode || HTTP_STATUS.SERVER_ERROR, message: error.message || error });
     }
 };
-export const updateVendor = async (req, res, next) => {
+
+export const updateVendor = async (req, res) => {
     try {
         const vendor = await vendorService.updateVendor(req.params.id, req.body);
         if (!vendor) {
-            res.status(HTTP_STATUS.NOT_FOUND).json({ success: false, message: 'Vendor not found' });
-            return;
+            return sendErrorResponse({
+                res,
+                status: HTTP_STATUS.NOT_FOUND,
+                message: 'Vendor not found',
+            });
         }
-        res.status(HTTP_STATUS.OK).json({ success: true, data: { vendor } });
-    }
-    catch (error) {
-        next(error);
+        sendSuccessResponse({
+            res,
+            status: HTTP_STATUS.OK,
+            data: vendor,
+            message: 'Vendor updated successfully',
+        });
+    } catch (error) {
+        sendErrorResponse({ res, status: error.statusCode || HTTP_STATUS.SERVER_ERROR, message: error.message || error });
     }
 };
-export const deleteVendor = async (req, res, next) => {
+
+export const deleteVendor = async (req, res) => {
     try {
         const vendor = await vendorService.deleteVendor(req.params.id);
         if (!vendor) {
-            res.status(HTTP_STATUS.NOT_FOUND).json({ success: false, message: 'Vendor not found' });
-            return;
+            return sendErrorResponse({
+                res,
+                status: HTTP_STATUS.NOT_FOUND,
+                message: 'Vendor not found',
+            });
         }
-        res.status(HTTP_STATUS.OK).json({ success: true, message: 'Vendor deleted successfully' });
-    }
-    catch (error) {
-        next(error);
+        sendSuccessResponse({
+            res,
+            status: HTTP_STATUS.OK,
+            message: 'Vendor deleted successfully',
+        });
+    } catch (error) {
+        sendErrorResponse({ res, status: error.statusCode || HTTP_STATUS.SERVER_ERROR, message: error.message || error });
     }
 };
-//# sourceMappingURL=vendor.controller.js.map
 

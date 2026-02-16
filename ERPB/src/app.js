@@ -10,10 +10,10 @@ import { fileURLToPath } from 'node:url';
 
 import { ENDPOINT } from './constant/endpoints.js';
 import { HTTP_STATUS } from './constant/httpStatus.js';
-import { errorHandler } from './middleware/error.handler.js';
+import { errorHandler } from './middleware/error.middleware.js';
 import { notFoundHandler } from './middleware/notFound.handler.js';
 import { requestLogger } from './utils/logger.js';
-import { router } from './features/index.js';
+import rootRouter from '#features/index.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -52,7 +52,7 @@ app.use('/profiles', (req, res, next) => {
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // USING ROUTER
-app.use(ENDPOINT.BASE, router);
+app.use(ENDPOINT.BASE, rootRouter);
 
 app.use(errorHandler);
 

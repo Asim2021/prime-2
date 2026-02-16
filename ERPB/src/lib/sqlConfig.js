@@ -1,7 +1,6 @@
 import { Sequelize } from 'sequelize';
-
+import { logger } from '#utils/logger.js';
 import config from './config.js';
-import { logger } from '../utils/logger.js';
 
 const sequelize = new Sequelize(config.SQL_DATABASE_NAME, config.SQL_USER, config.SQL_PASSWORD, {
   host: config.SQL_HOST,

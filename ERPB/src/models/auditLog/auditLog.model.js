@@ -1,6 +1,7 @@
 import { DataTypes, Model } from 'sequelize';
-import sequelize from '../../config/db.js';
-import { createError } from '../../middleware/errorHandler.middleware.js';
+import sequelize from '#lib/sqlConfig.js';
+import { createError } from '#middleware/error.middleware.js';
+
 export class AuditLog extends Model {
 }
 AuditLog.init({

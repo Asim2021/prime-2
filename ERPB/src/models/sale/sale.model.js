@@ -1,5 +1,5 @@
 import { DataTypes, Model } from 'sequelize';
-import sequelize from '../../config/db.js';
+import sequelize from '#lib/sqlConfig.js';
 export class Sale extends Model {
 }
 Sale.init({
@@ -74,6 +74,6 @@ Sale.init({
     sequelize,
     tableName: 'sales',
     timestamps: false,
-    indexes: [{ fields: ['bill_date'] }, { fields: ['customer_id'] }],
+    indexes: [ { fields: [ 'bill_date' ] }, { fields: [ 'customer_id' ] } ],
 });
 //# sourceMappingURL=sale.model.js.map

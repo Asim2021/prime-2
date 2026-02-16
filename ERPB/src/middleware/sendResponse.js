@@ -1,6 +1,6 @@
-import { HTTP_STATUS } from '#constant/httpStatus';
-import { GLOBAL_STRING, SEVERITY } from '#constant/strings';
-import { logger } from '#utils/logger';
+import { HTTP_STATUS } from '#constant/httpStatus.js';
+import { GLOBAL_STRING, SEVERITY } from '#constant/strings.js';
+import { logger } from '#utils/logger.js';
 
 /**
  * The function `sendSuccess` sends a successful response with data, message, and severity information.
