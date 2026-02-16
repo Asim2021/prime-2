@@ -1,0 +1,125 @@
+@import "tailwind-preset-mantine";
+
+/* custome css constnat */
+:root {
+  --erp-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.2);
+  --base-shadow: rgba(9, 30, 66, 0.25) 0px 1px 1px, rgba(9, 30, 66, 0.13) 0px 0px 1px 1px;
+  --hov-shadow: 0 4px 8px 0px rgba(57, 67, 87, .3);
+}
+
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  height: 100dvh !important;
+  min-height: 100dvh !important;
+  max-height: 100dvh !important;
+  width: 100dvw !important;
+  max-width: 100dvw !important;
+  min-width: 100dvw !important;
+  overflow: hidden !important;
+  color: light-dark(var(--mantine-color-gray-8),
+      var(--mantine-color-gray-3)) !important;
+  /* font-family: "Inter", sans-serif; */
+  font-family:
+    Inter,
+    -apple-system,
+    Roboto,
+    sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
+a {
+  text-decoration: none;
+}
+
+.mantine-Notifications-notification {
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px,
+    rgba(0, 0, 0, 0.22) 0px 10px 10px;
+}
+
+.highlight_bg {
+  background-color: light-dark(var(--mantine-primary-color-0),
+      var(--mantine-color-dark-5));
+}
+
+.active_text {
+  color: var(--mantine-primary-color-7);
+  font-weight: 600;
+}
+
+.mantine-Input-input:disabled,
+.mantine-Select-input:disabled,
+.mantine-Textarea-input:disabled {
+  background-color: light-dark("", rgba(255, 255, 0, 0.07)) !important;
+  color: light-dark(var(--mantine-color-gray-8), var(--mantine-color-gray-1)) !important;
+}
+
+.erp-rs__control {
+  border-color: light-dark(var(--mantine-color-gray-4), var(--mantine-color-dark-4)) !important;
+  box-shadow: none !important;
+  background-color: light-dark(var(--mantine-white), var(--mantine-color-dark-6)) !important;
+}
+
+.erp-rs__control:focus-visible,
+.erp-rs__control:focus-within,
+.erp-rs__control:focus {
+  border: 1px solid var(--mantine-primary-color-5) !important;
+}
+
+.erp-rs__control.erp-rs__control--is-disabled {
+  background-color: light-dark(var(--mantine-color-gray-1), rgba(255, 255, 0, 0.07)) !important;
+}
+
+.erp-select-wrapper.cursor-na {
+  cursor: not-allowed !important;
+}
+
+.erp-select-wrapper.has-error {
+  .erp-rs__control {
+    border: 1px solid var(--mantine-color-error) !important;
+    color: var(--mantine-color-error) !important;
+
+    .erp-rs__single-value {
+      color: var(--mantine-color-error) !important;
+    }
+
+    .erp-rs__indicators {
+      .erp-rs__indicator {
+        color: var(--mantine-color-error) !important;
+      }
+    }
+  }
+}
+
+.erp-rs__menu {
+  border: 1px solid;
+  border-color: light-dark(var(--mantine-color-gray-4), var(--mantine-color-dark-4)) !important;
+}
+
+.erp-rs__value-container {
+  padding: 0 8px;
+  font-weight: 400;
+  font-size: 15px;
+}
+
+.erp-rs__single-value {
+  color: light-dark(var(--mantine-color-black), var(--mantine-color-dark-0)) !important;
+  font-weight: 400 !important;
+  font-size: var(--mantine-font-size-sm) !important;
+}
+
+.erp-rs__single-value.erp-rs__single-value--is-disabled {
+  color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-dark-0)) !important;
+}
+
+.erp-rs__input-container {
+  color: light-dark(var(--mantine-color-black), var(--mantine-color-dark-0)) !important;
+}
+
+.erp-select-error-text {
+  color: var(--mantine-color-error) !important;
+  font-size: calc(var(--mantine-font-size-sm) - calc(0.125rem * var(--mantine-scale))) !important;
+
+}

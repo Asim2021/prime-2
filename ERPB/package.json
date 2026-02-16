@@ -1,0 +1,83 @@
+{
+  "name": "erpb",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "engines": {
+    "node": "^24",
+    "npm": "^11"
+  },
+  "type": "module",
+  "imports": {
+    "#utils/*": "./src/utils/*",
+    "#models/*": "./src/models/*",
+    "#routers/*": "./src/routers/*",
+    "#features/*": "./src/features/*",
+    "#middleware/*": "./src/middleware/*",
+    "#lib/*": "./src/lib/*",
+    "#constant/*": "./src/constant/*",
+    "#jobs/*": "./src/jobs/*",
+    "#common/*": "./src/common/*"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "feature:create": "node scripts/createFeature.js",
+    "lint:check": "eslint './**/*.js'",
+    "lint:fix": "eslint './**/*.js' --fix",
+    "format": "prettier --write \"src/**/*.js\" \"tests/**/*.js\"",
+    "format:check": "prettier --check \"src/**/*.js\" \"tests/**/*.js\"",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "start:prod": "node server.js",
+    "db:generate": "npx sequelize-cli migration:generate --name",
+    "db:migrate": "npx sequelize-cli db:migrate",
+    "db:migrate:undo": "npx sequelize-cli db:migrate:undo",
+    "db:migrate:undo:all": "npx sequelize-cli db:migrate:undo:all",
+    "db:insert": "npx sequelize-cli db:seed --seed",
+    "db:seed": "npx sequelize-cli seed:generate --name",
+    "db:seed:undo": "npx sequelize-cli db:seed:undo",
+    "db:seed:all": "npx sequelize-cli db:seed:all",
+    "db:seed:undo:all": "npx sequelize-cli db:seed:undo:all",
+    "docker:up": "docker-compose up -d",
+    "docker:build": "docker-compose up -d --build",
+    "docker:down": "docker-compose down",
+    "docker:remove": "docker-compose down -v",
+    "db:init": "npm run db:migrate && npm run db:seed:all"
+  },
+  "keywords": [
+    "ERP"
+  ],
+  "author": "Asim Shah",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "compression": "^1.7.5",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "crypto-js": "^4.2.0",
+    "dayjs": "^1.11.19",
+    "exceljs": "^4.4.0",
+    "express": "^4.21.2",
+    "express-handlebars": "^8.0.1",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.0.0",
+    "ioredis": "^5.4.1",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
+    "lodash": "^4.17.21",
+    "mysql2": "^3.11.5",
+    "sequelize": "^6.37.5",
+    "winston": "^3.17.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/sequelize": "^4.28.20",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "module-alias": "^2.2.3",
+    "nodemon": "^3.1.10",
+    "prettier": "^3.2.5",
+    "sequelize-cli": "^6.6.2"
+  }
+}

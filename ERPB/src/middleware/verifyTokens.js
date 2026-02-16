@@ -1,0 +1,202 @@
+import jwt from 'jsonwebtoken';
+
+import { HTTP_STATUS } from '#constant/httpStatus.js';
+import { ROLES, TOKEN, TOKEN_STRING } from '../constant/strings.js';
+import config from '#lib/config.js';
+import { logoutUser, sanitizeUser } from '../utils/helpers.js';
+import { sendErrorResponse, sendUnauthorizedResponse } from './sendResponse.js';
+import { Role, User } from '#models/index.js';
+
+const verifyAccessToken = async (req, res, next) => {
+  try {
+    const accessTokenFromReq = req.headers.authorization?.split(' ')[ 1 ];
+
+    if (!accessTokenFromReq) {
+      return sendUnauthorizedResponse({
+        res,
+        tokenType: TOKEN.ACCESS,
+        reason: TOKEN_STRING.NO_TOKEN,
+      });
+    }
+
+    const verifiedToken = jwt.verify(accessTokenFromReq, config.ACCESS_TOKEN_SECRET);
+
+    if (!verifiedToken) {
+      return sendUnauthorizedResponse({
+        res,
+        status: HTTP_STATUS.FORBIDDEN,
+        tokenType: TOKEN.ACCESS,
+        reason: TOKEN_STRING.VERIFICATION_FAILED,
+      });
+    }
+
+    const user = await User.findOne({
+      where: { id: verifiedToken.id },
+      attributes: {
+        exclude: [ 'password' ],
+      },
+      include: [
+        {
+          model: Role,
+          as: 'role',
+        },
+      ],
+    });
+
+    if (!user) {
+      return sendUnauthorizedResponse({
+        res,
+        tokenType: TOKEN.ACCESS,
+        reason: TOKEN_STRING.USER_NOT_EXIST,
+      });
+    }
+
+    if (!user.active) {
+      logoutUser({ res });
+      return sendUnauthorizedResponse({
+        res,
+        tokenType: TOKEN.ACCESS,
+        reason: TOKEN_STRING.USER_DEACTIVATED,
+      });
+    }
+
+    const userData = user.toJSON();
+    const role = userData.role || {};
+    const permissions = role.permissions || [];
+
+    req.user = {
+      ...sanitizeUser(userData),
+      roleName: role.name,
+      roleCode: role.code,
+      permissions: permissions.map(p => p.code),
+    };
+    next();
+  } catch (error) {
+    return sendErrorResponse({
+      res,
+      status: HTTP_STATUS.FORBIDDEN,
+      message: TOKEN_STRING.VERIFICATION_FAILED,
+      internalError: error,
+      args: {
+        service: 'verifyAccessToken',
+      },
+    });
+  }
+};
+
+const verifyRefreshToken = async (req, res, next) => {
+  try {
+    const refreshTokenFromReq = req.cookies[ TOKEN.REFRESH ];
+
+    if (!refreshTokenFromReq) {
+      return sendUnauthorizedResponse({
+        res,
+        tokenType: TOKEN.REFRESH,
+        reason: TOKEN_STRING.NO_TOKEN,
+      });
+    }
+
+    const verifiedToken = jwt.verify(refreshTokenFromReq, config.REFRESH_TOKEN_SECRET);
+
+    if (!verifiedToken) {
+      return sendUnauthorizedResponse({
+        res,
+        status: HTTP_STATUS.FORBIDDEN,
+        tokenType: TOKEN.REFRESH,
+        reason: TOKEN_STRING.VERIFICATION_FAILED,
+      });
+    }
+
+    const user = await User.findOne({
+      raw: true,
+      where: { id: verifiedToken.id },
+    });
+
+    if (!user) {
+      return sendUnauthorizedResponse({
+        res,
+        tokenType: TOKEN.REFRESH,
+        reason: TOKEN_STRING.USER_NOT_EXIST,
+      });
+    }
+
+    if (!user.active) {
+      logoutUser({ res });
+      return sendUnauthorizedResponse({
+        res,
+        tokenType: TOKEN.REFRESH,
+        reason: TOKEN_STRING.USER_DEACTIVATED,
+      });
+    }
+
+    req.user = sanitizeUser(user);
+    next();
+  } catch (error) {
+    return sendErrorResponse({
+      res,
+      status: HTTP_STATUS.SERVER_ERROR,
+      message: TOKEN_STRING.VERIFICATION_FAILED,
+      internalError: error,
+      args: {
+        service: 'verifyRefreshToken',
+      },
+    });
+  }
+};
+
+const verifyUserRole = (allowedRoles) => {
+  return (req, res, next) => {
+    if (!req.user || !req.user.roleCode) {
+      return sendUnauthorizedResponse({
+        res,
+        status: HTTP_STATUS.UNAUTHORIZED,
+        tokenType: TOKEN.ACCESS,
+        reason: TOKEN_STRING.MISSING_AUTH_CONTEXT,
+      });
+    }
+
+    if (!allowedRoles.includes(req.user.roleCode)) {
+      return sendUnauthorizedResponse({
+        res,
+        status: HTTP_STATUS.FORBIDDEN,
+        tokenType: TOKEN.ACCESS,
+        reason: TOKEN_STRING.ROLE_UNAUTHORIZED,
+      });
+    }
+    next();
+  };
+};
+
+const verifyPermission = (module, action) => {
+  return (req, res, next) => {
+    if (!req.user || !Array.isArray(req.user.permissions)) {
+      return sendUnauthorizedResponse({
+        res,
+        status: HTTP_STATUS.UNAUTHORIZED,
+        tokenType: TOKEN.ACCESS,
+        reason: TOKEN_STRING.MISSING_AUTH_CONTEXT,
+      });
+    }
+
+    const permissionCode = `${module}_${action}`.toUpperCase();
+    const hasPermission = req.user.permissions.includes(permissionCode);
+
+    if (!hasPermission && req.user.roleCode !== ROLES.SUPER_ADMIN) {
+      return sendUnauthorizedResponse({
+        res,
+        status: HTTP_STATUS.FORBIDDEN,
+        tokenType: TOKEN.ACCESS,
+        reason: TOKEN_STRING.PERMISSION_DENIED,
+      });
+    }
+    next();
+  };
+};
+
+export {
+  verifyAccessToken,
+  verifyRefreshToken,
+  verifyUserRole,
+  verifyPermission,
+};
+

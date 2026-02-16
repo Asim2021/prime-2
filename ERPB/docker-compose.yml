@@ -1,0 +1,92 @@
+version: '3.8'
+
+services:
+  mysqldb:
+    image: mysql:8.4.2
+    container_name: mysql-erp-container
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      MYSQL_ROOT_PASSWORD: $SQL_ROOT_PASSWORD
+      MYSQL_DATABASE: $SQL_DATABASE_NAME
+      MYSQL_USER: $SQL_USER
+      MYSQL_PASSWORD: $SQL_PASSWORD
+    ports:
+      - 3306:3306
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - erp-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redisdb:
+    image: redis:7-alpine
+    container_name: redis-container
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - 6379:6379
+    volumes:
+      - redis_data:/data
+    networks:
+      - erp-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  erp-backend:
+    depends_on:
+      mysqldb:
+        condition: service_healthy
+      redisdb:
+        condition: service_healthy
+    container_name: erp-backend-container
+    build: .
+    restart: unless-stopped
+    env_file:
+      - .env
+    stdin_open: true
+    tty: true
+    ports:
+      - ${PORT}:${PORT}
+    volumes:
+      - ./:/server
+    networks:
+      - erp-network
+
+  erp-frontend:
+    build: ../ERPF
+    command: ["npm", "run", "dev"]
+    depends_on:
+      - erp-backend
+    container_name: erp-frontend-container
+    working_dir: /frontend
+    restart: unless-stopped
+    env_file:
+      - ../ERPF/.env.dev
+    environment:
+      - NODE_ENV=development
+    stdin_open: true
+    tty: true
+    ports:
+      - 3001:3001
+    volumes:
+      - ../ERPF:/frontend:cached
+      - /frontend/node_modules
+    networks:
+      - erp-network
+
+volumes:
+  mysql_data: {}
+  redis_data: {}
+
+networks:
+  erp-network:
+    driver: bridge

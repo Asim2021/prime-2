@@ -1,0 +1,154 @@
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <title>Payslip</title>
+    <style>
+      body {
+        font-family: 'Helvetica', sans-serif;
+        color: #333;
+      }
+      .container {
+        width: 100%;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      .header {
+        text-align: center;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 10px;
+      }
+      .company-name {
+        font-size: 24px;
+        font-weight: bold;
+      }
+      .title {
+        font-size: 18px;
+        margin-top: 5px;
+      }
+      .details-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+      .row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 5px;
+      }
+      .label {
+        font-weight: bold;
+        color: #555;
+      }
+      .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+      .table th,
+      .table td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: left;
+      }
+      .table th {
+        background-color: #f8f9fa;
+      }
+      .text-right {
+        text-align: right;
+      }
+      .total-row {
+        font-weight: bold;
+        background-color: #f0f0f0;
+      }
+      .footer {
+        margin-top: 40px;
+        text-align: center;
+        font-size: 12px;
+        color: #777;
+      }
+    </style>
+  </head>
+  <body>
+    <div class='container'>
+      <div class='header'>
+        <div class='company-name'>My ERP Company</div>
+        <div class='title'>Payslip for {{monthName}} {{year}}</div>
+      </div>
+
+      <div class='details-grid'>
+        <div class='box'>
+          <div class='row'><span class='label'>Employee Name:</span>
+            <span>{{employee.firstName}} {{employee.lastName}}</span></div>
+          <div class='row'><span class='label'>Employee Code:</span>
+            <span>{{employee.employeeCode}}</span></div>
+          <div class='row'><span class='label'>Department:</span>
+            <span>{{employee.department}}</span></div>
+        </div>
+        <div class='box'>
+          <div class='row'><span class='label'>Designation:</span>
+            <span>{{employee.designation}}</span></div>
+          <div class='row'><span class='label'>Joining Date:</span>
+            <span>{{employee.joiningDate}}</span></div>
+          <div class='row'><span class='label'>Payslip ID:</span> <span>{{id}}</span></div>
+        </div>
+      </div>
+
+      <table class='table'>
+        <thead>
+          <tr>
+            <th>Earnings</th>
+            <th class='text-right'>Amount</th>
+            <th>Deductions</th>
+            <th class='text-right'>Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Basic Salary</td>
+            <td class='text-right'>{{formatCurrency basicSalary}}</td>
+            <td>Loss of Pay</td>
+            <td class='text-right'>{{formatCurrency deductions.LOP}}</td>
+          </tr>
+          {{#each allowancesList}}
+            <tr>
+              <td>{{name}}</td>
+              <td class='text-right'>{{formatCurrency amount}}</td>
+              <td></td>
+              <td class='text-right'></td>
+            </tr>
+          {{/each}}
+          <!-- Fill empty rows to balance if needed, for legacy reasons usually just list -->
+          <tr>
+            <td></td>
+            <td class='text-right'></td>
+            <td></td>
+            <td class='text-right'></td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr class='total-row'>
+            <td>Total Earnings</td>
+            <td class='text-right'>{{formatCurrency grossSalary}}</td>
+            <td>Total Deductions</td>
+            <td class='text-right'>{{formatCurrency totalDeductions}}</td>
+          </tr>
+          <tr style='background-color: #e3f2fd;'>
+            <td colspan='2' style='text-align: right; font-weight: bold; font-size: 16px;'>Net
+              Salary Payable</td>
+            <td
+              colspan='2'
+              style='text-align: right; font-weight: bold; font-size: 16px;'
+            >{{formatCurrency netSalary}}</td>
+          </tr>
+        </tfoot>
+      </table>
+
+      <div class='footer'>
+        <p>This is a computer-generated document and does not require a signature.</p>
+        <p>Generated on: {{generatedDate}}</p>
+      </div>
+    </div>
+  </body>
+</html>

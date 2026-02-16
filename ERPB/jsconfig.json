@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "paths": {
+      "#utils/*": ["utils/*"],
+      "#models/*": ["models/*"],
+      "#routers/*": ["routers/*"],
+      "#features/*": ["features/*"],
+      "#middleware/*": ["middleware/*"],
+      "#lib/*": ["lib/*"],
+      "#constant/*": ["constant/*"],
+      "#jobs/*": ["jobs/*"],
+      "#common/*": ["common/*"]
+    }
+  }
+}

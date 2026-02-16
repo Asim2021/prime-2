@@ -1,0 +1,183 @@
+import { ActionIcon, Avatar, Badge, Flex, Text, Title } from "@mantine/core";
+import { ColumnDef } from "@tanstack/react-table";
+import { useMemo } from "react";
+import { FaTrash } from "react-icons/fa6";
+import { MdModeEdit } from "react-icons/md";
+import { USER_COLUMNS, USER_DRAWER } from "@pages/Users/constant";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import { deleteUser } from "@services/userService";
+import {
+  apiErrNotification,
+  successNotification,
+} from "@utils/sendNotification";
+import { modals } from "@mantine/modals";
+import { getCountryData, TCountryCode } from "countries-list";
+import { QUERY_KEY } from "@constants/queryKeys";
+
+const useUserColumn = (
+  userEditHandler: (action: string, payload: UserI) => void,
+) => {
+  const queryClient = useQueryClient();
+
+  const useDeleteUser = useMutation<string, AxiosError, string>({
+    mutationFn: (id) => deleteUser(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.GET_ALL_USERS] });
+      successNotification(`User deleted`);
+    },
+    onError: (err) => {
+      apiErrNotification(err);
+    },
+  });
+
+  const deleteHandler = (user: UserI) => {
+    const openModal = () =>
+      modals.openConfirmModal({
+        modalId: "confirmation_modal",
+        title: (
+          <Title size="18" fw={500}>
+            Delete Account
+          </Title>
+        ),
+        children: (
+          <Text size="sm">
+            Are you sure you want to delete{" "}
+            <Text span c="red.7" fw={600}>
+              {user.username}
+            </Text>
+            's Account ?
+          </Text>
+        ),
+        labels: { confirm: "Confirm", cancel: "Cancel" },
+        onConfirm: () => useDeleteUser.mutate(user.id as string),
+      });
+
+    openModal();
+  };
+
+  const columns = useMemo<ColumnDef<UserI>[]>(
+    () => [
+      {
+        id: USER_COLUMNS.USERNAME,
+        accessorKey: USER_COLUMNS.USERNAME,
+        header: "Name",
+        minSize: 250,
+        cell: (props) => {
+          const { firstName, lastName, username, profile, email } =
+            props.row.original;
+          const displayName =
+            firstName && lastName ? `${firstName} ${lastName}` : username;
+
+          return (
+            <div className="min-w-max flex gap-2 items-center">
+              <Avatar src={profile} size={40} radius={40} />
+              <span className="flex flex-col items-start">
+                <Text fz="sm" miw={"max-content"}>
+                  {displayName}
+                </Text>
+                <Text fz="xs" c="dimmed" miw={"max-content"}>{`${email}`}</Text>
+              </span>
+            </div>
+          );
+        },
+      },
+      {
+        id: USER_COLUMNS.ROLE_NAME,
+        accessorKey: USER_COLUMNS.ROLE_NAME,
+        header: "Role",
+        cell: (props) => (
+          <div className="min-w-max">{props.getValue() as React.ReactNode}</div>
+        ),
+      },
+      {
+        id: USER_COLUMNS.DOB,
+        accessorKey: USER_COLUMNS.DOB,
+        header: "DOB",
+        cell: (props) => (
+          <div className="min-w-max">{props.getValue() as React.ReactNode}</div>
+        ),
+      },
+      {
+        id: USER_COLUMNS.PHONE,
+        accessorKey: USER_COLUMNS.PHONE,
+        header: "Phone",
+        cell: (props) =>
+          props.getValue() ? (
+            props.row.original.countryCode ? (
+              <div className="min-w-max">{`+${
+                getCountryData(props.row.original.countryCode as TCountryCode)
+                  .phone
+              } ${props.getValue()}`}</div>
+            ) : (
+              props.getValue()
+            )
+          ) : (
+            ""
+          ),
+      },
+      {
+        id: USER_COLUMNS.ACTIVE,
+        accessorKey: USER_COLUMNS.ACTIVE,
+        header: "Status",
+        cell: ({ row }) => (
+          <Badge
+            variant="filled"
+            color={!row.original.active ? "gray.5" : "green"}
+          >
+            {!row.original.active ? "InActive" : "Active"}
+          </Badge>
+        ),
+      },
+      {
+        id: USER_COLUMNS.COUNTRY,
+        accessorKey: USER_COLUMNS.COUNTRY,
+        header: "Country",
+        cell: (props) =>
+          props.getValue() ? (
+            <div className="min-w-max">
+              {getCountryData(props.getValue() as TCountryCode).name}
+            </div>
+          ) : (
+            ""
+          ),
+      },
+      {
+        id: USER_COLUMNS.ACTION,
+        minSize: 80,
+        maxSize: 114,
+        cell: ({ row }) => (
+          <Flex gap={8} justify={"center"}>
+            <ActionIcon
+              aria-label="Edit User"
+              title="Edit"
+              onClick={() => userEditHandler(USER_DRAWER.EDIT, row.original)}
+              radius={"100%"}
+              variant="light"
+              className="shadow-erp-shadow"
+            >
+              <MdModeEdit size={18} />
+            </ActionIcon>
+            <ActionIcon
+              aria-label="Delete User"
+              title="Delete"
+              radius={"100%"}
+              variant="light"
+              color="red"
+              onClick={() => deleteHandler(row.original)}
+              className="shadow-erp-shadow"
+            >
+              <FaTrash size={18} />
+            </ActionIcon>
+          </Flex>
+        ),
+      },
+    ],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
+
+  return { columns };
+};
+
+export default useUserColumn;
