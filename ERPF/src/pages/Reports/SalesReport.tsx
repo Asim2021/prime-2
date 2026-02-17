@@ -18,8 +18,8 @@ const SalesReport = () => {
       const [start, end] = dateRange;
       if (!start || !end) return { data: [], stats: {} };
       return fetchSalesReport({
-        start_date: start.toISOString(),
-        end_date: end.toISOString(),
+        startDate: start.toISOString(),
+        endDate: end.toISOString(),
       });
     },
     enabled: !!dateRange[0] && !!dateRange[1],

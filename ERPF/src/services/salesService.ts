@@ -1,4 +1,3 @@
-import { ENDPOINT } from "@constants/endpoints";
 import erpApi from "@lib/axiosInstance";
 
 export const fetchAllSales = async (params: {
@@ -8,12 +7,12 @@ export const fetchAllSales = async (params: {
   sortBy?: string;
   order?: "ASC" | "DESC";
 }) => {
-  const { data } = await erpApi.get(ENDPOINT.SALES_ORDERS, { params });
+  const { data } = await erpApi.get("/sales", { params });
   return data;
 };
 
 export const fetchSaleById = async (id: string) => {
-  const { data } = await erpApi.get(`${ENDPOINT.SALES_ORDERS}/${id}`);
+  const { data } = await erpApi.get(`/sales/${id}`);
   return data;
 };
 
@@ -37,11 +36,11 @@ export interface CreateSalePayload {
 }
 
 export const createSale = async (payload: CreateSalePayload) => {
-  const { data } = await erpApi.post(ENDPOINT.SALES_ORDERS, payload);
+  const { data } = await erpApi.post("/sales", payload);
   return data;
 };
 
 export const createSalesReturn = async (payload: any) => {
-  const { data } = await erpApi.post(ENDPOINT.SALES_RETURNS, payload);
+  const { data } = await erpApi.post("/sales/returns", payload);
   return data;
 };

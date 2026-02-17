@@ -109,7 +109,10 @@ const CheckoutModal = ({
           />
         </Stack>
 
-        <Card bg="gray.1" withBorder>
+        <Card
+          bg="light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-6))"
+          withBorder
+        >
           <Group justify="space-between">
             <Text size="lg">Total Payable</Text>
             <Text size="xl" fw={700} c="blue">

@@ -16,7 +16,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { notifications } from "@mantine/notifications";
 import MainHeader from "@components/Header/MainHeader";
 import { fetchShopSettings, updateShopSettings } from "@services/shopService";
-import { QUERY_KEY } from "@constants/queryKeys"; // Need to add this
 
 const ShopConfiguration = () => {
   const queryClient = useQueryClient();
@@ -87,7 +86,7 @@ const ShopConfiguration = () => {
   };
 
   return (
-    <div className="w-full h-full pb-24 relative">
+    <div className="w-full h-full pb-24 relative overflow-y-auto">
       <LoadingOverlay
         visible={isLoading || mutation.isPending}
         overlayProps={{ radius: "sm", blur: 2 }}

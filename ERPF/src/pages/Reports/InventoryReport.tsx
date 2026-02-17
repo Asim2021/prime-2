@@ -35,7 +35,11 @@ const InventoryReport = () => {
           Export CSV
         </Button>
       </Group>
-      <Paper p="md" withBorder bg="gray.0">
+      <Paper
+        p="md"
+        withBorder
+        bg="light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6))"
+      >
         <Text size="sm">
           <b>Total Inventory Value:</b> ₹
           {data?.total_value?.toLocaleString() || 0}

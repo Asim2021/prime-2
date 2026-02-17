@@ -50,7 +50,11 @@ const StatCard = ({ title, value, icon, color, subtext }: any) => (
           </Text>
         )}
       </Stack>
-      <Center p="sm" bg={`${color}.1`} style={{ borderRadius: "50%" }}>
+      <Center
+        p="sm"
+        bg={`var(--mantine-color-${color}-light)`}
+        style={{ borderRadius: "50%" }}
+      >
         {icon}
       </Center>
     </Group>
@@ -181,7 +185,7 @@ const Dashboard = () => {
                   key={item.id}
                   justify="space-between"
                   p="xs"
-                  bg="orange.0"
+                  bg="light-dark(var(--mantine-color-orange-0), var(--mantine-color-dark-5))"
                   style={{ borderRadius: 4 }}
                 >
                   <Text size="sm" fw={500} lineClamp={1}>

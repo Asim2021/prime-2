@@ -64,7 +64,6 @@ export const sidebarData = [
     links: [
       { label: "Users", link: ENDPOINT.USERS.BASE },
       { label: "Shop Settings", link: ENDPOINT.SHOP },
-      { label: "Roles", link: "/roles" },
     ],
   },
 ];
