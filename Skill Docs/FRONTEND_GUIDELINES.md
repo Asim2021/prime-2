@@ -79,7 +79,7 @@ ERPF/
 ```typescript
 import { FC } from 'react';
 import { Divider } from "@mantine/core";
-import ItemHeader from "../common/ItemHeader";
+import MainHeader from "@components/Header/MainHeader";
 
 interface ComponentNameProps {
   // Define props
@@ -88,10 +88,10 @@ interface ComponentNameProps {
 export const ComponentName: FC<ComponentNameProps> = ({ }) => {
   return (
     <div className="w-full h-full pb-24">
-      <ItemHeader title="Settings" placeholder="Search Item..." withSearch />  // Use header for main(index.tsx) pages
+      <MainHeader title="Settings" placeholder="Search Item..." withSearch />  // Use header for main(index.tsx) pages
       <Divider />
       {
-        //... content
+        //... content eg <MainTable .../>
       }
     </div>
   );
@@ -124,7 +124,7 @@ Take reference from src\pages\Users\components\UserTable\UserTable.tsx
 4.  **Render**:
 
     ```tsx
-
+   // let say for Users list
     import { TABLES } from "@constants/tables";
 
     const table = useReactTable<T>({
