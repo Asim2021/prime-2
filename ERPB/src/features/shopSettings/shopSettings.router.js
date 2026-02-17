@@ -13,7 +13,7 @@ router.use(verifyAccessToken);
 router.get(ENDPOINT.BASE, settingsController.getSettings);
 router.put(
   ENDPOINT.BASE,
-  verifyUserRole('admin'),
+  verifyUserRole(['admin']),
   joiValidate(updateSettingsSchema),
   settingsController.updateSettings,
 );

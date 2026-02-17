@@ -1,15 +1,29 @@
 import jwt from 'jsonwebtoken';
 
 import { HTTP_STATUS } from '#constant/httpStatus.js';
-import { ROLES, TOKEN, TOKEN_STRING } from '../constant/strings.js';
+import { TOKEN, TOKEN_STRING } from '#constant/strings.js';
 import config from '#lib/config.js';
-import { logoutUser, sanitizeUser } from '../utils/helpers.js';
+import { logoutUser, sanitizeUser } from '#utils/helpers.js';
 import { sendErrorResponse, sendUnauthorizedResponse } from './sendResponse.js';
 import { Role, User } from '#models/index.js';
 
+const getUser = async (id) => {
+  const user = await User.findOne({
+    where: { id: id },
+    raw: true,
+    nest: true,
+    attributes: {
+      exclude: ['password', ''],
+    },
+    include: [{ model: Role, as: 'role', attributes: ['name', 'code'] }],
+  });
+
+  return user;
+};
+
 const verifyAccessToken = async (req, res, next) => {
   try {
-    const accessTokenFromReq = req.headers.authorization?.split(' ')[ 1 ];
+    const accessTokenFromReq = req.headers.authorization?.split(' ')[1];
 
     if (!accessTokenFromReq) {
       return sendUnauthorizedResponse({
@@ -30,18 +44,7 @@ const verifyAccessToken = async (req, res, next) => {
       });
     }
 
-    const user = await User.findOne({
-      where: { id: verifiedToken.id },
-      attributes: {
-        exclude: [ 'password' ],
-      },
-      include: [
-        {
-          model: Role,
-          as: 'role',
-        },
-      ],
-    });
+    const user = await getUser(verifiedToken.id);
 
     if (!user) {
       return sendUnauthorizedResponse({
@@ -51,7 +54,7 @@ const verifyAccessToken = async (req, res, next) => {
       });
     }
 
-    if (!user.active) {
+    if (!user.is_active) {
       logoutUser({ res });
       return sendUnauthorizedResponse({
         res,
@@ -60,17 +63,7 @@ const verifyAccessToken = async (req, res, next) => {
       });
     }
 
-    const userData = user.toJSON();
-    const role = userData.role || {};
-    const permissions = role.permissions || [];
-
-    req.user = {
-      ...sanitizeUser(userData),
-      roleName: role.name,
-      roleCode: role.code,
-      permissions: permissions.map(p => p.code),
-    };
-    next();
+    ((req.user = sanitizeUser(user)), next());
   } catch (error) {
     return sendErrorResponse({
       res,
@@ -86,7 +79,7 @@ const verifyAccessToken = async (req, res, next) => {
 
 const verifyRefreshToken = async (req, res, next) => {
   try {
-    const refreshTokenFromReq = req.cookies[ TOKEN.REFRESH ];
+    const refreshTokenFromReq = req.cookies[TOKEN.REFRESH];
 
     if (!refreshTokenFromReq) {
       return sendUnauthorizedResponse({
@@ -107,10 +100,7 @@ const verifyRefreshToken = async (req, res, next) => {
       });
     }
 
-    const user = await User.findOne({
-      raw: true,
-      where: { id: verifiedToken.id },
-    });
+    const user = await getUser(verifiedToken.id);
 
     if (!user) {
       return sendUnauthorizedResponse({
@@ -120,7 +110,7 @@ const verifyRefreshToken = async (req, res, next) => {
       });
     }
 
-    if (!user.active) {
+    if (!user.is_active) {
       logoutUser({ res });
       return sendUnauthorizedResponse({
         res,
@@ -129,8 +119,7 @@ const verifyRefreshToken = async (req, res, next) => {
       });
     }
 
-    req.user = sanitizeUser(user);
-    next();
+    ((req.user = sanitizeUser(user)), next());
   } catch (error) {
     return sendErrorResponse({
       res,
@@ -144,9 +133,20 @@ const verifyRefreshToken = async (req, res, next) => {
   }
 };
 
-const verifyUserRole = (allowedRoles) => {
+const verifyUserRole = (allowedRoles = []) => {
+  if (!Array.isArray(allowedRoles)) {
+    return sendErrorResponse({
+      res,
+      status: HTTP_STATUS.SERVER_ERROR,
+      message: 'allowedRoles must be an array',
+      internalError: true,
+      args: {
+        service: 'verifyUserRole',
+      },
+    });
+  }
   return (req, res, next) => {
-    if (!req.user || !req.user.roleCode) {
+    if (!req.user || !req.user.role.code) {
       return sendUnauthorizedResponse({
         res,
         status: HTTP_STATUS.UNAUTHORIZED,
@@ -155,7 +155,7 @@ const verifyUserRole = (allowedRoles) => {
       });
     }
 
-    if (!allowedRoles.includes(req.user.roleCode)) {
+    if (!allowedRoles.includes(req.user.role.code)) {
       return sendUnauthorizedResponse({
         res,
         status: HTTP_STATUS.FORBIDDEN,
@@ -167,36 +167,4 @@ const verifyUserRole = (allowedRoles) => {
   };
 };
 
-const verifyPermission = (module, action) => {
-  return (req, res, next) => {
-    if (!req.user || !Array.isArray(req.user.permissions)) {
-      return sendUnauthorizedResponse({
-        res,
-        status: HTTP_STATUS.UNAUTHORIZED,
-        tokenType: TOKEN.ACCESS,
-        reason: TOKEN_STRING.MISSING_AUTH_CONTEXT,
-      });
-    }
-
-    const permissionCode = `${module}_${action}`.toUpperCase();
-    const hasPermission = req.user.permissions.includes(permissionCode);
-
-    if (!hasPermission && req.user.roleCode !== ROLES.SUPER_ADMIN) {
-      return sendUnauthorizedResponse({
-        res,
-        status: HTTP_STATUS.FORBIDDEN,
-        tokenType: TOKEN.ACCESS,
-        reason: TOKEN_STRING.PERMISSION_DENIED,
-      });
-    }
-    next();
-  };
-};
-
-export {
-  verifyAccessToken,
-  verifyRefreshToken,
-  verifyUserRole,
-  verifyPermission,
-};
-
+export { verifyAccessToken, verifyRefreshToken, verifyUserRole };

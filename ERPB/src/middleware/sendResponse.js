@@ -1,6 +1,5 @@
 import { HTTP_STATUS } from '#constant/httpStatus.js';
-import { GLOBAL_STRING, SEVERITY } from '#constant/strings.js';
-import { logger } from '#utils/logger.js';
+import { SEVERITY } from '#constant/strings.js';
 
 /**
  * The function `sendSuccess` sends a successful response with data, message, and severity information.
@@ -30,22 +29,15 @@ function sendSuccessResponse({ res, status = 200, data = null, message }) {
  */
 function sendErrorResponse({ res, status, message = 'Server error', args = {}, internalError }) {
   if (internalError) {
-    logger.error('Error ~ Failure: ', internalError);
+    console.error('Error ~ Failure: ', internalError);
   } else {
-    logger.error('Error ~ Failure: ', message);
+    console.error('Error ~ Failure: ', message);
   }
-
-  const safeMessage =
-    status === HTTP_STATUS.SERVER_ERROR
-      ? GLOBAL_STRING.WENT_WRONG
-      : typeof message === 'string'
-        ? message
-        : GLOBAL_STRING.WENT_WRONG;
 
   return res.status(status).json({
     success: false,
     data: null,
-    message: safeMessage,
+    message: message,
     ...args,
     severity: SEVERITY.ERROR,
   });

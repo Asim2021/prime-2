@@ -18,7 +18,10 @@ const fileNameFromLocationString = (string) => {
   return _.last(string.split('\\'));
 };
 
-const sanitizeUser = (user, paramsExcludeArray = [ 'password', 'twoFactorSecret' ]) => {
+const sanitizeUser = (
+  user,
+  paramsExcludeArray = ['password', 'password_hash', 'session_token']
+) => {
   if (!_.isObject(user)) {
     throw new Error('Provided user is not an object');
   }
@@ -98,9 +101,9 @@ const getPaginationParams = ({
   limit,
   sortBy,
   order,
-  defaultLimit = 20,
+  defaultLimit = 10,
   maxLimit = 100,
-  defaultSortBy = 'createdAt',
+  defaultSortBy = 'created_at',
   defaultOrder = 'DESC',
 } = {}) => {
   const parsedPage = page ? Math.max(Number(page), 1) : 1;

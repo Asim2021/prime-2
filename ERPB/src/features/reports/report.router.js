@@ -8,8 +8,8 @@ const router = Router();
 
 router.use(verifyAccessToken);
 
-router.get('/dashboard', verifyUserRole('admin', 'pharmacist'), reportController.getDashboardMetrics);
-router.get('/sales', verifyUserRole('admin'), reportController.getSalesReport);
-router.get('/inventory', verifyUserRole('admin', 'pharmacist'), reportController.getInventoryReport);
+router.get('/dashboard', verifyUserRole(['admin', 'pharmacist']), reportController.getDashboardMetrics);
+router.get('/sales', verifyUserRole(['admin']), reportController.getSalesReport);
+router.get('/inventory', verifyUserRole(['admin', 'pharmacist']), reportController.getInventoryReport);
 
 export default router;

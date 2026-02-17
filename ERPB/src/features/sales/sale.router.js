@@ -10,11 +10,11 @@ const router = Router();
 
 router.use(verifyAccessToken);
 
-router.get(ENDPOINT.BASE, verifyUserRole('admin', 'pharmacist', 'cashier'), getSales);
-router.get(ENDPOINT.ID, verifyUserRole('admin', 'pharmacist', 'cashier'), getSaleById);
+router.get(ENDPOINT.BASE, verifyUserRole(['admin', 'pharmacist', 'cashier']), getSales);
+router.get(ENDPOINT.ID, verifyUserRole(['admin', 'pharmacist', 'cashier']), getSaleById);
 router.post(
   ENDPOINT.BASE,
-  verifyUserRole('admin', 'pharmacist', 'cashier'),
+  verifyUserRole(['admin', 'pharmacist', 'cashier']),
   joiValidate(createSaleSchema),
   createSale,
 );

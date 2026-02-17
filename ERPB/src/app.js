@@ -45,11 +45,11 @@ app.use(express.urlencoded({ extended: false, limit: '50mb' }));
 app.use(compression());
 
 // // INITIATING STATIC FILE USAGE
-app.use('/profiles', (req, res, next) => {
-  res.setHeader('Cross-Origin-Resource-Policy', 'same-site');
-  next();
-});
-app.use(express.static(path.join(__dirname, '..', 'public')));
+// app.use('/profiles', (req, res, next) => {
+//   res.setHeader('Cross-Origin-Resource-Policy', 'same-site');
+//   next();
+// });
+// app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // USING ROUTER
 app.use(ENDPOINT.BASE, rootRouter);

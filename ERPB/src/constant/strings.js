@@ -8,21 +8,23 @@ const TOKEN = {
   REFRESH: 'refreshToken',
 };
 
-const ROLES = {
+const ROLE_CODES = {
   SUPER_ADMIN: 'super_admin',
   ADMIN: 'admin',
-  USER: 'user',
-  EMPLOYEE: 'employee',
-  MANAGER: 'manager',
-  ENGINEER: 'engineer',
-  HR: 'hr',
-  ACCOUNTANT: 'accountant',
-  SALES: 'sales'
-}
+  CASHIER: 'cashier',
+  PHARMACIST: 'pharmacist',
+};
+
+const ROLE_NAMES = {
+  SUPER_ADMIN: 'Super Admin',
+  ADMIN: 'Admin',
+  CASHIER: 'Cashier',
+  PHARMACIST: 'Pharmacist',
+};
 
 const GLOBAL_STRING = {
   WENT_WRONG: 'Something went wrong',
-}
+};
 
 const AUTH_STRING = {
   REGISTERED: '  Account registered successfully.',
@@ -43,7 +45,7 @@ const AUTH_STRING = {
   TWO_FA_NOT_ENABLED: '2FA is not enabled',
   TWO_FA_NOT_ENABLED_FOR_USER: '2FA is not enabled for this user',
   TWO_FA_STATUS_FETCHED: '2FA status retrieved',
-  TWO_FA_VERIFIED: '2FA verification successful'
+  TWO_FA_VERIFIED: '2FA verification successful',
 };
 
 const TOKEN_STRING = {
@@ -78,7 +80,7 @@ const USERS_STRING = {
 
 const TABLES = {
   ROLES: 'roles',
-  USERS: 'users'
+  USERS: 'users',
 };
 
 const SESSION_STRING = {
@@ -97,5 +99,6 @@ export {
   TABLES,
   USERS_STRING,
   SESSION_STRING,
-  ROLES
+  ROLE_CODES,
+  ROLE_NAMES,
 };

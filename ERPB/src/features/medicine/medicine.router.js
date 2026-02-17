@@ -13,7 +13,7 @@ router.use(verifyAccessToken);
 
 router.post(
   ENDPOINT.BASE,
-  verifyUserRole('admin', 'pharmacist'),
+  verifyUserRole(['admin', 'pharmacist']),
   joiValidate(createMedicineSchema),
   medicineController.createMedicine,
 );
@@ -22,10 +22,10 @@ router.get(ENDPOINT.ID, medicineController.getMedicineById);
 router.get(ENDPOINT.ID + '/batches', medicineController.getMedicineBatches);
 router.put(
   ENDPOINT.ID,
-  verifyUserRole('admin', 'pharmacist'),
+  verifyUserRole(['admin', 'pharmacist']),
   joiValidate(updateMedicineSchema),
   medicineController.updateMedicine,
 );
-router.delete(ENDPOINT.ID, verifyUserRole('admin'), medicineController.deleteMedicine);
+router.delete(ENDPOINT.ID, verifyUserRole(['admin']), medicineController.deleteMedicine);
 
 export default router;

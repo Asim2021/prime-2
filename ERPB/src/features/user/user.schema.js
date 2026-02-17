@@ -1,4 +1,7 @@
+import { querySchema } from '#common/joiSchema.js';
 import Joi from 'joi';
+
+export const getAllUserSchema = querySchema;
 export const createUserSchema = Joi.object({
     username: Joi.string().trim().min(3).max(100).required(),
     email: Joi.string().email().required(),

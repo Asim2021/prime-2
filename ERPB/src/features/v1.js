@@ -8,8 +8,10 @@ import saleRouter from './sales/sale.router.js';
 import reportRouter from './reports/report.router.js';
 import customerRouter from './customer/customer.router.js';
 import settingsRouter from './shopSettings/shopSettings.router.js';
+import { ENDPOINT } from '#constant/endpoints.js';
+
 const v1Router = Router();
-v1Router.use('/auth', authRouter);
+v1Router.use(ENDPOINT.AUTH.BASE, authRouter);
 v1Router.use('/users', userRouter);
 v1Router.use('/vendors', vendorRouter);
 v1Router.use('/customers', customerRouter);

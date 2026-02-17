@@ -1,29 +1,31 @@
 import Joi from 'joi';
+
 export const loginSchema = Joi.object({
-    username: Joi.string().trim().required().messages({
-        'string.empty': 'Username is required',
-        'any.required': 'Username is required',
-    }),
-    password: Joi.string().required().messages({
-        'string.empty': 'Password is required',
-        'any.required': 'Password is required',
-    }),
+  password: Joi.string().required(),
+  username: Joi.string().required(),
+  remember: Joi.boolean().optional(),
 });
-export const registerSchema = Joi.object({
-    username: Joi.string().trim().min(3).max(100).required().messages({
-        'string.min': 'Username must be at least 3 characters',
-        'string.max': 'Username must not exceed 100 characters',
-        'any.required': 'Username is required',
+
+export const registerUserSchema = Joi.object({
+  username: Joi.string().required(),
+  email: Joi.string().email().required(),
+  password: Joi.string()
+    .min(8)
+    .max(30)
+    .regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/)
+    .required()
+    .messages({
+      'string.min': 'Password must be at least 8 characters long.',
+      'string.max': 'Password must be less than 30 characters long.',
+      'string.pattern.base': 'Password must contain at least one letter and one number.',
+      'any.required': 'Password is required.',
     }),
-    email: Joi.string().email().required().messages({
-        'string.email': 'Please provide a valid email address',
-        'any.required': 'Email is required',
-    }),
-    password: Joi.string().min(6).max(128).required().messages({
-        'string.min': 'Password must be at least 6 characters',
-        'string.max': 'Password must not exceed 128 characters',
-        'any.required': 'Password is required',
-    }),
-    role_id: Joi.string().uuid().optional(),
+  confirmPassword: Joi.string().valid(Joi.ref('password')).required().messages({
+    'any.only': 'Passwords not matched.',
+    'any.required': 'Confirm password is required.',
+  }),
 });
-//# sourceMappingURL=auth.schema.js.map
+
+export const forgetPasswordSchema = Joi.object({
+  email: Joi.string().email().required(),
+});

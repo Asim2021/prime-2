@@ -11,13 +11,13 @@ const joiValidate = (schema, type) => {
         message: "joiValidate require 'type' as param",
       });
     }
-    const { error } = schema.joiValidate(req[type]);
+    const { error } = schema.validate(req[ type ]);
     if (error) {
       const errMessages = error?.details?.map((detail) => detail.message);
       return sendErrorResponse({
         res,
         status: HTTP_STATUS.BAD_REQUEST,
-        message: errMessages.length === 1 ? errMessages[0] : errMessages,
+        message: errMessages.length === 1 ? errMessages[ 0 ] : errMessages,
         args: { type: `Joi ${type} Validation Error` },
       });
     }

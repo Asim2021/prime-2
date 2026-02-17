@@ -5,7 +5,7 @@ const ENDPOINT = {
   AUTH: {
     BASE: '/auth',
     REGISTER: '/register',
-    LOGIN: '/LOGIN',
+    LOGIN: '/login',
     FORGET_PASS: '/forget-password',
     VALIDATE_OTP: '/validate-otp',
     LOGOUT: '/logout',
@@ -16,13 +16,6 @@ const ENDPOINT = {
     BASE: '/users',
     PROFILE: '/profile/:id',
   },
-  ITEMS: '/items',
-  ITEM_FIELDS: '/item-fields',
-  ITEM_GROUPS: '/item-groups',
-  ITEM_MAKE: '/item-make',
-  ITEM_EXCISE: '/item-excise',
-  ITEM_DISCOUNT: '/item-discount',
-  ITEM_STORE_LOCATION: '/item-store',
   SETTINGS: '/settings',
   ROLES: '/roles',
 };

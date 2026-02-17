@@ -1,5 +1,7 @@
-import { AES, enc } from 'crypto-js';
+import CryptoJS from 'crypto-js';
 import lodash from 'lodash';
+
+const { AES, enc } = CryptoJS;
 
 import config from '../lib/config.js';
 
@@ -24,11 +26,11 @@ const encryptObject = ({ payload }) => mapValues(payload, (value) => encrypt(val
 // Decrypt object function
 const decryptObject = ({ payload }) => mapValues(payload, (value) => decrypt(value));
 
-const decryptLoginRequest = (req,_res, next) => {
+const decryptLoginRequest = (req, _res, next) => {
   const newBody = {
-    email : decryptText(req.body.email),
-    password : decryptText(req.body.password),
-    remember : req.body.remember
+    username: decryptText(req.body.username),
+    password: decryptText(req.body.password),
+    remember: req.body.remember
   }
   req.body = newBody;
   next();

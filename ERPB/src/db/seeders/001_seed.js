@@ -15,7 +15,7 @@ const seed = async () => {
 
 		// ── Seed Roles ──
 		const roles = [
-			{ id: randomUUID(), name: 'Administrator', code: 'admin' },
+			{ id: randomUUID(), name: 'Admin', code: 'admin' },
 			{ id: randomUUID(), name: 'Pharmacist', code: 'pharmacist' },
 			{ id: randomUUID(), name: 'Cashier', code: 'cashier' },
 		];
