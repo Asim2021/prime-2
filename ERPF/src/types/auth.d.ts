@@ -1,9 +1,10 @@
-interface LoginData {
-  email: string;
+interface LoginDataI {
+  email?: string;
+  username: string;
   password: string;
   remember: boolean;
 }
 
-interface ForgetPassword {
-  otp : string;
+interface ForgetPasswordI {
+  otp: string;
 }

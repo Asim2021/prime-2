@@ -12,11 +12,11 @@ export const fetchUserById = async (id: string): Promise<UserI> => {
 
 export const fetchAllUser = async (
   params: QueryParamsI,
-): Promise<PaginationResponse<UserI[]>> => {
+): Promise<PaginationResponseI<UserI[]>> => {
   const url = `${ENDPOINT.USERS.BASE}` + paramsToQueryString(params);
   const res: AxiosResponse = await erpApi.get(url);
   const users = res?.data;
-  return users as PaginationResponse<UserI[]>;
+  return users as PaginationResponseI<UserI[]>;
 };
 
 export const addUser = async (values: Partial<UserI>): Promise<UserI> => {
@@ -49,7 +49,7 @@ export const deleteUser = async (id: string) => {
 
 export const bulkCreateUsers = async (
   users: any[],
-): Promise<ErpResponse<UserI[]>> => {
+): Promise<ErpResponseI<UserI[]>> => {
   const url = `${ENDPOINT.USERS.BASE}/bulk-create`;
   const res: AxiosResponse = await erpApi.post(url, users);
   return res?.data;

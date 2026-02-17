@@ -28,7 +28,7 @@ export const list = async (req, res) => {
       search,
       active,
     });
-    console.log('🚀 ~ list ~ users:', rows);
+
     sendSuccessResponse({
       res,
       status: HTTP_STATUS.OK,

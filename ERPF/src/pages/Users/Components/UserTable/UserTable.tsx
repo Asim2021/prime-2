@@ -21,12 +21,11 @@ import { QUERY_KEY } from "@constants/queryKeys";
 import { fetchAllUser } from "@services/userService";
 
 const UserTable = ({
-  userEditHandler,
   searchUser,
 }: UserTableI) => {
   const [sorting, setSorting] = useState<SortingState>([]);
 
-  const { columns } = useUserColumn(userEditHandler);
+  const { columns } = useUserColumn();
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 50,
@@ -76,10 +75,6 @@ const UserTable = ({
 
   const sortableHeader = [
     USER_COLUMNS.USERNAME,
-    USER_COLUMNS.PHONE,
-    USER_COLUMNS.COUNTRY,
-    USER_COLUMNS.ACTIVE,
-    USER_COLUMNS.DOB,
   ];
 
   return (
@@ -108,6 +103,5 @@ const UserTable = ({
 export default UserTable;
 
 interface UserTableI {
-  userEditHandler: (action: string, payload: UserI) => void;
   searchUser: string;
 }

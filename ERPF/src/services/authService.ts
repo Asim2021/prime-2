@@ -5,16 +5,16 @@ import erpApi from "@lib/axiosInstance";
 import { MutationFunction } from "@tanstack/react-query";
 
 export const loginUser = async (
-  values: LoginData,
-): Promise<ErpResponse<UserData>> => {
-  const res: ErpResponse<UserData> = await erpApi.post(
+  values: LoginDataI,
+): Promise<ErpResponseI<UserDataI>> => {
+  const res: ErpResponseI<UserDataI> = await erpApi.post(
     `${ENDPOINT.AUTH.LOGIN}`,
     values,
   );
   return res;
 };
 
-export const logoutUser = async (): Promise<ErpResponse<null>> => {
+export const logoutUser = async (): Promise<ErpResponseI<null>> => {
   const res: AxiosResponse = await erpApi.get(`${ENDPOINT.AUTH.LOGOUT}`);
   return res.data;
 };
@@ -40,9 +40,9 @@ export const sendForgetPasswordEmail: MutationFunction<
 };
 
 export const verifyOTP: MutationFunction<
-  UserData,
+  UserDataI,
   { otp: string; email: string }
-> = async (values: { otp: string; email: string }): Promise<UserData> => {
+> = async (values: { otp: string; email: string }): Promise<UserDataI> => {
   const res = await erpApi.post(`${ENDPOINT.AUTH.VALIDATE_OTP}`, values);
   const user = res?.data.user as UserI;
   const accessToken = res?.data.accessToken as string;
@@ -77,7 +77,7 @@ export const verify2FALogin = async (
   userId: string,
   token: string,
   remember: boolean,
-): Promise<ErpResponse<UserData>> => {
+): Promise<ErpResponseI<UserDataI>> => {
   const res: AxiosResponse = await erpApi.post(
     `${ENDPOINT.TWO_FACTOR.VERIFY}`,
     { userId, token, remember },

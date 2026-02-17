@@ -20,8 +20,8 @@ import { isRequired } from "@utils/validators";
 import { AxiosError } from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 
-const ForgetPassword = () => {
-  const form = useForm<ForgetPassword>({
+const ForgetPasswordI = () => {
+  const form = useForm<ForgetPasswordI>({
     initialValues: {
       otp: "",
     },
@@ -35,12 +35,12 @@ const ForgetPassword = () => {
   const userEmail = location.state?.email;
 
   const useVerifyOTP = useMutation<
-    UserData,
+    UserDataI,
     AxiosError,
     { otp: string; email: string }
   >({
     mutationFn: (values: { otp: string; email: string }) => verifyOTP(values),
-    onSuccess: ({ user, accessToken }: UserData) => {
+    onSuccess: ({ user, accessToken }: UserDataI) => {
       setAuth(accessToken);
       navigate("/");
       successNotification(`Welcome ${user.username}!`);
@@ -139,4 +139,4 @@ const ForgetPassword = () => {
     </Container>
   );
 };
-export default ForgetPassword;
+export default ForgetPasswordI;

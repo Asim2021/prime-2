@@ -1,10 +1,21 @@
-import { Anchor, Button, Checkbox, Container, Group, Paper, PasswordInput, Text, TextInput, Title } from '@mantine/core'
-import { UseFormReturnType } from '@mantine/form'
-import { MdAlternateEmail, MdLock } from 'react-icons/md'
+import {
+  Anchor,
+  Button,
+  Checkbox,
+  Container,
+  Group,
+  Paper,
+  PasswordInput,
+  Text,
+  TextInput,
+  Title,
+} from "@mantine/core";
+import { UseFormReturnType } from "@mantine/form";
+import { MdAlternateEmail, MdLock } from "react-icons/md";
 
 interface LoginFormProps {
-  submitHandler: (values: LoginData) => Promise<void>;
-  form: UseFormReturnType<LoginData>;
+  submitHandler: (values: LoginDataI) => Promise<void>;
+  form: UseFormReturnType<LoginDataI>;
   loading?: boolean;
   onForget?: () => void;
 }
@@ -28,13 +39,13 @@ const LoginForm = ({
             (errors) => {
               const firstErrorPath = Object.keys(errors)[0];
               form.getInputNode(firstErrorPath)?.focus();
-            }
+            },
           )}
         >
           <TextInput
-            label="Email"
+            label="Email/Username"
             placeholder="...@gmail.com"
-            {...form.getInputProps("email")}
+            {...form.getInputProps("username")}
             withAsterisk
             title="Please Fill out this field"
             leftSection={

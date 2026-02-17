@@ -38,7 +38,7 @@ const UserSection = ({ collapseSidebar }: { collapseSidebar: boolean }) => {
 
   useEffect(() => {
     if (currentUser.data) {
-      if (currentUser.data.active) {
+      if (currentUser.data.is_active) {
         setUser(currentUser.data);
       } else {
         logoutHandler();
@@ -103,7 +103,7 @@ const UserSection = ({ collapseSidebar }: { collapseSidebar: boolean }) => {
             mah={40}
           >
             <Avatar
-              src={user?.profile}
+              src={null}
               alt={"Profile Icon"}
               radius={40}
               size={40}

@@ -233,7 +233,7 @@ const {
 	search: debouncedSearch,
 });
 
-const useDeleteItemStore = useMutation<ErpResponse<null>, AxiosError, string>({
+const useDeleteItemStore = useMutation<ErpResponseI<null>, AxiosError, string>({
 	mutationFn: (id) => deleteItemStore(id),
 	onSuccess: (res) => {
 		queryClient.invalidateQueries({
@@ -255,15 +255,15 @@ import { ENDPOINT } from '@constants/endpoints';
 import erpApi from '@lib/axiosInstance';
 import { paramsToQueryString } from '@utils/helpers';
 
-export const fetchAllItemStore = async (params: QueryParamsI): Promise<PaginationResponse<ItemStoreI[]>> => {
+export const fetchAllItemStore = async (params: QueryParamsI): Promise<PaginationResponseI<ItemStoreI[]>> => {
 	const url = `${ENDPOINT.ITEM_STORE}` + paramsToQueryString(params);
 	const res: AxiosResponse = await erpApi.get(url);
-	return res?.data as PaginationResponse<ItemStoreI[]>;
+	return res?.data as PaginationResponseI<ItemStoreI[]>;
 };
 
-export const deleteItemStore = async (id: string): Promise<ErpResponse<null>> => {
+export const deleteItemStore = async (id: string): Promise<ErpResponseI<null>> => {
 	const url = `${ENDPOINT.ITEM_STORE}/${id}`;
-	const res: ErpResponse<null> = await erpApi.delete(url);
+	const res: ErpResponseI<null> = await erpApi.delete(url);
 	return res;
 };
 ```
@@ -274,8 +274,8 @@ import { AxiosError } from 'axios';
 
 type UseGenericQueryProps<Args, Data> = QueryParamsI & {
 	queryKey: QueryKey;
-	queryFn: (args: Args) => Promise<PaginationResponse<Data>>;
-	select?: (data: PaginationResponse<Data>) => any;
+	queryFn: (args: Args) => Promise<PaginationResponseI<Data>>;
+	select?: (data: PaginationResponseI<Data>) => any;
 	enabled?: boolean;
 	gcTime?: number | undefined;
 };
@@ -283,7 +283,7 @@ type UseGenericQueryProps<Args, Data> = QueryParamsI & {
 export const usePaginationDataFetch = <
 	Args extends QueryParamsI,
 	Data = unknown,
-	TransformedData = PaginationResponse<Data>,
+	TransformedData = PaginationResponseI<Data>,
 >({
 	queryKey,
 	queryFn,
@@ -296,9 +296,9 @@ export const usePaginationDataFetch = <
 	order,
 	filter,
 }: UseGenericQueryProps<Args, Data> & {
-	select?: (data: PaginationResponse<Data>) => TransformedData;
+	select?: (data: PaginationResponseI<Data>) => TransformedData;
 }) => {
-	return useQuery<PaginationResponse<Data>, AxiosError, TransformedData>({
+	return useQuery<PaginationResponseI<Data>, AxiosError, TransformedData>({
 		queryKey: [...queryKey, search, limit, page, sortBy, order, ...Object.values(filter || {})],
 		queryFn: () =>
 			queryFn({
@@ -341,11 +341,11 @@ export const fetchUserById = async (id: QueryParamsI): Promise<UserI> => {
 	return user as UserI;
 };
 
-export const fetchAllUser = async (params: QueryParamsI): Promise<PaginationResponse<UserI[]>> => {
+export const fetchAllUser = async (params: QueryParamsI): Promise<PaginationResponseI<UserI[]>> => {
 	const url = `${ENDPOINT.USERS.BASE}` + paramsToQueryString(params);
 	const res: AxiosResponse = await erpApi.get(url);
 	const users = res?.data;
-	return users as PaginationResponse<UserI[]>;
+	return users as PaginationResponseI<UserI[]>;
 };
 // ... other methods
 ```

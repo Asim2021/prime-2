@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { INITIAL_USER } from "./constant";
 import { devtools } from "zustand/middleware";
+import { capitalize } from "lodash-es";
 
 interface UserStore {
   user: UserI;
@@ -27,7 +28,7 @@ const useUserStore = create<UserStore>()(
     setUser: (user) => {
       set((state) => ({
         ...state,
-        avatarName : getAvatarName(user?.username),
+        avatarName: getAvatarName(capitalize(user?.username)),
         user,
         isAnonymous: false,
       }));

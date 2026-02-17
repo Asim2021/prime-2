@@ -1,11 +1,11 @@
-interface ErpResponse<T> {
+interface ErpResponseI<T> {
   data: T | null;
   success: boolean;
   message: string;
   severity: string;
 }
 
-interface PaginationResponse<T> {
+interface PaginationResponseI<T> {
   data: T | [];
   totalCount: number;
   currentPage: number;

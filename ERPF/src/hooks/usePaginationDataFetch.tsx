@@ -5,17 +5,17 @@ type UseGenericQueryProps<Args, Data> = QueryParamsI & {
   queryKey: QueryKey;
   queryFn: (
     args: Args,
-  ) => Promise<PaginationResponse<Data>>;
-  select?: (data: PaginationResponse<Data>) => any;
+  ) => Promise<PaginationResponseI<Data>>;
+  select?: (data: PaginationResponseI<Data>) => any;
   enabled?: boolean;
   gcTime?: number | undefined;
-  placeholderData?: PaginationResponse<Data>;
+  placeholderData?: PaginationResponseI<Data>;
 };
 
 export const usePaginationDataFetch = <
   Args extends QueryParamsI,
   Data = unknown,
-  TransformedData = PaginationResponse<Data>,
+  TransformedData = PaginationResponseI<Data>,
 >({
   queryKey,
   queryFn,
@@ -30,11 +30,11 @@ export const usePaginationDataFetch = <
   placeholderData,
 }: UseGenericQueryProps<Args, Data> & {
   select?: (
-    data: PaginationResponse<Data>,
+    data: PaginationResponseI<Data>,
   ) => TransformedData;
 }) => {
   return useQuery<
-    PaginationResponse<Data>,
+    PaginationResponseI<Data>,
     AxiosError,
     TransformedData
   >({

@@ -1,75 +1,46 @@
+import { useEffect } from "react";
 import useAuthStore from "@stores/authStore";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useForm } from "@mantine/form";
 import { useNavigate } from "react-router-dom";
-import { QUERY_KEY } from "@constants/queryKeys";
 import {
   apiErrNotification,
   successNotification,
 } from "@utils/sendNotification";
-import {
-  loginUser,
-  sendForgetPasswordEmail,
-  verify2FALogin,
-} from "@services/authService";
+import { loginUser, sendForgetPasswordEmail } from "@services/authService";
 import { AxiosError } from "axios";
-import { isRequired, validateEmail } from "@utils/validators";
+import { isRequired } from "@utils/validators";
 
 import LoginForm from "./Forms/LoginForm";
-import { useEffect, useState } from "react";
 import { encrypt } from "@utils/cryptoFunction";
+import { ENDPOINT } from "@constants/endpoints";
 
 const Login = () => {
   const { setAuth, clearAuth } = useAuthStore();
-  const [show2FA, setShow2FA] = useState(false);
-  const [tempUserId, setTempUserId] = useState<string | null>(null);
-  const queryClient = useQueryClient();
 
   const form = useForm({
     initialValues: {
-      email: "",
+      username: "",
       password: "",
       remember: false,
     },
     validate: {
-      email: validateEmail,
+      username: (value) => isRequired(value),
       password: (value) => isRequired(value),
     },
   });
   const navigate = useNavigate();
 
-  const useLogin = useMutation<ErpResponse<UserData>, AxiosError, LoginData>({
-    mutationFn: (values: LoginData) =>
+  const useLogin = useMutation<ErpResponseI<UserDataI>, AxiosError, LoginDataI>({
+    mutationFn: (values: LoginDataI) =>
       loginUser({
-        email: encrypt(values.email),
-        password: encrypt(values.password),
+        username: encrypt(values.username.trim()),
+        password: encrypt(values.password.trim()),
         remember: values.remember,
       }),
     onSuccess: (res) => {
-      // Check if 2FA is required
-      if (res?.data?.require2FA) {
-        setTempUserId(res?.data?.userId || null);
-        setShow2FA(true);
-        successNotification("Please verify your identity");
-        return;
-      }
-
       setAuth(res?.data?.accessToken);
       navigate("/");
-    },
-    onError: (err) => {
-      apiErrNotification(err);
-    },
-  });
-
-  const useVerify2FA = useMutation<ErpResponse<UserData>, AxiosError, string>({
-    mutationFn: (token: string) =>
-      verify2FALogin(tempUserId!, token, form.values.remember),
-    onSuccess: (res) => {
-      setAuth(res?.data?.accessToken);
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.GET_ACCESS_TOKEN] });
-      navigate("/");
-      setShow2FA(false);
     },
     onError: (err) => {
       apiErrNotification(err);
@@ -77,9 +48,11 @@ const Login = () => {
   });
 
   const useResetPassword = useMutation<null, AxiosError, { email: string }>({
-    mutationFn: (values: { email: string }) => sendForgetPasswordEmail(values),
+    mutationFn: sendForgetPasswordEmail,
     onSuccess: () => {
-      navigate("/forgetpassword", { state: { email: form.values.email } });
+      navigate(ENDPOINT.AUTH.FORGET_PASSWORD, {
+        state: { email: form.values.username },
+      });
       successNotification(`OTP has been sent to your Email`);
     },
     onError: (err) => {
@@ -87,14 +60,14 @@ const Login = () => {
     },
   });
 
-  const submitHandler = async (values: LoginData) => {
+  const submitHandler = async (values: LoginDataI) => {
     useLogin.mutate(values);
   };
 
   const onForgetHandler = () => {
-    if (form.values.email) {
+    if (form.values.username) {
       if (!form.validateField("email").hasError) {
-        useResetPassword.mutate({ email: form.values.email });
+        useResetPassword.mutate({ email: form.values.username });
       } else {
         form.getInputNode("email")?.focus();
         form.validateField("email");
@@ -110,14 +83,12 @@ const Login = () => {
   }, [clearAuth]);
 
   return (
-    <>
-      <LoginForm
-        submitHandler={submitHandler}
-        loading={useLogin.isPending && !useLogin.isError}
-        form={form}
-        onForget={onForgetHandler}
-      />
-    </>
+    <LoginForm
+      submitHandler={submitHandler}
+      loading={useLogin.isPending && !useLogin.isError}
+      form={form}
+      onForget={onForgetHandler}
+    />
   );
 };
 
