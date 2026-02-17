@@ -25,7 +25,9 @@ export const ENDPOINT = {
     REVOKE_ALL: "/sessions/revoke-all",
   },
   BASE: "/",
-  ITEMS: "/items",
+  ITEMS: "/medicines",
+  // BATCHES: "/batches", // Not implemented on backend yet
+  // BATCHES: "/batches",
   ITEM_FIELDS: "/item-fields",
   ITEM_GROUPS: "/item-groups",
   ITEM_OTHERS: "/item-others",
@@ -50,6 +52,7 @@ export const ENDPOINT = {
   SALES_RETURNS: "/sales/returns",
   SETTINGS: "/settings",
   ROLES: "/roles",
+  SHOP: "/shop-settings",
   AUDIT_LOGS: "/audit-logs",
   FINANCE: {
     TRIAL_BALANCE: "/finance/reports/trial-balance",

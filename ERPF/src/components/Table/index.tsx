@@ -13,7 +13,7 @@ import {
 } from "@dnd-kit/core";
 import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { ScrollArea } from "@mantine/core";
-import NoDataFound from "@pages/Common/NoDataFound";
+import NoDataFound from "@components/NoDataFound";
 import { CustomTableOptions, MainTableI } from "@src/types/table";
 import {
   ColumnOrderState,
@@ -63,13 +63,13 @@ const MainTable = <TData extends object>({
     const sortingKey = `${tableId}-${LOCAL_STORAGE_KEYS.COLUMN_SORTING}`;
 
     const currentVisibility = JSON.parse(
-      localStorage.getItem(visibilityKey) || "null"
+      localStorage.getItem(visibilityKey) || "null",
     ) as VisibilityState;
     const currentPinning = JSON.parse(
-      localStorage.getItem(pinningKey) || "null"
+      localStorage.getItem(pinningKey) || "null",
     ) as VisibilityState;
     const currentSorting = JSON.parse(
-      localStorage.getItem(sortingKey) || "null"
+      localStorage.getItem(sortingKey) || "null",
     ) as SortingState;
 
     // Handle column visibility persistence
@@ -126,7 +126,7 @@ const MainTable = <TData extends object>({
     useSensor(TouchSensor, {}),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   if (!columnOrder) {

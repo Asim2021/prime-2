@@ -21,7 +21,7 @@
 - **State Management**:
     - Server state: TanStack Query v5 (`@tanstack/react-query@5.83.0`)
     - Client state: Zustand (`zustand@5.0.6`)
-- **UI Library**: Mantine v8 (`@mantine/core@8.2.1`, `@mantine/hooks`, `@mantine/form`, etc.)
+- **UI Library**: Mantine v8 (`@mantine/core@8.2.1`, `@mantine/hooks`, `@mantine/form`,`@mantine/dates`,`@mantine/notifications`, `@mantine/modals` etc.)
 - **UI Charts**: @mantine/charts and recharts
 - **Tables**: TanStack Table v8 (`@tanstack/react-table@8.21.3`)
 - **Forms**: Mantine Form + react-imask (`react-imask@7.6.1`)

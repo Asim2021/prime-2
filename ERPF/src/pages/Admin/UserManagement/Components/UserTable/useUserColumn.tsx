@@ -3,7 +3,6 @@ import { ColumnDef } from "@tanstack/react-table";
 import { useMemo } from "react";
 import { FaTrash } from "react-icons/fa6";
 import { MdModeEdit } from "react-icons/md";
-import { USER_COLUMNS } from "@pages/Users/constant";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { deleteUser } from "@services/userService";
@@ -14,9 +13,9 @@ import {
 import { modals } from "@mantine/modals";
 import { QUERY_KEY } from "@constants/queryKeys";
 import { capitalize } from "lodash-es";
+import { USER_COLUMNS } from "../../constant";
 
-const useUserColumn = (
-) => {
+const useUserColumn = () => {
   const queryClient = useQueryClient();
 
   const useDeleteUser = useMutation<string, AxiosError, string>({
@@ -63,8 +62,7 @@ const useUserColumn = (
         header: "Name",
         minSize: 250,
         cell: (props) => {
-          const {  username, email } =
-            props.row.original;
+          const { username, email } = props.row.original;
 
           return (
             <div className="min-w-max flex gap-2 items-center">

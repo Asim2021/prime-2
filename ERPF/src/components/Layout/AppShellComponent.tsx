@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 import { AppShell, rem, useMantineTheme } from "@mantine/core";
 import { useViewportSize } from "@mantine/hooks";
 
-import { Sidebar } from "../../components/Sidebar";
+import { Sidebar } from "@components/Sidebar";
 import { ModalsProvider } from "@mantine/modals";
 import { useEffect, useState } from "react";
 // import { useState } from "react";

@@ -8,7 +8,7 @@ import {
   Text,
   TextInput,
 } from "@mantine/core";
-import NoDataFound from "@pages/Common/NoDataFound";
+import NoDataFound from "@components/NoDataFound";
 import clsx from "clsx";
 import { FiSearch } from "react-icons/fi";
 import { MdClose, MdModeEdit } from "react-icons/md";

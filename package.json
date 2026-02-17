@@ -1,0 +1,19 @@
+{
+	"name": "pims-base",
+	"version": "1.0.0",
+	"description": "Pharmaceutical Inventory Management System",
+	"workspaces": [
+		"erpb",
+		"erpf"
+	],
+	"scripts": {
+		"install-all": "npm install",
+		"dev": "concurrently -n \"BACKEND,FRONTEND\" -c \"blue,magenta\" \"npm run dev -w erpb\" \"npm run dev -w erpf\"",
+		"dev:server": "npm run dev -w erpb",
+		"dev:client": "npm run dev -w erpf"
+	},
+	"devDependencies": {
+		"concurrently": "^9.1.2"
+	},
+	"author": "Asim Shah"
+}

@@ -1,7 +1,6 @@
 import MainTable from "@components/Table";
 import { useMemo, useState } from "react";
 import { useDebouncedValue } from "@mantine/hooks";
-import { USER_COLUMNS } from "@pages/Users/constant";
 import {
   ColumnOrderState,
   getCoreRowModel,
@@ -19,10 +18,9 @@ import { INITIAL_ALL_TABLE_PINNING } from "@constants/items";
 import { usePaginationDataFetch } from "@hooks/usePaginationDataFetch";
 import { QUERY_KEY } from "@constants/queryKeys";
 import { fetchAllUser } from "@services/userService";
+import { USER_COLUMNS } from "../../constant";
 
-const UserTable = ({
-  searchUser,
-}: UserTableI) => {
+const UserTable = ({ searchUser }: UserTableI) => {
   const [sorting, setSorting] = useState<SortingState>([]);
 
   const { columns } = useUserColumn();
@@ -50,7 +48,10 @@ const UserTable = ({
     limit: pagination.pageSize,
   });
 
-  const usersData = useMemo<UserI[]>(() => (users?.data as UserI[]) || [], [users]);
+  const usersData = useMemo<UserI[]>(
+    () => (users?.data as UserI[]) || [],
+    [users],
+  );
 
   const table = useReactTable<UserI>({
     tableId: TABLES.USERS,
@@ -73,9 +74,7 @@ const UserTable = ({
     manualPagination: true, // use this instead of onPaginationChange
   } as CustomTableOptions<UserI>);
 
-  const sortableHeader = [
-    USER_COLUMNS.USERNAME,
-  ];
+  const sortableHeader = [USER_COLUMNS.USERNAME];
 
   return (
     <MainTable
