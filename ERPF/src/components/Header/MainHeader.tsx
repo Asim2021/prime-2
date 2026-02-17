@@ -2,7 +2,7 @@ import React, { Dispatch, SetStateAction } from "react";
 import { TextInput, TitleOrder } from "@mantine/core";
 import { FiSearch } from "react-icons/fi";
 import { MdClose } from "react-icons/md";
-import Header from './HeaderTemplate'
+import Header from "./HeaderTemplate";
 
 const MainHeader = ({
   setSearch = () => null,

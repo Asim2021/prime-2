@@ -4,7 +4,6 @@ import {
   Stack,
   Select,
   NumberInput,
-  TextInput,
   Button,
   Group,
   Text,
@@ -38,16 +37,16 @@ const StockAdjustmentModal = ({ opened, close }: StockAdjustmentModalProps) => {
     initialValues: {
       medicine_id: "",
       batch_id: "",
-      quantity_adjustment: 0,
-      reason: "",
-      notes: "",
+      quantity_change: 0,
+      reason: "manual_correction",
+      note: "",
     },
     validate: {
       medicine_id: (value) => (value ? null : "Select a medicine"),
       batch_id: (value) => (value ? null : "Select a batch"),
-      quantity_adjustment: (value) =>
+      quantity_change: (value) =>
         value === 0 ? "Adjustment cannot be 0" : null,
-      reason: (value) => (value.length < 3 ? "Reason is required" : null),
+      reason: (value) => (value ? null : "Reason is required"),
     },
   });
 
@@ -89,7 +88,7 @@ const StockAdjustmentModal = ({ opened, close }: StockAdjustmentModalProps) => {
     } else {
       setBatches([]);
     }
-  }, [form.values.medicine_id, medicines]);
+  }, [form.values.medicine_id]);
 
   // Update Selected Batch Info
   useEffect(() => {
@@ -122,8 +121,8 @@ const StockAdjustmentModal = ({ opened, close }: StockAdjustmentModalProps) => {
     },
   });
 
-  const handleSubmit = (values: typeof form.values) => {
-    mutation.mutate(values);
+  const handleSubmit = (values: any) => {
+    mutation.mutate(values as Partial<StockAdjustmentI>);
   };
 
   return (
@@ -175,7 +174,7 @@ const StockAdjustmentModal = ({ opened, close }: StockAdjustmentModalProps) => {
                 New stock will be:{" "}
                 <b>
                   {Number(selectedBatch.current_stock) +
-                    Number(form.values.quantity_adjustment)}
+                    Number(form.values.quantity_change)}
                 </b>
               </Text>
             </Alert>
@@ -185,19 +184,27 @@ const StockAdjustmentModal = ({ opened, close }: StockAdjustmentModalProps) => {
             label="Quantity Adjustment"
             description="Use negative values to remove stock (e.g., -5 for breakage). Positive to add (e.g., returned found stock)."
             placeholder="0"
-            {...form.getInputProps("quantity_adjustment")}
+            {...form.getInputProps("quantity_change")}
           />
 
-          <TextInput
+          <Select
             label="Reason"
-            placeholder="e.g., Breakage, Theft, Data Entry Error"
+            placeholder="Select reason"
+            data={[
+              { value: "damage", label: "Damage" },
+              { value: "expired", label: "Expired" },
+              { value: "theft", label: "Theft" },
+              { value: "manual_correction", label: "Manual Correction" },
+              { value: "other", label: "Other" },
+            ]}
+            required
             {...form.getInputProps("reason")}
           />
 
           <Textarea
             label="Notes"
             placeholder="Additional details..."
-            {...form.getInputProps("notes")}
+            {...form.getInputProps("note")}
           />
 
           <Group justify="flex-end" mt="md">

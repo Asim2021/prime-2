@@ -96,7 +96,11 @@ const POSCart = ({ onCheckout }: { onCheckout: () => void }) => {
         </ScrollArea>
       </Card>
 
-      <Card withBorder radius="md" bg="gray.0">
+      <Card
+        withBorder
+        radius="md"
+        bg="light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6))"
+      >
         <Stack gap="xs">
           <Group justify="space-between">
             <Text size="sm">Subtotal</Text>
@@ -109,7 +113,9 @@ const POSCart = ({ onCheckout }: { onCheckout: () => void }) => {
           <Group
             justify="space-between"
             pt="sm"
-            style={{ borderTop: "1px dashed #ccc" }}
+            style={{
+              borderTop: "1px dashed var(--mantine-color-default-border)",
+            }}
           >
             <Title order={3}>Total</Title>
             <Title order={3} c="blue">

@@ -11,20 +11,20 @@ const router = Router();
 // All user routes require authentication
 router.use(verifyAccessToken);
 
-router.get(ENDPOINT.BASE, verifyUserRole(['admin']), joiValidate(getAllUserSchema, JOI_TYPES.QUERY), list);
-router.get(ENDPOINT.ID, joiValidate(userIdParamSchema, 'params'), getById);
-router.post(ENDPOINT.BASE, verifyUserRole(['admin']), joiValidate(createUserSchema), create);
+router.get(ENDPOINT.BASE, verifyUserRole([ 'admin' ]), joiValidate(getAllUserSchema, JOI_TYPES.QUERY), list);
+router.get(ENDPOINT.ID, joiValidate(userIdParamSchema, JOI_TYPES.PARAMS), getById);
+router.post(ENDPOINT.BASE, verifyUserRole([ 'admin' ]), joiValidate(createUserSchema, JOI_TYPES.BODY), create);
 router.patch(
   ENDPOINT.ID,
-  verifyUserRole(['admin']),
-  joiValidate(userIdParamSchema, 'params'),
-  joiValidate(updateUserSchema),
+  verifyUserRole([ 'admin' ]),
+  joiValidate(userIdParamSchema, JOI_TYPES.PARAMS),
+  joiValidate(updateUserSchema, JOI_TYPES.BODY),
   update,
 );
 router.delete(
   ENDPOINT.ID,
-  verifyUserRole(['admin']),
-  joiValidate(userIdParamSchema, 'params'),
+  verifyUserRole([ 'admin' ]),
+  joiValidate(userIdParamSchema, JOI_TYPES.PARAMS),
   deactivate,
 );
 

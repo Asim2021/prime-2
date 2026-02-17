@@ -26,7 +26,6 @@ const MedicineModal = () => {
       generic_name: "",
       manufacturer: "",
       composition: "",
-      unit_type: "Strip",
       gst_percent: 12,
       hsn_code: "",
       schedule_type: "H",
@@ -149,14 +148,6 @@ const MedicineModal = () => {
           </Grid.Col>
 
           <Grid.Col span={6}>
-            <Select
-              label="Unit Type"
-              data={["Strip", "Bottle", "Tube", "Box", "Vial", "Ampoule"]}
-              {...form.getInputProps("unit_type")}
-            />
-          </Grid.Col>
-
-          <Grid.Col span={6}>
             <NumberInput
               label="GST Percent (%)"
               placeholder="12"
@@ -171,6 +162,13 @@ const MedicineModal = () => {
               label="Reorder Level"
               min={0}
               {...form.getInputProps("reorder_level")}
+            />
+          </Grid.Col>
+          <Grid.Col span={6}>
+            <TextInput
+              label="Barcode"
+              placeholder="Scan or enter barcode"
+              {...form.getInputProps("barcode")}
             />
           </Grid.Col>
         </Grid>

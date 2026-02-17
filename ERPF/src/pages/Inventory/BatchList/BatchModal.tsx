@@ -6,52 +6,37 @@ import {
   Button,
   Group,
   Grid,
-  Select,
+  Switch,
+  Stack,
+  Text,
 } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { notifications } from "@mantine/notifications";
 import { useBatchStore } from "./useBatchColumns";
-import {
-  addBatch,
-  editBatch,
-  fetchAllMedicines,
-} from "@services/inventoryService";
+import { editBatch } from "@services/inventoryService";
 
 const BatchModal = () => {
   const { modalAction, setModalAction, detail, setDetail } = useBatchStore();
   const queryClient = useQueryClient();
 
-  // Fetch medicines for selection. We might need a search API if list is huge, but for now fetch all (paginated? default 100?)
-  // fetchAllMedicines requires params. I'll pass limit: 1000 for now or implement search in Select.
-  // For simplicity, I'll fetch first 100.
-  const { data: medicinesData } = useQuery({
-    queryKey: ["medicines-select"],
-    queryFn: () => fetchAllMedicines({ page: 1, limit: 100 }),
-  });
-
-  const medicineOptions =
-    medicinesData?.data?.map((m) => ({
-      value: m.id,
-      label: `${m.brand_name} (${m.generic_name})`,
-    })) || [];
-
-  const form = useForm<Partial<BatchI>>({
+  const form = useForm({
     initialValues: {
-      item_id: "",
-      batch_number: "",
-      expiry_date: "",
-      purchase_price: 0,
-      sale_price: 0,
+      medicine_id: "",
+      batch_no: "",
+      mfg_date: new Date(),
+      exp_date: new Date(),
+      purchase_rate: 0,
       mrp: 0,
-      current_stock: 0,
+      quantity_available: 0,
+      rack_location: "UNASSIGNED",
+      is_active: true,
+      vendor_id: "",
     },
     validate: {
-      item_id: (value) => (value ? null : "Medicine is required"),
-      batch_number: (value) => (value ? null : "Batch Number is required"),
-      expiry_date: (value) => (value ? null : "Expiry Date is required"),
       mrp: (value) => ((value || 0) > 0 ? null : "MRP must be positive"),
+      rack_location: (value) => (value ? null : "Rack location is required"),
     },
   });
 
@@ -59,9 +44,8 @@ const BatchModal = () => {
     if (modalAction === "EDIT" && detail) {
       form.setValues({
         ...detail,
-        expiry_date: detail.expiry_date
-          ? new Date(detail.expiry_date)
-          : undefined,
+        mfg_date: detail.mfg_date ? new Date(detail.mfg_date) : new Date(),
+        exp_date: detail.exp_date ? new Date(detail.exp_date) : new Date(),
       } as any);
     } else {
       form.reset();
@@ -69,22 +53,24 @@ const BatchModal = () => {
   }, [modalAction, detail]);
 
   const mutation = useMutation({
-    mutationFn: (values: Partial<BatchI>) => {
-      const payload = {
-        ...values,
-        expiry_date: values.expiry_date
-          ? new Date(values.expiry_date).toISOString()
-          : undefined,
-      };
+    mutationFn: (values: any) => {
       if (modalAction === "EDIT" && detail) {
+        // Only allow updating editable fields
+        const payload = {
+          mrp: values.mrp,
+          rack_location: values.rack_location,
+          is_active: values.is_active,
+        };
         return editBatch(detail.id, payload);
       }
-      return addBatch(payload);
+      throw new Error(
+        "Add batch not supported via this modal. Use Purchase Entry.",
+      );
     },
     onSuccess: () => {
       notifications.show({
         title: "Success",
-        message: `Batch ${modalAction === "EDIT" ? "updated" : "added"} successfully`,
+        message: "Batch updated successfully",
         color: "green",
       });
       queryClient.invalidateQueries({ queryKey: ["batches"] });
@@ -93,7 +79,8 @@ const BatchModal = () => {
     onError: (error: any) => {
       notifications.show({
         title: "Error",
-        message: error?.response?.data?.message || "Operation failed",
+        message:
+          error?.response?.data?.message || error.message || "Operation failed",
         color: "red",
       });
     },
@@ -105,7 +92,7 @@ const BatchModal = () => {
     form.reset();
   };
 
-  const handleSubmit = (values: Partial<BatchI>) => {
+  const handleSubmit = (values: any) => {
     mutation.mutate(values);
   };
 
@@ -113,77 +100,112 @@ const BatchModal = () => {
     <Modal
       opened={!!modalAction}
       onClose={handleClose}
-      title={`${modalAction === "EDIT" ? "Edit" : "Add"} Batch`}
+      title="Edit Batch Details"
       size="lg"
     >
       <form onSubmit={form.onSubmit(handleSubmit)}>
-        <Grid>
-          <Grid.Col span={12}>
-            <Select
-              label="Medicine"
-              placeholder="Select Medicine"
-              data={medicineOptions}
-              searchable
-              required
-              disabled={modalAction === "EDIT"} // Usually batch is tied to item, changing item might be weird but allowed if needed.
-              {...form.getInputProps("item_id")}
-            />
-          </Grid.Col>
-          <Grid.Col span={6}>
-            <TextInput
-              label="Batch Number"
-              placeholder="Batch No"
-              required
-              {...form.getInputProps("batch_number")}
-            />
-          </Grid.Col>
-          <Grid.Col span={6}>
-            <DateInput
-              label="Expiry Date"
-              placeholder="Expiry Date"
-              required
-              valueFormat="DD/MM/YYYY"
-              {...form.getInputProps("expiry_date")}
-            />
-          </Grid.Col>
+        <Stack gap="md">
+          <Grid>
+            <Grid.Col span={12}>
+              <Stack gap={4}>
+                <Text size="xs" c="dimmed" fw={500}>
+                  Medicine
+                </Text>
+                <Text fw={600}>{detail?.item_name || "N/A"}</Text>
+              </Stack>
+            </Grid.Col>
 
-          <Grid.Col span={4}>
-            <NumberInput
-              label="Purchase Price"
-              min={0}
-              {...form.getInputProps("purchase_price")}
-            />
-          </Grid.Col>
-          <Grid.Col span={4}>
-            <NumberInput
-              label="Sale Price"
-              min={0}
-              {...form.getInputProps("sale_price")}
-            />
-          </Grid.Col>
-          <Grid.Col span={4}>
-            <NumberInput
-              label="MRP"
-              min={0}
-              required
-              {...form.getInputProps("mrp")}
-            />
-          </Grid.Col>
-          <Grid.Col span={6}>
-            <NumberInput
-              label="Current Stock"
-              min={0}
-              required
-              {...form.getInputProps("current_stock")}
-            />
-          </Grid.Col>
-        </Grid>
-        <Group justify="flex-end" mt="md">
+            <Grid.Col span={6}>
+              <TextInput
+                label="Batch Number"
+                readOnly
+                variant="filled"
+                {...form.getInputProps("batch_no")}
+              />
+            </Grid.Col>
+
+            <Grid.Col span={6}>
+              <Stack gap={4}>
+                <Text size="xs" c="dimmed" fw={500}>
+                  Vendor
+                </Text>
+                <Text size="sm">{detail?.vendor_name || "N/A"}</Text>
+              </Stack>
+            </Grid.Col>
+
+            <Grid.Col span={6}>
+              <DateInput
+                label="Mfg Date"
+                readOnly
+                variant="filled"
+                valueFormat="DD/MM/YYYY"
+                {...form.getInputProps("mfg_date")}
+              />
+            </Grid.Col>
+
+            <Grid.Col span={6}>
+              <DateInput
+                label="Expiry Date"
+                readOnly
+                variant="filled"
+                valueFormat="DD/MM/YYYY"
+                {...form.getInputProps("exp_date")}
+              />
+            </Grid.Col>
+
+            <Grid.Col span={4}>
+              <NumberInput
+                label="Purchase Rate"
+                readOnly
+                variant="filled"
+                prefix="₹"
+                {...form.getInputProps("purchase_rate")}
+              />
+            </Grid.Col>
+
+            <Grid.Col span={4}>
+              <NumberInput
+                label="Quantity Available"
+                readOnly
+                variant="filled"
+                {...form.getInputProps("quantity_available")}
+              />
+            </Grid.Col>
+
+            <Grid.Col span={4}>
+              <NumberInput
+                label="MRP"
+                min={0}
+                required
+                prefix="₹"
+                {...form.getInputProps("mrp")}
+              />
+            </Grid.Col>
+
+            <Grid.Col span={8}>
+              <TextInput
+                label="Rack Location"
+                placeholder="Shelf/Rack ID"
+                required
+                {...form.getInputProps("rack_location")}
+              />
+            </Grid.Col>
+
+            <Grid.Col span={4} pt="xl">
+              <Switch
+                label="Is Active"
+                {...form.getInputProps("is_active", { type: "checkbox" })}
+              />
+            </Grid.Col>
+          </Grid>
+        </Stack>
+
+        <Group justify="flex-end" mt="xl">
           <Button variant="default" onClick={handleClose}>
             Cancel
           </Button>
           <Button type="submit" loading={mutation.isPending}>
-            Save
+            Save Changes
           </Button>
         </Group>
       </form>

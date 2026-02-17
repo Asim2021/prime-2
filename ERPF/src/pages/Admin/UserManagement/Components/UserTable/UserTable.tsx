@@ -20,10 +20,10 @@ import { QUERY_KEY } from "@constants/queryKeys";
 import { fetchAllUser } from "@services/userService";
 import { USER_COLUMNS } from "../../constant";
 
-const UserTable = ({ searchUser }: UserTableI) => {
+const UserTable = ({ searchUser, onEdit }: UserTableI) => {
   const [sorting, setSorting] = useState<SortingState>([]);
 
-  const { columns } = useUserColumn();
+  const { columns } = useUserColumn(onEdit);
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 50,
@@ -103,4 +103,5 @@ export default UserTable;
 
 interface UserTableI {
   searchUser: string;
+  onEdit: (user: UserI) => void;
 }

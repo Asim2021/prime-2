@@ -34,7 +34,6 @@ const ProductSearch = () => {
     queryKey: ["medicines", debouncedSearch],
     queryFn: () =>
       fetchAllMedicines({ search: debouncedSearch, page: 1, limit: 10 }),
-    enabled: debouncedSearch.length > 1,
   });
 
   const { data: batches } = useQuery({

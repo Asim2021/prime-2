@@ -40,16 +40,27 @@ interface PurchaseI {
 
 interface BatchI {
   id: string;
-  item_id: string;
-  item_name?: string;
-  batch_number: string;
-  expiry_date: string;
-  sale_price: number;
-  purchase_price: number;
+  medicine_id: string;
+  batch_no: string;
+  mfg_date: string;
+  exp_date: string;
+  purchase_rate: number;
   mrp: number;
-  current_stock: number;
+  quantity_available: number;
+  rack_location: string;
+  is_active: boolean;
+  vendor_id?: string;
+  vendor_name?: string;
+  item_name?: string; // Helper for UI
   created_at?: string;
   updated_at?: string;
+  // Legacy fields for backward compatibility if any
+  item_id?: string;
+  batch_number?: string;
+  expiry_date?: string;
+  sale_price?: number;
+  purchase_price?: number;
+  current_stock?: number;
 }
 
 interface ManufacturerI {
@@ -68,9 +79,11 @@ interface StockAdjustmentI {
   batch_id: string;
   old_quantity?: number;
   new_quantity?: number;
-  quantity_adjustment: number; // + or -
-  reason: string;
-  notes?: string;
+  quantity_change: number; // New field
+  quantity_adjustment?: number; // Legacy
+  reason: "damage" | "expired" | "theft" | "manual_correction" | "other";
+  note: string; // New field
+  notes?: string; // Legacy
   created_by?: string;
   created_at?: string;
   medicine?: MedicineI;

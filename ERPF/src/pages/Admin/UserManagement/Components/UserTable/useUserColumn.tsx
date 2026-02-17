@@ -15,7 +15,7 @@ import { QUERY_KEY } from "@constants/queryKeys";
 import { capitalize } from "lodash-es";
 import { USER_COLUMNS } from "../../constant";
 
-const useUserColumn = () => {
+const useUserColumn = (onEdit: (user: UserI) => void) => {
   const queryClient = useQueryClient();
 
   const useDeleteUser = useMutation<string, AxiosError, string>({
@@ -113,7 +113,7 @@ const useUserColumn = () => {
             <ActionIcon
               aria-label="Edit User"
               title="Edit"
-              onClick={() => {}}
+              onClick={() => onEdit(row.original)}
               radius={"100%"}
               variant="light"
               className="shadow-erp-shadow"
@@ -136,7 +136,7 @@ const useUserColumn = () => {
       },
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
+    [onEdit],
   );
 
   return { columns };

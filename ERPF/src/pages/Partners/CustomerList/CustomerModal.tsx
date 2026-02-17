@@ -114,14 +114,6 @@ const CustomerModal = () => {
               {...form.getInputProps("credit_limit")}
             />
           </Grid.Col>
-          <Grid.Col span={6}>
-            <NumberInput
-              label="Outstanding Balance"
-              placeholder="0"
-              min={0}
-              {...form.getInputProps("outstanding_balance")}
-            />
-          </Grid.Col>
         </Grid>
         <Group justify="flex-end" mt="md">
           <Button variant="default" onClick={handleClose}>

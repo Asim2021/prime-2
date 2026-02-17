@@ -52,10 +52,6 @@ export const sidebarData = [
     label: "Reports",
     link: ENDPOINT.REPORTS,
     icon: MdBarChart,
-    links: [
-      { label: "Sales Report", link: ENDPOINT.REPORTS },
-      { label: "Inventory Report", link: ENDPOINT.REPORTS },
-    ],
   },
   {
     label: "Admin",
