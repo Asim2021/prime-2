@@ -11,6 +11,7 @@ const useMedicineColumns = (deleteHandler: (id: string) => void) => {
   const columns = useMemo<ColumnDef<MedicineI>[]>(
     () => [
       {
+        id: "item_name",
         accessorKey: "brand_name",
         header: "Brand Name",
         cell: ({ row }) => (
@@ -25,6 +26,7 @@ const useMedicineColumns = (deleteHandler: (id: string) => void) => {
         ),
       },
       {
+        id: "manufacturer",
         accessorKey: "manufacturer",
         header: "Manufacturer",
         cell: ({ row }) => (
@@ -32,6 +34,7 @@ const useMedicineColumns = (deleteHandler: (id: string) => void) => {
         ),
       },
       {
+        id: "schedule_type",
         accessorKey: "schedule_type",
         header: "Schedule",
         cell: ({ row }) => (
@@ -39,6 +42,7 @@ const useMedicineColumns = (deleteHandler: (id: string) => void) => {
         ),
       },
       {
+        id: "unit_type",
         accessorKey: "unit_type",
         header: "Unit",
         cell: ({ row }) => (
@@ -46,18 +50,19 @@ const useMedicineColumns = (deleteHandler: (id: string) => void) => {
         ),
       },
       {
+        id: "gst_percent",
         accessorKey: "gst_percent",
         header: "Tax",
         cell: ({ row }) => <Text size="sm">{row.original.gst_percent}%</Text>,
       },
       {
+        id: "reorder_level",
         accessorKey: "reorder_level",
         header: "Reorder Lvl",
         cell: ({ row }) => <Text size="sm">{row.original.reorder_level}</Text>,
       },
       {
         id: "action",
-        header: "Action",
         cell: ({ row }) => (
           <Group gap="xs">
             <ActionIcon

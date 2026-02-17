@@ -11,6 +11,7 @@ const useVendorColumns = (deleteHandler: (id: string) => void) => {
   const columns = useMemo<ColumnDef<VendorI>[]>(
     () => [
       {
+        id: "name",
         accessorKey: "name",
         header: "Name",
         cell: ({ row }) => (
@@ -20,11 +21,13 @@ const useVendorColumns = (deleteHandler: (id: string) => void) => {
         ),
       },
       {
+        id: "phone",
         accessorKey: "phone",
         header: "Phone",
         cell: ({ row }) => <Text size="sm">{row.original.phone}</Text>,
       },
       {
+        id: "contact_person",
         accessorKey: "contact_person",
         header: "Contact Person",
         cell: ({ row }) => (
@@ -32,6 +35,7 @@ const useVendorColumns = (deleteHandler: (id: string) => void) => {
         ),
       },
       {
+        id: "gst_number",
         accessorKey: "gst_number",
         header: "GSTIN",
         cell: ({ row }) => (
@@ -40,7 +44,6 @@ const useVendorColumns = (deleteHandler: (id: string) => void) => {
       },
       {
         id: "action",
-        header: "Action",
         cell: ({ row }) => (
           <Group gap="xs">
             <ActionIcon

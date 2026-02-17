@@ -17,6 +17,7 @@ import UserSection from "./UserSection";
 import { SidebarLinkGroup } from "./SidebarLinkGroup";
 import { sidebarData } from "./sidebarData";
 import clsx from "clsx";
+import GlobalSearch from "@components/GlobalSearch";
 
 interface SidebarProps {
   isCompanyImage: boolean;
@@ -42,17 +43,17 @@ export function Sidebar({
 }: SidebarProps) {
   const [currentOpen, setCurrentOpen] = useState<string[]>([]);
   const links = sidebarData.map((item) => {
-    return <SidebarLinkGroup
-      {...item}
-      key={item.label}
-      currentOpen={currentOpen}
-      setCurrentOpen={setCurrentOpen}
-      singleOpen={singleOpen} // if true, only one link can be opened at a time
-      collapseSidebar={collapseSidebar}
-
-    />
-  }
-  );
+    return (
+      <SidebarLinkGroup
+        {...item}
+        key={item.label}
+        currentOpen={currentOpen}
+        setCurrentOpen={setCurrentOpen}
+        singleOpen={singleOpen} // if true, only one link can be opened at a time
+        collapseSidebar={collapseSidebar}
+      />
+    );
+  });
 
   return (
     <AppShell.Navbar>
@@ -67,7 +68,7 @@ export function Sidebar({
         <MdChevronRight
           className={clsx(
             "transition-all duration-300",
-            !collapseSidebar && "rotate-180"
+            !collapseSidebar && "rotate-180",
           )}
         />
       </ActionIcon>
@@ -90,6 +91,9 @@ export function Sidebar({
               <MdRocketLaunch size="1.1rem" />
             </ThemeIcon>
           )}
+          <Group justify="flex-end" h="100%">
+            <GlobalSearch />
+          </Group>
           <DarkModeIconBtn />
         </Group>
       </AppShell.Section>

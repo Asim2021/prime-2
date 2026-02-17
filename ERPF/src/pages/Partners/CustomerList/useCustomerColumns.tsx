@@ -11,6 +11,7 @@ const useCustomerColumns = (deleteHandler: (id: string) => void) => {
   const columns = useMemo<ColumnDef<CustomerI>[]>(
     () => [
       {
+        id: "name",
         accessorKey: "name",
         header: "Name",
         cell: ({ row }) => (
@@ -20,21 +21,25 @@ const useCustomerColumns = (deleteHandler: (id: string) => void) => {
         ),
       },
       {
+        id: "phone",
         accessorKey: "phone",
         header: "Phone",
         cell: ({ row }) => <Text size="sm">{row.original.phone}</Text>,
       },
       {
+        id: "gstin",
         accessorKey: "gstin",
         header: "GSTIN",
         cell: ({ row }) => <Text size="sm">{row.original.gstin || "-"}</Text>,
       },
       {
+        id: "credit_limit",
         accessorKey: "credit_limit",
         header: "Credit Limit",
         cell: ({ row }) => <Text size="sm">₹{row.original.credit_limit}</Text>,
       },
       {
+        id: "outstanding_balance",
         accessorKey: "outstanding_balance",
         header: "Balance",
         cell: ({ row }) => (
@@ -48,7 +53,6 @@ const useCustomerColumns = (deleteHandler: (id: string) => void) => {
       },
       {
         id: "action",
-        header: "Action",
         cell: ({ row }) => (
           <Group gap="xs">
             <ActionIcon

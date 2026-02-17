@@ -48,12 +48,14 @@ const PurchaseList = () => {
   const columns = useMemo<ColumnDef<PurchaseI>[]>(
     () => [
       {
+        id: "invoice_date",
         accessorKey: "invoice_date",
         header: "Date",
         cell: ({ row }) =>
           dayjs(row.original.invoice_date).format("DD MMM YYYY"),
       },
       {
+        id: "invoice_no",
         accessorKey: "invoice_no",
         header: "Invoice No",
         cell: ({ row }) => (
@@ -63,6 +65,7 @@ const PurchaseList = () => {
         ),
       },
       {
+        id: "vendor.name",
         accessorKey: "vendor.name",
         header: "Vendor",
         // Fallback to vendor_name if populated or ID
@@ -72,6 +75,7 @@ const PurchaseList = () => {
           row.original.vendor_id,
       },
       {
+        id: "total_amount",
         accessorKey: "total_amount",
         header: "Total Amount",
         cell: ({ row }) => (
@@ -81,6 +85,7 @@ const PurchaseList = () => {
         ),
       },
       {
+        id: "items",
         accessorKey: "items",
         header: "Items",
         cell: ({ row }) => (
@@ -91,7 +96,6 @@ const PurchaseList = () => {
       },
       {
         id: "actions",
-        header: "Action",
         cell: ({ row }) => (
           <ActionIcon
             variant="subtle"

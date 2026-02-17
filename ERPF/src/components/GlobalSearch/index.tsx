@@ -10,6 +10,7 @@ import {
   Badge,
   Loader,
   Center,
+  Tooltip,
 } from "@mantine/core";
 import { useDisclosure, useHotkeys, useDebouncedValue } from "@mantine/hooks";
 import {
@@ -19,6 +20,7 @@ import {
   MdPerson,
   MdStore,
 } from "react-icons/md";
+import { FcSearch } from "react-icons/fc";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useQuery } from "@tanstack/react-query";
@@ -99,12 +101,11 @@ const GlobalSearch = () => {
   return (
     <>
       <Group onClick={open} style={{ cursor: "pointer" }}>
-        <ActionIcon variant="default" size="lg" radius="md">
-          <MdSearch size={18} />
-        </ActionIcon>
-        <Text size="sm" c="dimmed" visibleFrom="xs">
-          Search (Ctrl + K)
-        </Text>
+        <Tooltip label="Search (Ctrl + K)">
+          <ActionIcon variant="default" size="lg" radius="md">
+            <FcSearch size="1.5rem" />
+          </ActionIcon>
+        </Tooltip>
       </Group>
 
       <Modal

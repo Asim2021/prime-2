@@ -42,16 +42,19 @@ const SalesHistory = () => {
   const columns = useMemo<ColumnDef<SaleI>[]>(
     () => [
       {
+        id: "bill_date",
         accessorKey: "bill_date",
         header: "Date",
         cell: ({ row }) =>
           dayjs(row.original.bill_date).format("DD MMM YYYY, hh:mm A"),
       },
       {
+        id: "bill_no",
         accessorKey: "bill_no",
         header: "Bill No",
       },
       {
+        id: "customer_name",
         accessorKey: "customer_name",
         header: "Customer",
         cell: ({ row }) => (
@@ -68,6 +71,7 @@ const SalesHistory = () => {
         ),
       },
       {
+        id: "total_amount",
         accessorKey: "total_amount",
         header: "Amount",
         cell: ({ row }) => (
@@ -75,6 +79,7 @@ const SalesHistory = () => {
         ),
       },
       {
+        id: "payment_mode",
         accessorKey: "payment_mode",
         header: "Mode",
         cell: ({ row }) => (
@@ -83,7 +88,6 @@ const SalesHistory = () => {
       },
       {
         id: "actions",
-        header: "Action",
         cell: ({ row }) => (
           <ActionIcon
             variant="subtle"

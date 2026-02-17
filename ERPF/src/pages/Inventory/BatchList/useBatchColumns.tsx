@@ -27,6 +27,7 @@ const useBatchColumns = (deleteHandler: (id: string) => void) => {
   const columns = useMemo<ColumnDef<BatchI>[]>(
     () => [
       {
+        id: "batch_number",
         accessorKey: "batch_number",
         header: "Batch No",
         cell: ({ row }) => (
@@ -36,6 +37,7 @@ const useBatchColumns = (deleteHandler: (id: string) => void) => {
         ),
       },
       {
+        id: "item_name",
         accessorKey: "item_name",
         header: "Medicine",
         cell: ({ row }) => (
@@ -45,6 +47,7 @@ const useBatchColumns = (deleteHandler: (id: string) => void) => {
         ),
       },
       {
+        id: "expiry_date",
         accessorKey: "expiry_date",
         header: "Expiry",
         cell: ({ row }) => (
@@ -54,6 +57,7 @@ const useBatchColumns = (deleteHandler: (id: string) => void) => {
         ),
       },
       {
+        id: "current_stock",
         accessorKey: "current_stock",
         header: "Stock",
         cell: ({ row }) => (
@@ -63,13 +67,13 @@ const useBatchColumns = (deleteHandler: (id: string) => void) => {
         ),
       },
       {
+        id: "mrp",
         accessorKey: "mrp",
         header: "MRP",
         cell: ({ row }) => <Text size="sm">₹{row.original.mrp}</Text>,
       },
       {
         id: "action",
-        header: "Action",
         cell: ({ row }) => (
           <Group gap="xs">
             <ActionIcon

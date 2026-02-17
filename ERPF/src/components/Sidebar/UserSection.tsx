@@ -138,19 +138,6 @@ const UserSection = ({ collapseSidebar }: { collapseSidebar: boolean }) => {
           Settings
         </Menu.Item>
         <Menu.Item
-          leftSection={<MdSecurity size={18} />}
-          className={classes.user_option}
-          onClick={() => navigate(ENDPOINT.USERS.PROFILE)}
-        >
-          Security
-        </Menu.Item>
-        <Menu.Item
-          leftSection={<MdTextsms size={18} />}
-          className={classes.user_option}
-        >
-          Messages
-        </Menu.Item>
-        <Menu.Item
           color={"red"}
           leftSection={<MdLogout size={18} />}
           onClick={toggle}
