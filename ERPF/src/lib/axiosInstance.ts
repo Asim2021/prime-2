@@ -5,7 +5,7 @@ import { QueryCache } from "@tanstack/react-query";
 
 declare module "axios" {
   export interface AxiosRequestConfig {
-    _retry: boolean;
+    _retry?: boolean;
   }
 }
 
@@ -33,7 +33,7 @@ erpApi.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 erpApi.interceptors.response.use(
@@ -61,7 +61,7 @@ erpApi.interceptors.response.use(
     error.message =
       error.response?.data?.message || error.message || "An error occurred";
     return Promise.reject(error);
-  }
+  },
 );
 
 export default erpApi;

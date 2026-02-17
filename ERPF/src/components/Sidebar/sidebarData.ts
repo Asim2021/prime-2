@@ -1,73 +1,70 @@
 import {
-  MdHome,
   MdInventory,
   MdPointOfSale,
   MdShoppingCart,
   MdPeople,
   MdAdminPanelSettings,
-  MdSettings,
   MdDashboard,
   MdBarChart,
 } from "react-icons/md";
-import { FaUsersGear } from "react-icons/fa6";
 import { ENDPOINT } from "@constants/endpoints";
 
 export const sidebarData = [
   { label: "Dashboard", link: ENDPOINT.BASE, icon: MdDashboard },
   {
     label: "Inventory",
-    link: "#",
+    link: ENDPOINT.ITEMS,
     icon: MdInventory,
     links: [
       { label: "Medicines", link: ENDPOINT.ITEMS },
-      { label: "Batches", link: "#" }, // To be implemented
+      { label: "Batches", link: "/inventory/batches" },
       { label: "Adjustments", link: ENDPOINT.INVENTORY_ADJUST },
     ],
   },
   {
     label: "Sales",
-    link: "#",
+    link: ENDPOINT.SALES.POS,
     icon: MdPointOfSale,
     links: [
-      { label: "POS", link: "#" }, // To be implemented
-      { label: "History", link: ENDPOINT.SALES_INVOICES },
+      { label: "POS / Billing", link: ENDPOINT.SALES.POS },
+      { label: "History", link: ENDPOINT.SALES.ORDERS },
     ],
   },
   {
     label: "Purchase",
-    link: "#",
+    link: ENDPOINT.PURCHASE.BASE,
     icon: MdShoppingCart,
     links: [
-      { label: "New Purchase", link: ENDPOINT.PURCHASE_GRN },
-      { label: "History", link: ENDPOINT.PURCHASE_ORDERS },
+      { label: "New Purchase", link: `${ENDPOINT.PURCHASE.BASE}/create` },
+      { label: "History", link: ENDPOINT.PURCHASE.BASE },
     ],
   },
   {
     label: "Partners",
-    link: "#",
+    link: ENDPOINT.PARTNER_VENDORS,
     icon: MdPeople,
     links: [
-      { label: "Vendors", link: ENDPOINT.PURCHASE_VENDORS }, // Or dedicated vendors route
-      { label: "Customers", link: ENDPOINT.SALES_CUSTOMERS },
+      { label: "Vendors", link: ENDPOINT.PARTNER_VENDORS },
+      { label: "Customers", link: ENDPOINT.PARTNER_CUSTOMERS },
     ],
   },
   {
     label: "Reports",
-    link: "#",
+    link: ENDPOINT.REPORTS,
     icon: MdBarChart,
     links: [
-      { label: "Sales Report", link: "#" },
-      { label: "Inventory Report", link: "#" },
+      { label: "Sales Report", link: ENDPOINT.REPORTS },
+      { label: "Inventory Report", link: ENDPOINT.REPORTS },
     ],
   },
   {
     label: "Admin",
-    link: "#",
+    link: ENDPOINT.USERS.BASE,
     icon: MdAdminPanelSettings,
     links: [
       { label: "Users", link: ENDPOINT.USERS.BASE },
       { label: "Shop Settings", link: ENDPOINT.SHOP },
-      { label: "Roles", link: ENDPOINT.ROLES },
+      { label: "Roles", link: "/roles" },
     ],
   },
 ];

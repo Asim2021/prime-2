@@ -40,33 +40,24 @@ export const deleteMedicine = async (id: string): Promise<string> => {
 
 // Batches
 export const fetchAllBatches = async (
-  params: QueryParamsI,
+  _params: QueryParamsI,
 ): Promise<PaginationResponseI<BatchI[]>> => {
-  // const url = `${ENDPOINT.BATCHES}` + paramsToQueryString(params);
-  // const res: AxiosResponse = await erpApi.get(url);
-  // return res?.data as PaginationResponseI<BatchI[]>;
   console.warn("fetchAllBatches not implemented");
   return { data: [], totalCount: 0, totalPages: 0, currentPage: 1 } as any;
 };
 
-export const addBatch = async (values: Partial<BatchI>): Promise<BatchI> => {
-  // const res: AxiosResponse = await erpApi.post(ENDPOINT.BATCHES, values);
-  // return res?.data;
+export const addBatch = async (_values: Partial<BatchI>): Promise<BatchI> => {
   throw new Error("Batches not implemented yet");
 };
 
 export const editBatch = async (
-  id: string,
-  values: Partial<BatchI>,
+  _id: string,
+  _values: Partial<BatchI>,
 ): Promise<BatchI> => {
-  // const res: AxiosResponse = await erpApi.put(`${ENDPOINT.BATCHES}/${id}`, values);
-  // return res?.data;
   throw new Error("Batches not implemented yet");
 };
 
-export const deleteBatch = async (id: string): Promise<string> => {
-  // const res: AxiosResponse = await erpApi.delete(`${ENDPOINT.BATCHES}/${id}`);
-  // return res?.data;
+export const deleteBatch = async (_id: string): Promise<string> => {
   throw new Error("Batches not implemented yet");
 };
 
@@ -82,4 +73,30 @@ export const fetchAllCategories = async (): Promise<CategoryI[]> => {
   // const res: AxiosResponse = await erpApi.get(ENDPOINT.ITEM_GROUPS);
   // return res?.data;
   return [];
+};
+
+export const fetchBatchesByMedicine = async (medicineId: string) => {
+  const { data } = await erpApi.get(
+    `${ENDPOINT.INVENTORY_ITEMS}/${medicineId}/batches`,
+  );
+  return data;
+};
+
+// Stock Adjustment
+export const fetchStockAdjustments = async (
+  params: QueryParamsI,
+): Promise<PaginationResponseI<StockAdjustmentI[]>> => {
+  const url = `${ENDPOINT.INVENTORY_ADJUST}` + paramsToQueryString(params);
+  const res: AxiosResponse = await erpApi.get(url);
+  return res?.data as PaginationResponseI<StockAdjustmentI[]>;
+};
+
+export const createStockAdjustment = async (
+  values: Partial<StockAdjustmentI>,
+): Promise<StockAdjustmentI> => {
+  const res: AxiosResponse = await erpApi.post(
+    ENDPOINT.INVENTORY_ADJUST,
+    values,
+  );
+  return res?.data;
 };

@@ -7,6 +7,7 @@ import {
   TableProps,
   Text,
   TextInput,
+  Pagination,
 } from "@mantine/core";
 import NoDataFound from "@components/NoDataFound";
 import clsx from "clsx";
@@ -32,6 +33,10 @@ const MantineTable = <T extends object>({
   isActionColumn = false,
   editHandler,
   deleteHandler,
+  total,
+  page,
+  limit,
+  onPageChange,
   ...props
 }: MaintineTableI<T>) => {
   return (
@@ -102,7 +107,9 @@ const MantineTable = <T extends object>({
                   {headers?.map((header) => (
                     <Table.Td key={String(header.key)}>
                       <Text size="xs">
-                        {get(dataItem, header.key, "") as React.ReactNode}
+                        {header.render
+                          ? header.render(dataItem)
+                          : (get(dataItem, header.key, "") as React.ReactNode)}
                       </Text>
                     </Table.Td>
                   ))}
@@ -150,6 +157,16 @@ const MantineTable = <T extends object>({
         />
       )}
       {isLoading && <CenterLoader />}
+      {!!total && !!page && !!limit && !!onPageChange && (
+        <div className="flex justify-end p-2 border-t border-gray-200 bg-white">
+          <Pagination
+            total={Math.ceil(total / limit)}
+            value={page}
+            onChange={onPageChange}
+            size="sm"
+          />
+        </div>
+      )}
     </div>
   );
 };
@@ -158,7 +175,11 @@ export default MantineTable;
 interface MaintineTableI<T extends object> extends TableProps {
   TData: T[] | undefined;
   isLoading?: boolean;
-  headers: { key: string; label: string }[];
+  headers: {
+    key: string;
+    label: string;
+    render?: (record: T) => React.ReactNode;
+  }[];
   caption?: string;
   tableClasses?: string | undefined;
   className?: string | undefined;
@@ -171,4 +192,8 @@ interface MaintineTableI<T extends object> extends TableProps {
   isActionColumn?: boolean;
   editHandler?: (arg: T) => void;
   deleteHandler?: (arg: T) => void;
+  total?: number;
+  page?: number;
+  limit?: number;
+  onPageChange?: (arg: number) => void;
 }

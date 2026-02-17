@@ -28,6 +28,11 @@ export const ENDPOINT = {
   ITEMS: "/medicines",
   // BATCHES: "/batches", // Not implemented on backend yet
   // BATCHES: "/batches",
+  PURCHASE: {
+    BASE: "/purchases",
+    CREATE: "/purchases/create",
+    DETAILS: "/purchases/details", // placeholder
+  },
   ITEM_FIELDS: "/item-fields",
   ITEM_GROUPS: "/item-groups",
   ITEM_OTHERS: "/item-others",
@@ -35,6 +40,9 @@ export const ENDPOINT = {
   ITEM_EXCISE: "/item-excise",
   ITEM_DISCOUNT: "/item-discount",
   ITEM_STORE: "/item-store",
+  PARTNER_VENDORS: "/vendors",
+  PARTNER_CUSTOMERS: "/customers",
+  INVENTORY_ITEMS: "/medicines",
   USERS: {
     BASE: "/users",
     PROFILE: "/users/profile",
@@ -45,6 +53,10 @@ export const ENDPOINT = {
   PURCHASE_ORDERS: "/purchase/orders",
   PURCHASE_GRN: "/purchase/grn",
   // Sales Routes
+  SALES: {
+    POS: "/sales/pos",
+    ORDERS: "/sales", // History
+  },
   SALES_CUSTOMERS: "/sales/customers",
   SALES_ORDERS: "/sales/orders",
   SALES_DELIVERY: "/sales/delivery",
@@ -102,4 +114,5 @@ export const ENDPOINT = {
     PENDING: "pending",
     DELEGATION: "delegation",
   },
+  REPORTS: "/reports",
 };
