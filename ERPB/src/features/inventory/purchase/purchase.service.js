@@ -1,12 +1,11 @@
 import { randomUUID } from 'node:crypto';
-import db from '../../../models/index.js';
-
-const {
+import {
     Purchase,
     PurchaseItem,
     Batch,
     StockLedger,
-} = db;
+    Vendor
+} from '#models/index.js';
 
 export const purchaseService = {
     getAll: async (params = {}) => {
@@ -23,6 +22,11 @@ export const purchaseService = {
                             as: 'batch',
                         },
                     ],
+                },
+                {
+                    model: Vendor,
+                    as: 'vendor',
+                    attributes: [ 'name' ]
                 },
             ],
             order: [ [ sortBy || 'created_at', order || 'DESC' ] ],

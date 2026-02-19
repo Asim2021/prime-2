@@ -2,7 +2,7 @@ import { HTTP_STATUS } from '#constant/httpStatus.js';
 import { sendErrorResponse } from '#middleware/sendResponse.js';
 
 
-const joiValidate = (schema, type) => {
+const joiValidate = (schema, type = JOI_TYPES.BODY) => {
   return (req, res, next) => {
     if (!type) {
       return sendErrorResponse({

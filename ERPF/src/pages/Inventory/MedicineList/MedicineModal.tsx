@@ -55,7 +55,9 @@ const MedicineModal = () => {
   const mutation = useMutation({
     mutationFn: (values: Partial<MedicineI>) => {
       if (modalAction === "EDIT" && detail) {
-        return editMedicine(detail.id, values);
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { id, created_at, updated_at, ...payload } = values;
+        return editMedicine(detail.id, payload);
       }
       return addMedicine(values);
     },

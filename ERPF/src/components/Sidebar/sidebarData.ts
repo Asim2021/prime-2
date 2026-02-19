@@ -13,13 +13,8 @@ export const sidebarData = [
   { label: "Dashboard", link: ENDPOINT.BASE, icon: MdDashboard },
   {
     label: "Inventory",
-    link: ENDPOINT.ITEMS,
+    link: "/inventory",
     icon: MdInventory,
-    links: [
-      { label: "Medicines", link: ENDPOINT.ITEMS },
-      { label: "Batches", link: "/inventory/batches" },
-      { label: "Adjustments", link: ENDPOINT.INVENTORY_ADJUST },
-    ],
   },
   {
     label: "Sales",

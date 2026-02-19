@@ -9,7 +9,7 @@ import {
 } from "@mantine/core";
 import { useInputState, useDebouncedValue } from "@mantine/hooks";
 import { useQuery } from "@tanstack/react-query";
-import { MdAddShoppingCart, MdSearch } from "react-icons/md";
+import { MdAddShoppingCart, MdSearch, MdClear } from "react-icons/md";
 import {
   fetchAllMedicines,
   fetchBatchesByMedicine,
@@ -49,6 +49,13 @@ const ProductSearch = () => {
       <Autocomplete
         placeholder="Search Medicine (Brand, Generic)..."
         leftSection={<MdSearch size={16} />}
+        rightSection={
+          search && (
+            <ActionIcon variant="transparent" onClick={() => setSearch("")}>
+              <MdClear />
+            </ActionIcon>
+          )
+        }
         data={
           medicines?.data?.map((m) => ({ value: m.brand_name, ...m })) || []
         }
@@ -83,18 +90,18 @@ const ProductSearch = () => {
                 >
                   <Stack gap={0}>
                     <Text fw={500} size="sm">
-                      Batch: {batch.batch_number}
+                      Batch: {batch.batch_no}
                     </Text>
                     <Text size="xs" c="dimmed">
-                      Exp: {new Date(batch.expiry_date).toLocaleDateString()}
+                      Exp: {new Date(batch.exp_date).toLocaleDateString()}
                     </Text>
                   </Stack>
                   <Group>
                     <Badge
-                      color={batch.available_quantity > 0 ? "green" : "red"}
+                      color={batch.quantity_available > 0 ? "green" : "red"}
                       variant="light"
                     >
-                      Qty: {batch.available_quantity}
+                      Qty: {batch.quantity_available}
                     </Badge>
                     <Text fw={600}>₹{batch.mrp}</Text>
                     <Tooltip label="Add to Cart">
@@ -102,7 +109,7 @@ const ProductSearch = () => {
                         variant="filled"
                         color="blue"
                         onClick={() => addItem(batch, selectedMedicine)}
-                        disabled={batch.available_quantity <= 0}
+                        disabled={batch.quantity_available <= 0}
                       >
                         <MdAddShoppingCart size={18} />
                       </ActionIcon>

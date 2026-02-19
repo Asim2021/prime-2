@@ -8,17 +8,15 @@ import Dashboard from "@pages/Dashboard";
 import ShopConfiguration from "@pages/Admin/ShopConfiguration";
 import VendorList from "@pages/Partners/VendorList";
 import CustomerList from "@pages/Partners/CustomerList";
-import MedicineList from "@pages/Inventory/MedicineList";
 import PurchaseList from "@pages/Inventory/PurchaseList";
 import PurchaseEntry from "@pages/Inventory/PurchaseEntry";
 import POS from "@pages/Sales/POS";
 import SalesHistory from "@pages/Sales/SalesHistory";
 import InvoiceDetails from "@pages/Sales/SalesHistory/InvoiceDetails";
 import SalesReturn from "@pages/Sales/SalesReturn";
-import StockAdjustment from "@pages/Inventory/StockAdjustment";
 import Reports from "@pages/Reports";
-import BatchList from "@pages/Inventory/BatchList";
 import RolesManagement from "@pages/Admin/RolesManagement";
+import Inventory from "@pages/Inventory";
 
 const MainRouter = createBrowserRouter([
   {
@@ -42,9 +40,11 @@ const MainRouter = createBrowserRouter([
       { path: ENDPOINT.SALES.ORDERS, element: <SalesHistory /> },
       { path: `${ENDPOINT.SALES.ORDERS}/:id`, element: <InvoiceDetails /> },
       { path: `${ENDPOINT.SALES.ORDERS}/:id/return`, element: <SalesReturn /> },
-      { path: ENDPOINT.INVENTORY_ITEMS, element: <MedicineList /> },
-      { path: ENDPOINT.INVENTORY_ADJUST, element: <StockAdjustment /> },
-      { path: "/inventory/batches", element: <BatchList /> },
+      // Inventory Routes Consolidated
+      { path: "/inventory", element: <Inventory /> },
+      { path: ENDPOINT.INVENTORY_ITEMS, element: <Inventory /> },
+      { path: ENDPOINT.INVENTORY_ADJUST, element: <Inventory /> },
+      { path: "/inventory/batches", element: <Inventory /> },
       { path: "/reports", element: <Reports /> },
       { path: ENDPOINT.ALL, element: <NotFound /> },
     ],

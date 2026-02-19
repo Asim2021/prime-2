@@ -21,7 +21,7 @@ import BatchModal from "./BatchModal";
 import { usePaginationDataFetch } from "@hooks/usePaginationDataFetch";
 import { CustomTableOptions } from "@src/types/table";
 
-const BatchList = () => {
+const BatchList = ({ withHeader = true }: { withHeader?: boolean }) => {
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebouncedValue(search, 400);
   const [pagination, setPagination] = useState<PaginationState>({
@@ -82,7 +82,7 @@ const BatchList = () => {
   return (
     <div className="w-full h-full pb-24 relative">
       <MainHeader
-        title="Batches"
+        title={withHeader ? "Batches" : ""}
         search={search}
         setSearch={setSearch}
         withSearch

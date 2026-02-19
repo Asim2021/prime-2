@@ -1,10 +1,20 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Button, Group, Stack, Text, Paper, SimpleGrid } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { useQuery } from "@tanstack/react-query";
-import MantineTable from "@components/Table/MantineTable";
+import MainTable from "@components/Table";
 import { fetchSalesReport } from "@services/reportService";
 import { MdDownload } from "react-icons/md";
+import {
+  getCoreRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+  ColumnDef,
+  SortingState,
+  PaginationState,
+} from "@tanstack/react-table";
+import { CustomTableOptions } from "@src/types/table";
 
 const SalesReport = () => {
   const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([
@@ -12,7 +22,13 @@ const SalesReport = () => {
     new Date(),
   ]);
 
-  const { data, isLoading } = useQuery({
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+  const [sorting, setSorting] = useState<SortingState>([]);
+
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: ["reports", "sales", dateRange],
     queryFn: () => {
       const [start, end] = dateRange;
@@ -25,21 +41,42 @@ const SalesReport = () => {
     enabled: !!dateRange[0] && !!dateRange[1],
   });
 
-  const columns = [
-    { accessor: "invoice_no", title: "Invoice No" },
-    {
-      accessor: "invoice_date",
-      title: "Date",
-      render: (r: any) => new Date(r.invoice_date).toLocaleDateString(),
+  const columns = useMemo<ColumnDef<any>[]>(
+    () => [
+      { accessorKey: "invoice_no", header: "Invoice No" },
+      {
+        accessorKey: "invoice_date",
+        header: "Date",
+        cell: (info) =>
+          new Date(info.getValue() as string).toLocaleDateString(),
+      },
+      { accessorKey: "customer_name", header: "Customer" },
+      { accessorKey: "payment_mode", header: "Mode" },
+      {
+        accessorKey: "total_amount",
+        header: "Amount",
+        cell: (info) => `₹${info.getValue()}`,
+      },
+    ],
+    [],
+  );
+
+  const tableData = data?.data || [];
+
+  const table = useReactTable({
+    data: tableData,
+    columns,
+    state: {
+      sorting,
+      pagination,
     },
-    { accessor: "customer_name", title: "Customer" },
-    { accessor: "payment_mode", title: "Mode" },
-    {
-      accessor: "total_amount",
-      title: "Amount",
-      render: (r: any) => `₹${r.total_amount}`,
-    },
-  ];
+    onPaginationChange: setPagination,
+    onSortingChange: setSorting,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    tableId: "sales-report-table",
+  } as CustomTableOptions<any>);
 
   const stats = data?.stats || { total_revenue: 0, total_orders: 0 };
 
@@ -78,14 +115,23 @@ const SalesReport = () => {
         </Paper>
       </SimpleGrid>
 
-      <MantineTable
-        headers={columns.map((c) => ({
-          key: c.accessor,
-          label: c.title,
-          render: c.render,
-        }))}
-        TData={data?.data || []}
+      <MainTable
+        id="sales-report-table"
+        table={table}
         isLoading={isLoading}
+        isError={isError}
+        error={error}
+        totalCount={tableData.length}
+        totalPages={Math.ceil(tableData.length / pagination.pageSize)}
+        setPagination={setPagination}
+        columnOrder={[
+          "invoice_no",
+          "invoice_date",
+          "customer_name",
+          "payment_mode",
+          "total_amount",
+        ]}
+        withFooter
       />
     </Stack>
   );

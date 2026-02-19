@@ -23,7 +23,7 @@ import { usePaginationDataFetch } from "@hooks/usePaginationDataFetch";
 import { CustomTableOptions } from "@src/types/table";
 import { INITIAL_ALL_TABLE_PINNING } from "@constants/items";
 
-const MedicineList = () => {
+const MedicineList = ({ withHeader = true }: { withHeader?: boolean }) => {
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebouncedValue(search, 400);
   const [pagination, setPagination] = useState<PaginationState>({
@@ -87,7 +87,7 @@ const MedicineList = () => {
   return (
     <div className="w-full h-full pb-24 relative">
       <MainHeader
-        title="Medicines"
+        title={withHeader ? "Medicines" : ""} // Hide title if embedded
         search={search}
         setSearch={setSearch}
         withSearch

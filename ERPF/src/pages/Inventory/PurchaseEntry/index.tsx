@@ -247,7 +247,7 @@ const PurchaseEntry = () => {
             <Table.Tr>
               <Table.Th w={250}>Medicine</Table.Th>
               <Table.Th>Batch No</Table.Th>
-              <Table.Th>Expiry</Table.Th>
+              <Table.Th>Mfg / Exp Date</Table.Th>
               <Table.Th>MRP</Table.Th>
               <Table.Th>Rate</Table.Th>
               <Table.Th>Qty</Table.Th>
@@ -274,16 +274,16 @@ const PurchaseEntry = () => {
                 </Table.Td>
                 <Table.Td>
                   <DateInput
+                    placeholder="Mfg Date"
+                    valueFormat="DD/MM/YYYY"
+                    {...form.getInputProps(`items.${index}.mfg_date`)}
+                    mb="xs"
+                  />
+                  <DateInput
                     placeholder="Exp Date"
                     valueFormat="DD/MM/YYYY"
                     {...form.getInputProps(`items.${index}.exp_date`)}
                   />
-                  {/* Hidden MFG date for simplicity or add another column if strictly required */}
-                  <div style={{ display: "none" }}>
-                    <DateInput
-                      {...form.getInputProps(`items.${index}.mfg_date`)}
-                    />
-                  </div>
                 </Table.Td>
                 <Table.Td>
                   <NumberInput

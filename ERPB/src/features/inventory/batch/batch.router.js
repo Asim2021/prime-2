@@ -1,0 +1,19 @@
+import { Router } from 'express';
+import { verifyAccessToken, verifyUserRole } from '../../../middleware/verifyTokens.js';
+import { ENDPOINT } from '../../../constant/endpoints.js';
+import * as batchController from './batch.controller.js';
+
+const router = Router();
+
+// Protect all batch routes
+router.use(verifyAccessToken);
+
+router.get(ENDPOINT.BASE, batchController.getAllBatches);
+router.get(ENDPOINT.ID, batchController.getBatchById);
+router.put(
+  ENDPOINT.ID,
+  verifyUserRole([ 'admin', 'pharmacist' ]),
+  batchController.updateBatch,
+);
+
+export default router;
