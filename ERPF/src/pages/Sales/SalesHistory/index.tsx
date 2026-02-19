@@ -27,9 +27,6 @@ const SalesHistory = () => {
     pageSize: 10,
   });
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnOrder, setColumnOrder] = useState<ColumnOrderState>(() =>
-    columns?.map((c) => c.id as string),
-  );
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["sales", pagination, sorting],
@@ -103,6 +100,10 @@ const SalesHistory = () => {
       },
     ],
     [],
+  );
+
+  const [columnOrder, setColumnOrder] = useState<ColumnOrderState>(() =>
+    columns?.map((c) => c.id as string),
   );
 
   const table = useReactTable({
