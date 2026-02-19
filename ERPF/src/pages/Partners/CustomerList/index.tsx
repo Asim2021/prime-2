@@ -9,6 +9,7 @@ import {
   useReactTable,
   SortingState,
   PaginationState,
+  ColumnOrderState,
 } from "@tanstack/react-table";
 
 import MainHeader from "@components/Header/MainHeader";
@@ -28,8 +29,11 @@ const CustomerList = () => {
     pageIndex: 0,
     pageSize: 10,
   });
+  const columns = useCustomerColumns((id) => deleteMutation.mutate(id));
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnOrder, setColumnOrder] = useState<string[]>([]);
+  const [columnOrder, setColumnOrder] = useState<ColumnOrderState>(() =>
+    columns?.map((c) => c.id as string),
+  );
 
   const { setModalAction } = useCustomerStore();
   const queryClient = useQueryClient();
@@ -52,8 +56,6 @@ const CustomerList = () => {
       });
     },
   });
-
-  const columns = useCustomerColumns((id) => deleteMutation.mutate(id));
 
   const { data, isError, isFetching, error } = usePaginationDataFetch({
     queryKey: ["customers"],

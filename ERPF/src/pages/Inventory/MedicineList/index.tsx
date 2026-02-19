@@ -9,6 +9,7 @@ import {
   useReactTable,
   SortingState,
   PaginationState,
+  ColumnOrderState,
 } from "@tanstack/react-table";
 
 import MainHeader from "@components/Header/MainHeader";
@@ -20,6 +21,7 @@ import useMedicineColumns from "./useMedicineColumns";
 import MedicineModal from "./MedicineModal";
 import { usePaginationDataFetch } from "@hooks/usePaginationDataFetch";
 import { CustomTableOptions } from "@src/types/table";
+import { INITIAL_ALL_TABLE_PINNING } from "@constants/items";
 
 const MedicineList = () => {
   const [search, setSearch] = useState("");
@@ -28,8 +30,11 @@ const MedicineList = () => {
     pageIndex: 0,
     pageSize: 10,
   });
+  const columns = useMedicineColumns((id) => deleteMutation.mutate(id));
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnOrder, setColumnOrder] = useState<string[]>([]);
+  const [columnOrder, setColumnOrder] = useState<ColumnOrderState>(() =>
+    columns?.map((c) => c.id as string),
+  );
 
   const { setModalAction } = useMedicineStore();
   const queryClient = useQueryClient();
@@ -53,8 +58,6 @@ const MedicineList = () => {
     },
   });
 
-  const columns = useMedicineColumns((id) => deleteMutation.mutate(id));
-
   const { data, isError, isFetching, error } = usePaginationDataFetch({
     queryKey: ["medicines"],
     queryFn: fetchAllMedicines,
@@ -66,6 +69,9 @@ const MedicineList = () => {
   const table = useReactTable({
     data: data?.data || [],
     columns,
+    initialState: {
+      columnPinning: INITIAL_ALL_TABLE_PINNING,
+    },
     state: { sorting, pagination, columnOrder },
     pageCount: data?.totalPages || 0,
     onPaginationChange: setPagination,

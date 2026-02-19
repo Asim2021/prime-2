@@ -2,6 +2,7 @@ import { ActionIcon, Group, Stack, Text, Title } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import {
   ColumnDef,
+  ColumnOrderState,
   getCoreRowModel,
   getPaginationRowModel,
   getSortedRowModel,
@@ -26,7 +27,9 @@ const SalesHistory = () => {
     pageSize: 10,
   });
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnOrder, setColumnOrder] = useState<string[]>([]);
+  const [columnOrder, setColumnOrder] = useState<ColumnOrderState>(() =>
+    columns?.map((c) => c.id as string),
+  );
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["sales", pagination, sorting],

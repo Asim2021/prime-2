@@ -9,6 +9,7 @@ import {
   useReactTable,
   SortingState,
   PaginationState,
+  ColumnOrderState,
 } from "@tanstack/react-table";
 
 import MainHeader from "@components/Header/MainHeader";
@@ -27,8 +28,11 @@ const BatchList = () => {
     pageIndex: 0,
     pageSize: 10,
   });
+  const columns = useBatchColumns((id) => deleteMutation.mutate(id));
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnOrder, setColumnOrder] = useState<string[]>([]);
+  const [columnOrder, setColumnOrder] = useState<ColumnOrderState>(() =>
+    columns?.map((c) => c.id as string),
+  );
 
   const { setModalAction } = useBatchStore();
   const queryClient = useQueryClient();
@@ -51,8 +55,6 @@ const BatchList = () => {
       });
     },
   });
-
-  const columns = useBatchColumns((id) => deleteMutation.mutate(id));
 
   const { data, isError, isFetching, error } = usePaginationDataFetch({
     queryKey: ["batches"],

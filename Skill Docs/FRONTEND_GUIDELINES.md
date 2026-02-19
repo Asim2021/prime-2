@@ -123,9 +123,23 @@ Take reference from src\pages\Users\components\UserTable\UserTable.tsx
     - Pass `getCoreRowModel`, `getSortedRowModel`, `getPaginationRowModel` etc.
 4.  **Render**:
 
-    ```tsx
+```tsx
+
    // let say for Users list
     import { TABLES } from "@constants/tables";
+    import {
+     getCoreRowModel,
+     getPaginationRowModel,
+     getSortedRowModel,
+     useReactTable,
+     SortingState,
+     PaginationState,
+     ColumnOrderState,
+     } from "@tanstack/react-table";
+
+     const [columnOrder, setColumnOrder] = useState<ColumnOrderState>(() =>
+       columns?.map((c) => c.id as string),
+     );
 
     const table = useReactTable<T>({
     tableId: TABLES.USERS,
@@ -169,7 +183,8 @@ Take reference from src\pages\Users\components\UserTable\UserTable.tsx
       persistColumnPinning
       persistColumnSorting
     />
-    ```
+
+```
 
 #### **Modals & State Management (Zustand)**
 

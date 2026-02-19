@@ -8,6 +8,7 @@ import {
   SortingState,
   PaginationState,
   ColumnDef,
+  ColumnOrderState,
 } from "@tanstack/react-table";
 import { ActionIcon, Badge, Text, Button } from "@mantine/core";
 import { MdAdd, MdVisibility } from "react-icons/md";
@@ -31,7 +32,6 @@ const PurchaseList = () => {
     pageSize: 10,
   });
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnOrder, setColumnOrder] = useState<string[]>([]);
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["purchases", pagination, debouncedSearch, sorting],
@@ -110,6 +110,9 @@ const PurchaseList = () => {
       },
     ],
     [],
+  );
+  const [columnOrder, setColumnOrder] = useState<ColumnOrderState>(() =>
+    columns?.map((c) => c.id as string),
   );
 
   const table = useReactTable({

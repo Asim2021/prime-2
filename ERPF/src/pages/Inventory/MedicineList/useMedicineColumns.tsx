@@ -26,6 +26,14 @@ const useMedicineColumns = (deleteHandler: (id: string) => void) => {
         ),
       },
       {
+        id: "generic_name",
+        accessorKey: "generic_name",
+        header: "Generic Name",
+        cell: ({ row }) => (
+          <Text size="sm">{row.original.generic_name || "-"}</Text>
+        ),
+      },
+      {
         id: "manufacturer",
         accessorKey: "manufacturer",
         header: "Manufacturer",
@@ -39,14 +47,6 @@ const useMedicineColumns = (deleteHandler: (id: string) => void) => {
         header: "Schedule",
         cell: ({ row }) => (
           <Badge variant="outline">{row.original.schedule_type || "-"}</Badge>
-        ),
-      },
-      {
-        id: "unit_type",
-        accessorKey: "unit_type",
-        header: "Unit",
-        cell: ({ row }) => (
-          <Text size="sm">{row.original.unit_type || "-"}</Text>
         ),
       },
       {

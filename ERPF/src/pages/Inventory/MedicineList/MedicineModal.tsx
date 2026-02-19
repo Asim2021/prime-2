@@ -130,14 +130,6 @@ const MedicineModal = () => {
             />
           </Grid.Col>
 
-          <Grid.Col span={12}>
-            <Textarea
-              label="Composition"
-              placeholder="e.g. Paracetamol 650mg"
-              {...form.getInputProps("composition")}
-            />
-          </Grid.Col>
-
           <Grid.Col span={6}>
             <Select
               label="Schedule Type"
@@ -169,6 +161,14 @@ const MedicineModal = () => {
               label="Barcode"
               placeholder="Scan or enter barcode"
               {...form.getInputProps("barcode")}
+            />
+          </Grid.Col>
+
+          <Grid.Col span={12}>
+            <Textarea
+              label="Composition"
+              placeholder="e.g. Paracetamol 650mg"
+              {...form.getInputProps("composition")}
             />
           </Grid.Col>
         </Grid>
