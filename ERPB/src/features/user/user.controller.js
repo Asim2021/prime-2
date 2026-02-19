@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import * as userService from './user.service.js';
-import { HTTP_STATUS } from '../../constant/httpStatus.js';
-import { sendSuccessResponse, sendErrorResponse } from '../../middleware/sendResponse.js';
+import { HTTP_STATUS } from '#constant/httpStatus.js';
+import { sendSuccessResponse, sendErrorResponse } from '#middleware/sendResponse.js';
 import { getPaginationParams, parseBoolean } from '#utils/helpers.js';
 import { USERS_STRING } from '#constant/strings.js';
 
@@ -35,19 +35,19 @@ export const list = async (req, res) => {
       message: USERS_STRING.USER_FETCHED,
       data: _.isEmpty(rows)
         ? {
-            data: [],
-            totalCount: 0,
-            count: 0,
-            currentPage: 1,
-            totalPages: 1,
-          }
+          data: [],
+          totalCount: 0,
+          count: 0,
+          currentPage: 1,
+          totalPages: 1,
+        }
         : {
-            data: rows,
-            totalCount: count,
-            count: rows.length,
-            currentPage: page,
-            totalPages: Math.ceil(count / limit),
-          },
+          data: rows,
+          totalCount: count,
+          count: rows.length,
+          currentPage: page,
+          totalPages: Math.ceil(count / limit),
+        },
     });
   } catch (error) {
     sendErrorResponse({

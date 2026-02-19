@@ -1,11 +1,9 @@
 import bcrypt from 'bcryptjs';
 import { randomUUID } from 'node:crypto';
 import { Op, Sequelize } from 'sequelize';
-
-import { User } from '../../models/user/user.model.js';
-import { Role } from '../../models/role/role.model.js';
-import { createError } from '../../middleware/error.middleware.js';
-import { HTTP_STATUS } from '../../constant/httpStatus.js';
+import { User, Role } from '#models/index.js';
+import { createError } from '#middleware/error.middleware.js';
+import { HTTP_STATUS } from '#constant/httpStatus.js';
 
 /**
  * Get all users with their roles.
@@ -13,23 +11,23 @@ import { HTTP_STATUS } from '../../constant/httpStatus.js';
 export const getAllUsers = async ({ page, limit, offset, sortBy, order, search, active }) => {
   return User.findAndCountAll({
     raw: true,
-    include: [{ model: Role, as: 'role', attributes: [] }],
+    include: [ { model: Role, as: 'role', attributes: [] } ],
     attributes: {
-      exclude: ['password_hash', 'session_token'],
+      exclude: [ 'password_hash', 'session_token' ],
       include: [
-        [Sequelize.col('role.name'), 'role_name'],
-        [Sequelize.col('role.code'), 'role_code'],
+        [ Sequelize.col('role.name'), 'role_name' ],
+        [ Sequelize.col('role.code'), 'role_code' ],
       ],
     },
     where: {
       ...(search && {
-        username: { [Op.like]: `%${search.trim()}%` },
+        username: { [ Op.like ]: `%${search.trim()}%` },
       }),
       ...(active && { is_active: active }),
     },
     limit,
     offset,
-    order: [[sortBy, order]],
+    order: [ [ sortBy, order ] ],
   });
 };
 
@@ -38,8 +36,8 @@ export const getAllUsers = async ({ page, limit, offset, sortBy, order, search, 
  */
 export const getUserById = async (id) => {
   const user = await User.findByPk(id, {
-    include: [{ model: Role, as: 'role', attributes: ['id', 'name', 'code'] }],
-    attributes: { exclude: ['password_hash', 'session_token'] },
+    include: [ { model: Role, as: 'role', attributes: [ 'id', 'name', 'code' ] } ],
+    attributes: { exclude: [ 'password_hash', 'session_token' ] },
   });
   if (!user) {
     throw createError('User not found', HTTP_STATUS.NOT_FOUND);
@@ -53,7 +51,7 @@ export const getUserById = async (id) => {
 export const createUser = async (data) => {
   const existing = await User.findOne({
     where: {
-      [Op.or]: [{ email: data.email }, { username: data.username }],
+      [ Op.or ]: [ { email: data.email }, { username: data.username } ],
     },
   });
   if (existing) {

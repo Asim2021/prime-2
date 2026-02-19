@@ -10,7 +10,7 @@ import {
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { useMutation } from "@tanstack/react-query";
-import useCartStore from "@stores/cartStore";
+import { useCartStore } from "@stores/cartStore";
 import { createSale } from "@services/salesService";
 
 const CheckoutModal = ({

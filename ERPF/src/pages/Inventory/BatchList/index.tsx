@@ -80,7 +80,7 @@ const BatchList = ({ withHeader = true }: { withHeader?: boolean }) => {
   } as CustomTableOptions<BatchI>);
 
   return (
-    <div className="w-full h-full pb-24 relative">
+    <div className="w-full h-full flex flex-col relative">
       <MainHeader
         title={withHeader ? "Batches" : ""}
         search={search}
@@ -96,6 +96,7 @@ const BatchList = ({ withHeader = true }: { withHeader?: boolean }) => {
         }
       />
       <MainTable
+        className="flex-1 !h-auto"
         id="batches-table"
         table={table}
         isLoading={isFetching}

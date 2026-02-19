@@ -11,7 +11,7 @@ import {
   Title,
 } from "@mantine/core";
 import { MdDelete } from "react-icons/md";
-import useCartStore from "@stores/cartStore";
+import { useCartStore } from "@stores/cartStore";
 
 const POSCart = ({ onCheckout }: { onCheckout: () => void }) => {
   const { items, removeItem, updateQty, getTotals, reset } = useCartStore();
@@ -55,20 +55,20 @@ const POSCart = ({ onCheckout }: { onCheckout: () => void }) => {
                 </Table.Tr>
               ) : (
                 items.map((item) => (
-                  <Table.Tr key={item.cartId}>
+                  <Table.Tr key={item.id}>
                     <Table.Td>
                       <Text size="sm" fw={500} lineClamp={1}>
                         {item.medicine_name}
                       </Text>
                       <Text size="xs" c="dimmed">
-                        Batch: {item.batch_number}
+                        Batch: {item.batch_no}
                       </Text>
                     </Table.Td>
                     <Table.Td>
                       <NumberInput
                         size="xs"
                         min={1}
-                        max={item.available_quantity}
+                        max={item.quantity_available}
                         value={item.cartQty}
                         onChange={(v) => updateQty(item.id, Number(v))}
                         hideControls

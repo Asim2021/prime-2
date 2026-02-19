@@ -1,11 +1,12 @@
+import { BatchI } from "./inventory";
+
 export interface SaleItemI {
   id: string;
   sale_id: string;
   batch_id: string;
   quantity: number;
-  selling_price: string | number; // Decimal comes as string from API usually
+  selling_price: string | number;
   mrp_at_sale: string | number;
-  // Computed/Joined fields if available from backend
   batch?: BatchI;
   medicine_name?: string;
 }
@@ -13,7 +14,7 @@ export interface SaleItemI {
 export interface SaleI {
   id: string;
   bill_no: string;
-  bill_date: string; // ISO Date
+  bill_date: string;
   customer_name: string;
   customer_phone?: string;
   customer_id?: string;
@@ -30,14 +31,8 @@ export interface SaleI {
 }
 
 export interface CartItemI extends BatchI {
-  cartId: string;
   cartQty: number;
-  cartPrice: number;
-  taxPercent: number;
-  medicine_name?: string;
-  brand_name?: string;
-  generic_name?: string;
-  available_quantity: number; // Ensure this is present
+  cartPrice: number; // selling_price
 }
 
 export interface SalesStatI {

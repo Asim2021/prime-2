@@ -85,7 +85,7 @@ const MedicineList = ({ withHeader = true }: { withHeader?: boolean }) => {
   } as CustomTableOptions<MedicineI>);
 
   return (
-    <div className="w-full h-full pb-24 relative">
+    <div className="w-full h-full flex flex-col relative">
       <MainHeader
         title={withHeader ? "Medicines" : ""} // Hide title if embedded
         search={search}
@@ -101,6 +101,7 @@ const MedicineList = ({ withHeader = true }: { withHeader?: boolean }) => {
         }
       />
       <MainTable
+        className="flex-1 !h-auto"
         id="medicines-table"
         table={table}
         isLoading={isFetching}

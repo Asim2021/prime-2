@@ -33,4 +33,14 @@ export const createSale = async (req, res, next) => {
         next(error);
     }
 };
+
+export const returnSale = async (req, res, next) => {
+    try {
+        const data = { ...req.body, created_by: req.user.id };
+        const result = await saleService.processReturn(data);
+        res.status(201).json(result);
+    } catch (error) {
+        next(error);
+    }
+};
 //# sourceMappingURL=sale.controller.js.map

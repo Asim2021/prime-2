@@ -12,21 +12,34 @@ export const createSaleSchema = Joi.object({
     is_credit: Joi.boolean().default(false),
     items: Joi.array()
         .items(Joi.object({
-        batch_id: Joi.string().uuid().required().messages({
-            'string.guid': 'Invalid Batch ID',
-            'any.required': 'Batch is required',
-        }),
-        quantity: Joi.number().integer().min(1).required().messages({
-            'number.min': 'Quantity must be at least 1',
-        }),
-        selling_price: Joi.number().min(0.01).required(),
-        mrp_at_sale: Joi.number().min(0.01).required(),
-    }))
+            batch_id: Joi.string().uuid().required().messages({
+                'string.guid': 'Invalid Batch ID',
+                'any.required': 'Batch is required',
+            }),
+            quantity: Joi.number().integer().min(1).required().messages({
+                'number.min': 'Quantity must be at least 1',
+            }),
+            selling_price: Joi.number().min(0.01).required(),
+            mrp_at_sale: Joi.number().min(0.01).required(),
+        }))
         .min(1)
         .required()
         .messages({
-        'array.min': 'At least one item is required',
-        'any.required': 'Items are required',
-    }),
+            'array.min': 'At least one item is required',
+            'any.required': 'Items are required',
+        }),
+});
+
+export const returnSaleSchema = Joi.object({
+    sale_id: Joi.string().uuid().required(),
+    reason: Joi.string().allow('', null),
+    items: Joi.array()
+        .items(Joi.object({
+            sale_item_id: Joi.string().uuid().required(),
+            batch_id: Joi.string().uuid().required(),
+            quantity: Joi.number().integer().min(1).required(),
+        }))
+        .min(1)
+        .required(),
 });
 //# sourceMappingURL=sale.schema.js.map

@@ -1,151 +1,95 @@
-import { ActionIcon, Group, Stack, Text, Title } from "@mantine/core";
-import { useQuery } from "@tanstack/react-query";
-import {
-  ColumnDef,
-  ColumnOrderState,
-  getCoreRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  PaginationState,
-  SortingState,
-  useReactTable,
-} from "@tanstack/react-table";
+import { ActionIcon, Badge, Group, Text, Tooltip } from "@mantine/core";
 import { useMemo, useState } from "react";
 import { MdVisibility } from "react-icons/md";
 import MainTable from "@components/Table";
 import { fetchAllSales } from "@services/salesService";
-import dayjs from "dayjs";
-import { CustomTableOptions } from "@src/types/table";
-import { SaleI } from "@src/types/sales";
-
-import { useNavigate } from "react-router";
+import { SaleI } from "@types/sales";
+// import InvoiceViewer from "./InvoiceViewer"; // To be implemented
 
 const SalesHistory = () => {
-  const navigate = useNavigate();
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
-  });
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const [viewId, setViewId] = useState<string | null>(null);
 
-  const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["sales", pagination, sorting],
-    queryFn: () =>
-      fetchAllSales({
-        page: pagination.pageIndex + 1,
-        limit: pagination.pageSize,
-        sortBy: sorting[0]?.id || "created_at",
-        order: sorting[0]?.desc ? "DESC" : "ASC",
-      }),
-  });
-
-  const columns = useMemo<ColumnDef<SaleI>[]>(
+  const columns = useMemo(
     () => [
       {
-        id: "bill_date",
-        accessorKey: "bill_date",
-        header: "Date",
-        cell: ({ row }) =>
-          dayjs(row.original.bill_date).format("DD MMM YYYY, hh:mm A"),
-      },
-      {
-        id: "bill_no",
         accessorKey: "bill_no",
         header: "Bill No",
+        cell: (info: any) => <Text fw={500}>{info.getValue()}</Text>,
       },
       {
-        id: "customer_name",
+        accessorKey: "bill_date",
+        header: "Date",
+        cell: (info: any) => new Date(info.getValue()).toLocaleDateString(),
+      },
+      {
         accessorKey: "customer_name",
         header: "Customer",
-        cell: ({ row }) => (
-          <Stack gap={0}>
-            <Text size="sm" fw={500}>
-              {row.original.customer_name}
-            </Text>
-            {row.original.customer_phone && (
-              <Text size="xs" c="dimmed">
-                {row.original.customer_phone}
-              </Text>
-            )}
-          </Stack>
-        ),
       },
       {
-        id: "total_amount",
-        accessorKey: "total_amount",
+        accessorKey: "grand_total", // Backend returns 'grand_total' or 'total_amount'?
+        // sale.service.js: total_amount: data.total_amount ... wait, let's check backend response.
+        // It returns 'total_amount' and 'taxable_amount'.
+        // Let's use total_amount as the final payable.
         header: "Amount",
-        cell: ({ row }) => (
-          <Text fw={600}>₹{Number(row.original.total_amount).toFixed(2)}</Text>
+        cell: (info: any) => (
+          <Text fw={600}>₹{info.row.original.total_amount}</Text>
         ),
       },
       {
-        id: "payment_mode",
         accessorKey: "payment_mode",
         header: "Mode",
-        cell: ({ row }) => (
-          <Text tt="capitalize">{row.original.payment_mode}</Text>
+        cell: (info: any) => (
+          <Badge
+            color={
+              info.getValue() === "cash"
+                ? "green"
+                : info.getValue() === "credit"
+                  ? "orange"
+                  : "blue"
+            }
+          >
+            {info.getValue().toUpperCase()}
+          </Badge>
         ),
       },
       {
         id: "actions",
-        cell: ({ row }) => (
-          <ActionIcon
-            variant="subtle"
-            color="blue"
-            onClick={() => navigate(`${row.original.id}`)}
-          >
-            <MdVisibility size={16} />
-          </ActionIcon>
+        header: "Action",
+        cell: (info: any) => (
+          <Group gap="xs">
+            <Tooltip label="View Invoice">
+              <ActionIcon
+                variant="subtle"
+                color="blue"
+                onClick={() => setViewId(info.row.original.id)}
+              >
+                <MdVisibility size={18} />
+              </ActionIcon>
+            </Tooltip>
+          </Group>
         ),
       },
     ],
     [],
   );
 
-  const [columnOrder, setColumnOrder] = useState<ColumnOrderState>(() =>
-    columns?.map((c) => c.id as string),
-  );
-
-  const table = useReactTable({
-    data: data?.data || [],
-    columns,
-    state: { pagination, sorting, columnOrder },
-    pageCount: data?.totalPages || 0,
-    onPaginationChange: setPagination,
-    onSortingChange: setSorting,
-    onColumnOrderChange: setColumnOrder,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    manualPagination: true,
-    tableId: "sales-history",
-  } as CustomTableOptions<SaleI>);
-
   return (
-    <Stack h="100%" p="md">
-      <Group justify="space-between">
-        <Title order={3}>Sales History</Title>
-      </Group>
+    <>
       <MainTable
-        id="sales-history"
-        table={table}
-        isLoading={isLoading}
-        isError={isError}
-        error={error}
-        totalCount={data?.totalCount || 0}
-        totalPages={data?.totalPages || 0}
-        setPagination={setPagination}
-        columnOrder={columnOrder}
-        setColumnOrder={setColumnOrder}
-        columnIdsToSort={[
-          "bill_date",
-          "bill_no",
-          "total_amount",
-          "customer_name",
-        ]}
-        withFooter
+        queryKey={["sales-history"]}
+        queryFn={fetchAllSales}
+        columns={columns}
+        searchPlaceholder="Search Invoice, Customer..."
+        title="Sales History"
       />
-    </Stack>
+      {/* {viewId && (
+        <InvoiceViewer
+          opened={!!viewId}
+          onClose={() => setViewId(null)}
+          saleId={viewId}
+        />
+      )} */}
+    </>
   );
 };
 

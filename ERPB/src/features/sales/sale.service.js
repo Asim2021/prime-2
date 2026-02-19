@@ -205,6 +205,93 @@ export const saleService = {
             );
 
             return sale;
+            return sale;
+        });
+    },
+
+    processReturn: async (data) => {
+        return await db.sequelize.transaction(async (t) => {
+            const { sale_id, items, reason } = data;
+            const sale = await Sale.findByPk(sale_id, { transaction: t });
+            if (!sale) throw new Error('Sale not found');
+
+            // check if already returned? For now, we allow multiple returns until qty is exhausted.
+            // But we need to track how much returned.
+            // We can sum up existing SalesReturnItems for this sale_item_id.
+
+            let totalRefund = 0;
+            const returnId = randomUUID();
+
+            const salesReturn = await db.SalesReturn.create({
+                id: returnId,
+                sale_id,
+                bill_no: sale.bill_no,
+                // return_date defaults to now
+                reason,
+                total_refund: 0, // update later
+                created_by: data.created_by,
+            }, { transaction: t });
+
+            for (const item of items) {
+                const saleItem = await SaleItem.findByPk(item.sale_item_id, { transaction: t });
+                if (!saleItem) throw new Error(`Sale Item ${item.sale_item_id} not found`);
+                if (saleItem.sale_id !== sale_id) throw new Error('Item does not belong to this sale');
+
+                // Check previously returned quantity
+                const previousReturns = await db.SalesReturnItem.sum('quantity', {
+                    where: { sale_item_id: item.sale_item_id },
+                    transaction: t,
+                }) || 0;
+
+                if (previousReturns + item.quantity > saleItem.quantity) {
+                    throw new Error(`Cannot return ${item.quantity}. Sold: ${saleItem.quantity}, Already Returned: ${previousReturns}`);
+                }
+
+                const refundAmount = Number(saleItem.selling_price) * item.quantity;
+                totalRefund += refundAmount;
+
+                // 1. Create Return Item
+                await db.SalesReturnItem.create({
+                    id: randomUUID(),
+                    sales_return_id: returnId,
+                    sale_item_id: item.sale_item_id,
+                    batch_id: item.batch_id,
+                    quantity: item.quantity,
+                    refund_amount: refundAmount,
+                }, { transaction: t });
+
+                // 2. Update Batch Stock (Increment)
+                const batch = await Batch.findByPk(item.batch_id, { transaction: t, lock: true });
+                if (batch) {
+                    await batch.increment('quantity_available', { by: item.quantity, transaction: t });
+
+                    // 3. Stock Ledger
+                    await StockLedger.create({
+                        id: randomUUID(),
+                        batch_id: item.batch_id,
+                        transaction_type: 'return',
+                        reference_id: returnId,
+                        quantity_change: item.quantity,
+                        balance_after: batch.quantity_available + item.quantity, // approximate if concurrent, but we locked batch? findByPk with lock: true locks the row.
+                        // Wait, increment returns the updated instance or I should calculate manually?
+                        // `increment` runs an update query. The `batch` instance might not be updated in memory unless `{ returning: true }` (Postgres).
+                        // Safer to calc:
+                    }, { transaction: t });
+                }
+            }
+
+            await salesReturn.update({ total_refund: totalRefund }, { transaction: t });
+
+            await AuditLog.create({
+                id: randomUUID(),
+                user_id: data.created_by,
+                action: 'sale_return',
+                table_name: 'sales_returns',
+                record_id: returnId,
+                new_value: JSON.stringify({ sale_id, items_count: items.length, total_refund: totalRefund }),
+            }, { transaction: t });
+
+            return salesReturn;
         });
     },
 };

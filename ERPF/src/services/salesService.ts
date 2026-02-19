@@ -1,46 +1,42 @@
 import erpApi from "@lib/axiosInstance";
-
-export const fetchAllSales = async (params: {
-  page?: number;
-  limit?: number;
-  search?: string;
-  sortBy?: string;
-  order?: "ASC" | "DESC";
-}) => {
-  const { data } = await erpApi.get("/sales", { params });
-  return data;
-};
-
-export const fetchSaleById = async (id: string) => {
-  const { data } = await erpApi.get(`/sales/${id}`);
-  return data;
-};
+import { ENDPOINT } from "../constants/endpoints";
+import { SaleI } from "../types/sales";
 
 export interface CreateSalePayload {
-  customer_name: string;
+  customer_id?: string | null;
+  customer_name?: string;
   customer_phone?: string;
-  customer_id?: string;
-  payment_mode: "cash" | "upi" | "credit";
-  total_amount: number;
-  taxable_amount: number;
-  cgst_amount: number;
-  sgst_amount: number;
-  igst_amount: number;
-  is_credit: boolean;
+  payment_mode: string;
   items: {
     batch_id: string;
     quantity: number;
     selling_price: number;
     mrp_at_sale: number;
   }[];
+  total_amount: number;
+  taxable_amount: number;
+  cgst_amount?: number;
+  sgst_amount?: number;
+  igst_amount?: number;
+  item_count: number;
 }
 
 export const createSale = async (payload: CreateSalePayload) => {
-  const { data } = await erpApi.post("/sales", payload);
-  return data;
+  const response = await erpApi.post(ENDPOINT.SALES.BASE, payload);
+  return response.data;
+};
+
+export const fetchAllSales = async (params?: any) => {
+  const response = await erpApi.get(ENDPOINT.SALES.BASE, { params });
+  return response.data;
+};
+
+export const fetchSaleById = async (id: string) => {
+  const response = await erpApi.get(`${ENDPOINT.SALES.BASE}/${id}`);
+  return response.data;
 };
 
 export const createSalesReturn = async (payload: any) => {
-  const { data } = await erpApi.post("/sales/returns", payload);
-  return data;
+  const response = await erpApi.post(`${ENDPOINT.SALES.BASE}/return`, payload);
+  return response.data;
 };

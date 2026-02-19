@@ -15,6 +15,8 @@ import { StockAdjustment } from './stockAdjustment/stockAdjustment.model.js';
 import { StockLedger } from './stockLedger/stockLedger.model.js';
 import { AuditLog } from './auditLog/auditLog.model.js';
 import { InvoiceSequence } from './invoiceSequence/invoiceSequence.model.js';
+import { SalesReturn } from './salesReturn/salesReturn.model.js';
+import { SalesReturnItem } from './salesReturn/salesReturnItem.model.js';
 // ══════════════════════════════════════════════
 // ASSOCIATIONS
 // ══════════════════════════════════════════════
@@ -63,6 +65,17 @@ StockLedger.belongsTo(Batch, { foreignKey: 'batch_id', as: 'batch' });
 // ── User ↔ AuditLog ──
 User.hasMany(AuditLog, { foreignKey: 'user_id', as: 'auditLogs' });
 AuditLog.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
+
+// ── Sales Return Associations ──
+Sale.hasMany(SalesReturn, { foreignKey: 'sale_id', as: 'returns' });
+SalesReturn.belongsTo(Sale, { foreignKey: 'sale_id', as: 'sale' });
+
+SalesReturn.hasMany(SalesReturnItem, { foreignKey: 'sales_return_id', as: 'items' });
+SalesReturnItem.belongsTo(SalesReturn, { foreignKey: 'sales_return_id', as: 'salesReturn' });
+
+SalesReturnItem.belongsTo(Batch, { foreignKey: 'batch_id', as: 'batch' });
+Batch.hasMany(SalesReturnItem, { foreignKey: 'batch_id', as: 'returnedItems' });
+
 // ══════════════════════════════════════════════
 // EXPORT
 // ══════════════════════════════════════════════
@@ -83,7 +96,9 @@ const db = {
     StockLedger,
     AuditLog,
     InvoiceSequence,
+    SalesReturn,
+    SalesReturnItem,
 };
 export default db;
-export { Role, User, ShopSettings, Customer, Medicine, Vendor, Batch, Purchase, PurchaseItem, Sale, SaleItem, StockAdjustment, StockLedger, AuditLog, InvoiceSequence, };
+export { Role, User, ShopSettings, Customer, Medicine, Vendor, Batch, Purchase, PurchaseItem, Sale, SaleItem, StockAdjustment, StockLedger, AuditLog, InvoiceSequence, SalesReturn, SalesReturnItem };
 //# sourceMappingURL=index.js.map

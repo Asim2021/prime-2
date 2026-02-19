@@ -15,7 +15,7 @@ import {
   fetchBatchesByMedicine,
 } from "@services/inventoryService";
 import { useState } from "react";
-import useCartStore from "@stores/cartStore";
+import { useCartStore } from "@stores/cartStore";
 
 // We need a custom search component that shows medicines, then expands to show batches.
 // Or simple: Search Medicine -> On Select -> Show Modal/List of Batches.
@@ -108,7 +108,14 @@ const ProductSearch = () => {
                       <ActionIcon
                         variant="filled"
                         color="blue"
-                        onClick={() => addItem(batch, selectedMedicine)}
+                        onClick={() =>
+                          addItem({
+                            ...batch,
+                            cartQty: 1,
+                            cartPrice: batch.mrp,
+                            medicine_name: selectedMedicine.brand_name,
+                          } as any)
+                        }
                         disabled={batch.quantity_available <= 0}
                       >
                         <MdAddShoppingCart size={18} />

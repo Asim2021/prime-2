@@ -54,6 +54,7 @@ export const ENDPOINT = {
   PURCHASE_GRN: "/purchase/grn",
   // Sales Routes
   SALES: {
+    BASE: "/sales",
     POS: "/sales/pos",
     ORDERS: "/sales", // History
   },

@@ -14,6 +14,7 @@ import {
   ColumnDef,
   SortingState,
   PaginationState,
+  ColumnOrderState,
 } from "@tanstack/react-table";
 import { CustomTableOptions } from "@src/types/table";
 
@@ -24,6 +25,14 @@ const StockAdjustment = ({ withHeader = true }: { withHeader?: boolean }) => {
     pageSize: 10,
   });
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnOrder, setColumnOrder] = useState<ColumnOrderState>([
+    "created_at",
+    "medicine.brand_name",
+    "batch.batch_no",
+    "quantity_change",
+    "reason",
+    "note",
+  ]);
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["stock-adjustments", pagination.pageIndex, pagination.pageSize],
@@ -78,9 +87,11 @@ const StockAdjustment = ({ withHeader = true }: { withHeader?: boolean }) => {
     state: {
       sorting,
       pagination,
+      columnOrder,
     },
     onPaginationChange: setPagination,
     onSortingChange: setSorting,
+    onColumnOrderChange: setColumnOrder,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -90,7 +101,7 @@ const StockAdjustment = ({ withHeader = true }: { withHeader?: boolean }) => {
   } as CustomTableOptions<any>);
 
   return (
-    <Stack>
+    <Stack h="100%" gap="md">
       {withHeader && (
         <Group justify="space-between">
           <Title order={3}>Stock Adjustments</Title>
@@ -109,6 +120,7 @@ const StockAdjustment = ({ withHeader = true }: { withHeader?: boolean }) => {
       )}
 
       <MainTable
+        className="flex-1 !h-auto"
         id="stock-adjustment-table"
         table={table}
         isLoading={isLoading}
@@ -117,14 +129,9 @@ const StockAdjustment = ({ withHeader = true }: { withHeader?: boolean }) => {
         totalCount={data?.totalCount || 0}
         totalPages={data?.totalPages || 0}
         setPagination={setPagination}
-        columnOrder={[
-          "created_at",
-          "medicine.brand_name",
-          "batch.batch_no",
-          "quantity_change",
-          "reason",
-          "note",
-        ]}
+        columnOrder={columnOrder}
+        setColumnOrder={setColumnOrder}
+        columnIdsToSort={["created_at", "quantity_change"]}
         withFooter
       />
 

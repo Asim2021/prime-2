@@ -1,8 +1,8 @@
 import { Router } from 'express';
 
-import { verifyAccessToken, verifyUserRole } from '../../middleware/verifyTokens.js';
-import { JOI_TYPES, joiValidate } from '../../utils/joiValidator.js';
-import { ENDPOINT } from '../../constant/endpoints.js';
+import { verifyAccessToken, verifyUserRole } from '#middleware/verifyTokens.js';
+import { JOI_TYPES, joiValidate } from '#utils/joiValidator.js';
+import { ENDPOINT } from '#constant/endpoints.js';
 import { list, getById, create, update, deactivate } from './user.controller.js';
 import { createUserSchema, getAllUserSchema, updateUserSchema, userIdParamSchema } from './user.schema.js';
 

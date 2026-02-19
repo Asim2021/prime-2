@@ -54,6 +54,7 @@ const MainTable = <TData extends object>({
   persistColumnSorting = false,
   noDataFoundDescription = undefined,
   noDataFoundChildren = undefined,
+  className,
 }: MainTableI<TData>) => {
   const tableId = (table.options as CustomTableOptions<TData>)?.tableId;
 
@@ -140,7 +141,7 @@ const MainTable = <TData extends object>({
   }
 
   return (
-    <main className={classes.mainContiner}>
+    <main className={`${classes.mainContiner} ${className || ""}`}>
       <DndContext
         collisionDetection={closestCenter}
         onDragEnd={handleDragEnd}

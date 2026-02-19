@@ -18,7 +18,7 @@ interface TableHeaderI<TData extends object> {
 interface TableBodyI<TData extends object> {
   table: Table<TData>;
   hasSubComponent?: boolean;
-  renderSubComponent?: (row: Row<TData>) => React.ReactElement ;
+  renderSubComponent?: (row: Row<TData>) => React.ReactElement;
   trClasses?: string;
   isLoading?: boolean;
 }
@@ -37,19 +37,19 @@ interface FooterI<TData extends object> {
 }
 
 interface MainTableI<TData extends object>
-  extends FooterI<TData>,
-    TableBodyI<TData>,
-    TableHeaderI<TData> {
+  extends FooterI<TData>, TableBodyI<TData>, TableHeaderI<TData> {
   id: string;
   table: Table<TData>;
   isError?: boolean;
   isLoading?: boolean;
   error?: Error | AxiosError | null | undefined;
   setColumnOrder: (
-    updater: (oldOrder: ColumnOrderState) => ColumnOrderState
+    updater: (oldOrder: ColumnOrderState) => ColumnOrderState,
   ) => void;
   excludeColumnFromSwap?: string[];
   notFoundPage?: React.ReactNode;
   noDataFoundDescription?: string | undefined;
-  noDataFoundChildren? : React.ReactElement
+  noDataFoundDescription?: string | undefined;
+  noDataFoundChildren?: React.ReactElement;
+  className?: string;
 }
