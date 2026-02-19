@@ -13,10 +13,9 @@ export const fetchUserById = async (id: string): Promise<UserI> => {
 export const fetchAllUser = async (
   params: QueryParamsI,
 ): Promise<PaginationResponseI<UserI[]>> => {
-  const url = `${ENDPOINT.USERS.BASE}` + paramsToQueryString(params);
+  const url = ENDPOINT.USERS.BASE + paramsToQueryString(params);
   const res: AxiosResponse = await erpApi.get(url);
-  const users = res?.data;
-  return users as PaginationResponseI<UserI[]>;
+  return res.data;
 };
 
 export const addUser = async (values: Partial<UserI>): Promise<UserI> => {
@@ -53,17 +52,6 @@ export const bulkCreateUsers = async (
   const url = `${ENDPOINT.USERS.BASE}/bulk-create`;
   const res: AxiosResponse = await erpApi.post(url, users);
   return res?.data;
-};
-
-export const uploadProfile = async (
-  id: string,
-  payload: ProfileI,
-): Promise<ProfileUploadI> => {
-  const res: AxiosResponse<ProfileUploadI> = await erpApi.post<ProfileUploadI>(
-    `${ENDPOINT.USERS.PROFILE}/${id}`,
-    payload,
-  );
-  return res.data;
 };
 
 export const deleteProfile = async (id: string): Promise<null> => {

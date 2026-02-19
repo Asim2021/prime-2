@@ -1,4 +1,7 @@
+import { querySchema } from '#common/joiSchema.js';
 import Joi from 'joi';
+
+export const getAllBatchSchema = querySchema;
 
 export const createBatchSchema = Joi.object({
   medicine_id: Joi.string().uuid().required(),

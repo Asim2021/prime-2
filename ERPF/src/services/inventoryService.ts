@@ -8,7 +8,7 @@ export const fetchAllMedicines = async (
 ): Promise<PaginationResponseI<MedicineI[]>> => {
   const url = "/medicines" + paramsToQueryString(params);
   const res: AxiosResponse = await erpApi.get(url);
-  return res?.data as PaginationResponseI<MedicineI[]>;
+  return res.data;
 };
 
 export const addMedicine = async (
@@ -37,7 +37,7 @@ export const fetchAllBatches = async (
 ): Promise<PaginationResponseI<BatchI[]>> => {
   const url = "/batches" + paramsToQueryString(params);
   const res: AxiosResponse = await erpApi.get(url);
-  return res?.data as PaginationResponseI<BatchI[]>;
+  return res.data;
 };
 
 export const addBatch = async (values: Partial<BatchI>): Promise<BatchI> => {
@@ -83,7 +83,7 @@ export const fetchStockAdjustments = async (
 ): Promise<PaginationResponseI<StockAdjustmentI[]>> => {
   const url = "/stock-adjustments" + paramsToQueryString(params);
   const res: AxiosResponse = await erpApi.get(url);
-  return res?.data as PaginationResponseI<StockAdjustmentI[]>;
+  return res.data;
 };
 
 export const createStockAdjustment = async (

@@ -1,4 +1,7 @@
+import { querySchema } from '#common/joiSchema.js';
 import Joi from 'joi';
+
+export const getAllCustomerSchema = querySchema;
 export const createCustomerSchema = Joi.object({
     name: Joi.string().required().messages({
         'string.empty': 'Customer name is required',

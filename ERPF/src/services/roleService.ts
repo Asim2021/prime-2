@@ -5,8 +5,8 @@ export const fetchAllRoles = async (
   params: QueryParamsI,
 ): Promise<PaginationResponseI<RoleI[]>> => {
   const url = "/roles" + paramsToQueryString(params);
-  const res: any = await erpApi.get(url);
-  return res?.data;
+  const res = await erpApi.get(url);
+  return res as any;
 };
 
 export const updateRolePermissions = async (

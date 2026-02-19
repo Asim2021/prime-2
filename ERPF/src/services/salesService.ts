@@ -1,6 +1,8 @@
 import erpApi from "@lib/axiosInstance";
 import { ENDPOINT } from "../constants/endpoints";
 import { SaleI } from "../types/sales";
+import { paramsToQueryString } from "@utils/helpers";
+import { AxiosResponse } from "axios";
 
 export interface CreateSalePayload {
   customer_id?: string | null;
@@ -18,16 +20,18 @@ export interface CreateSalePayload {
   cgst_amount?: number;
   sgst_amount?: number;
   igst_amount?: number;
-  item_count: number;
 }
 
 export const createSale = async (payload: CreateSalePayload) => {
   const response = await erpApi.post(ENDPOINT.SALES.BASE, payload);
-  return response.data;
+  return response;
 };
 
-export const fetchAllSales = async (params?: any) => {
-  const response = await erpApi.get(ENDPOINT.SALES.BASE, { params });
+export const fetchAllSales = async (
+  params?: any,
+): Promise<PaginationResponseI<SaleI[]>> => {
+  const url = ENDPOINT.SALES.BASE + paramsToQueryString(params);
+  const response: AxiosResponse = await erpApi.get(url);
   return response.data;
 };
 

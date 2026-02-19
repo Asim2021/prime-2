@@ -1,40 +1,28 @@
 import { Op } from 'sequelize';
 import { randomUUID } from 'node:crypto';
 
-import { Vendor } from '../../models/vendor/vendor.model.js';
+import { Vendor } from '#models/index.js';
 
 export const createVendor = async (data) => {
-    return await Vendor.create({ ...data, id: randomUUID() });
+    return Vendor.create({ ...data, id: randomUUID() });
 };
 
-export const getAllVendors = async (params = {}) => {
-    const { page, limit, offset, sortBy, order, search } = params;
-
+export const getAllVendors = async ({ limit, offset, sortBy, order, search }) => {
     const whereClause = {};
     if (search) {
         whereClause[ Op.or ] = [
-            { name: { [ Op.like ]: `%${search}%` } },
-            { phone: { [ Op.like ]: `%${search}%` } },
-            { contact_person: { [ Op.like ]: `%${search}%` } },
+            { name: { [ Op.like ]: `%${search.trim()}%` } },
+            { phone: { [ Op.like ]: `%${search.trim()}%` } },
+            { contact_person: { [ Op.like ]: `%${search.trim()}%` } },
         ];
     }
 
-    const { rows, count } = await Vendor.findAndCountAll({
+    return Vendor.findAndCountAll({
         where: whereClause,
         limit,
         offset,
-        order: [ [ sortBy || 'created_at', order || 'DESC' ] ],
+        order: [ [ sortBy, order ] ],
     });
-
-    return {
-        data: rows,
-        meta: {
-            total: count,
-            page,
-            limit,
-            totalPages: Math.ceil(count / limit),
-        },
-    };
 };
 
 export const getVendorById = async (id) => {

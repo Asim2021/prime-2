@@ -1,4 +1,7 @@
+import { querySchema } from '#common/joiSchema.js';
 import Joi from 'joi';
+
+export const getAllSaleSchema = querySchema;
 export const createSaleSchema = Joi.object({
     customer_name: Joi.string().trim().default('CASH CUSTOMER'),
     customer_phone: Joi.string().trim().allow(null, ''),

@@ -18,9 +18,9 @@ export const fetchSalesTrend = async (): Promise<SalesTrendI[]> => {
 export const fetchLowStock = async (): Promise<any[]> => {
   // Low stock comes from the dashboard metrics or inventory report
   try {
-    const { data } = await erpApi.get("/reports/inventory");
+    const res = await erpApi.get("/reports/inventory");
     // Filter for low stock items
-    return (data?.data || []).filter(
+    return (res?.data || []).filter(
       (item: any) => item.status === "LOW" || item.current_stock < 10,
     );
   } catch {

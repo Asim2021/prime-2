@@ -8,7 +8,7 @@ export const fetchAllVendors = async (
 ): Promise<PaginationResponseI<VendorI[]>> => {
   const url = "/vendors" + paramsToQueryString(params);
   const res: AxiosResponse = await erpApi.get(url);
-  return res?.data as PaginationResponseI<VendorI[]>;
+  return res.data;
 };
 
 export const addVendor = async (values: Partial<VendorI>): Promise<VendorI> => {
@@ -35,7 +35,7 @@ export const fetchAllCustomers = async (
 ): Promise<PaginationResponseI<CustomerI[]>> => {
   const url = "/customers" + paramsToQueryString(params);
   const res: AxiosResponse = await erpApi.get(url);
-  return res?.data as PaginationResponseI<CustomerI[]>;
+  return res.data;
 };
 
 export const addCustomer = async (

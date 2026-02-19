@@ -1,3 +1,4 @@
+import { querySchema } from '#common/joiSchema.js';
 import Joi from 'joi';
 
 export const createStockAdjustmentSchema = Joi.object({
@@ -7,10 +8,4 @@ export const createStockAdjustmentSchema = Joi.object({
   note: Joi.string().allow('', null),
 });
 
-export const getStockAdjustmentSchema = Joi.object({
-  page: Joi.number().integer().min(1),
-  limit: Joi.number().integer().min(1),
-  batch_id: Joi.string().uuid(),
-  start_date: Joi.date(),
-  end_date: Joi.date(),
-});
+export const getAllStockAdjustmentSchema = querySchema;

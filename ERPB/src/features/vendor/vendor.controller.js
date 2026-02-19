@@ -1,7 +1,60 @@
+import _ from 'lodash';
 import * as vendorService from './vendor.service.js';
-import { HTTP_STATUS } from '../../constant/httpStatus.js';
-import { sendSuccessResponse, sendErrorResponse } from '../../middleware/sendResponse.js';
-import { getPaginationParams } from '../../utils/helpers.js';
+import { HTTP_STATUS } from '#constant/httpStatus.js';
+import { sendSuccessResponse, sendErrorResponse } from '#middleware/sendResponse.js';
+import { getPaginationParams } from '#utils/helpers.js';
+
+export const getAllVendors = async (req, res) => {
+    try {
+        const { page, limit, offset, sortBy, order } = getPaginationParams({
+            page: req.query.page,
+            limit: req.query.limit,
+            sortBy: req.query.sortBy,
+            order: req.query.order,
+            defaultLimit: 20,
+            maxLimit: 100,
+            defaultSortBy: 'created_at',
+            defaultOrder: 'DESC',
+        });
+
+        const search = req.query.search ? decodeURIComponent(req.query.search).trim() : undefined;
+
+        const { rows, count } = await vendorService.getAllVendors({
+            limit,
+            offset,
+            sortBy,
+            order,
+            search,
+        });
+
+        sendSuccessResponse({
+            res,
+            status: HTTP_STATUS.OK,
+            message: 'Vendors fetched successfully',
+            data: _.isEmpty(rows)
+                ? {
+                    data: [],
+                    totalCount: 0,
+                    count: 0,
+                    currentPage: 1,
+                    totalPages: 1,
+                }
+                : {
+                    data: rows,
+                    totalCount: count,
+                    count: rows.length,
+                    currentPage: page,
+                    totalPages: Math.ceil(count / limit),
+                },
+        });
+    } catch (error) {
+        sendErrorResponse({
+            res,
+            status: error.statusCode || HTTP_STATUS.SERVER_ERROR,
+            message: error.message || error,
+        });
+    }
+};
 
 export const createVendor = async (req, res) => {
     try {
@@ -13,35 +66,11 @@ export const createVendor = async (req, res) => {
             message: 'Vendor created successfully',
         });
     } catch (error) {
-        sendErrorResponse({ res, status: error.statusCode || HTTP_STATUS.SERVER_ERROR, message: error.message || error });
-    }
-};
-
-export const getAllVendors = async (req, res) => {
-    try {
-        const { page, limit, offset, sortBy, order } = getPaginationParams({
-            page: req.query.page,
-            limit: req.query.limit,
-            sortBy: req.query.sortBy,
-            order: req.query.order,
-        });
-
-        const search = req.query.search;
-        const result = await vendorService.getAllVendors({ page, limit, offset, sortBy, order, search });
-
-        sendSuccessResponse({
+        sendErrorResponse({
             res,
-            status: HTTP_STATUS.OK,
-            data: {
-                data: result.data,
-                totalCount: result.meta.total,
-                count: result.data.length,
-                currentPage: result.meta.page,
-                totalPages: result.meta.totalPages,
-            },
+            status: error.statusCode || HTTP_STATUS.SERVER_ERROR,
+            message: error.message || error,
         });
-    } catch (error) {
-        sendErrorResponse({ res, status: error.statusCode || HTTP_STATUS.SERVER_ERROR, message: error.message || error });
     }
 };
 
@@ -61,7 +90,11 @@ export const getVendorById = async (req, res) => {
             data: vendor,
         });
     } catch (error) {
-        sendErrorResponse({ res, status: error.statusCode || HTTP_STATUS.SERVER_ERROR, message: error.message || error });
+        sendErrorResponse({
+            res,
+            status: error.statusCode || HTTP_STATUS.SERVER_ERROR,
+            message: error.message || error,
+        });
     }
 };
 
@@ -82,7 +115,11 @@ export const updateVendor = async (req, res) => {
             message: 'Vendor updated successfully',
         });
     } catch (error) {
-        sendErrorResponse({ res, status: error.statusCode || HTTP_STATUS.SERVER_ERROR, message: error.message || error });
+        sendErrorResponse({
+            res,
+            status: error.statusCode || HTTP_STATUS.SERVER_ERROR,
+            message: error.message || error,
+        });
     }
 };
 
@@ -102,7 +139,11 @@ export const deleteVendor = async (req, res) => {
             message: 'Vendor deleted successfully',
         });
     } catch (error) {
-        sendErrorResponse({ res, status: error.statusCode || HTTP_STATUS.SERVER_ERROR, message: error.message || error });
+        sendErrorResponse({
+            res,
+            status: error.statusCode || HTTP_STATUS.SERVER_ERROR,
+            message: error.message || error,
+        });
     }
 };
 

@@ -1,10 +1,10 @@
 import { Router } from 'express';
 
-import { verifyAccessToken, verifyUserRole } from '../../middleware/verifyTokens.js';
-import { JOI_TYPES, joiValidate } from '../../utils/joiValidator.js';
-import { ENDPOINT } from '../../constant/endpoints.js';
+import { verifyAccessToken, verifyUserRole } from '#middleware/verifyTokens.js';
+import { JOI_TYPES, joiValidate } from '#utils/joiValidator.js';
+import { ENDPOINT } from '#constant/endpoints.js';
 import * as customerController from './customer.controller.js';
-import { createCustomerSchema, updateCustomerSchema } from './customer.schema.js';
+import { createCustomerSchema, updateCustomerSchema, getAllCustomerSchema } from './customer.schema.js';
 
 const router = Router();
 
@@ -16,7 +16,7 @@ router.post(
   joiValidate(createCustomerSchema, JOI_TYPES.BODY),
   customerController.createCustomer,
 );
-router.get(ENDPOINT.BASE, customerController.getCustomers);
+router.get(ENDPOINT.BASE, joiValidate(getAllCustomerSchema, JOI_TYPES.QUERY), customerController.getCustomers);
 router.get(ENDPOINT.ID, customerController.getCustomerById);
 router.put(
   ENDPOINT.ID,

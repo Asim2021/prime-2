@@ -8,7 +8,7 @@ export const fetchAllPurchases = async (
 ): Promise<PaginationResponseI<PurchaseI[]>> => {
   const url = `${ENDPOINT.PURCHASE.BASE}` + paramsToQueryString(params);
   const res: AxiosResponse = await erpApi.get(url);
-  return res?.data as PaginationResponseI<PurchaseI[]>;
+  return res.data;
 };
 
 export const fetchPurchaseById = async (id: string): Promise<PurchaseI> => {

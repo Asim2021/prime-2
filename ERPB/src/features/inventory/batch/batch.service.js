@@ -2,7 +2,10 @@ import crypto from 'node:crypto';
 import { HTTP_STATUS } from '#constant/httpStatus.js';
 import { Batch, Medicine, StockLedger, Vendor } from '#models/index.js';
 
-export const getAllBatches = async ({ page, limit, offset, sortBy, order, search, medicine_id }) => {
+/**
+ * Get all batches with pagination and search.
+ */
+export const getAllBatches = async ({ limit, offset, sortBy, order, search, medicine_id }) => {
   const where = {};
 
   if (medicine_id) {
@@ -10,37 +13,27 @@ export const getAllBatches = async ({ page, limit, offset, sortBy, order, search
   }
 
   if (search) {
-    where.batch_no = { [ Op.like ]: `%${search}%` };
+    where.batch_no = { [ Op.like ]: `%${search.trim()}%` };
   }
 
-  const { count, rows } = await Batch.findAndCountAll({
+  return Batch.findAndCountAll({
     where,
     include: [
       {
         model: Medicine,
         as: 'medicine',
-        attributes: [ 'id', 'brand_name', 'generic_name' ]
+        attributes: [ 'id', 'brand_name', 'generic_name' ],
       },
       {
         model: Vendor,
         as: 'vendor',
-        attributes: [ 'id', 'name' ]
-      }
+        attributes: [ 'id', 'name' ],
+      },
     ],
     limit,
     offset,
-    order: [ [ sortBy || 'created_at', order || 'DESC' ] ],
+    order: [ [ sortBy, order ] ],
   });
-
-  return {
-    data: rows,
-    meta: {
-      total: count,
-      page: Number(page),
-      totalPages: Math.ceil(count / limit),
-      limit: Number(limit),
-    },
-  };
 };
 
 export const getBatchById = async (id) => {
@@ -71,8 +64,6 @@ export const updateBatch = async (id, data, userId) => {
   // Define allowed fields for update based on "Edit Only" requirement for some fields
   // Assuming frontend restricts what it sends, but we can also restrict here.
   // For now, allow updating what's sent, validation handled by Joi/Frontend
-  await batch.update(data);
-  return batch;
   await batch.update(data);
   return batch;
 };
@@ -110,7 +101,6 @@ export const createBatch = async (data, userId) => {
       }, { transaction: t });
     }
 
-    return batch;
     return batch;
   });
 };

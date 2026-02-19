@@ -1,7 +1,8 @@
-import { purchaseService } from './purchase.service.js';
-import { HTTP_STATUS } from '../../../constant/httpStatus.js';
-import { sendSuccessResponse, sendErrorResponse } from '../../../middleware/sendResponse.js';
-import { getPaginationParams } from '../../../utils/helpers.js';
+import _ from 'lodash';
+import * as purchaseService from './purchase.service.js';
+import { HTTP_STATUS } from '#constant/httpStatus.js';
+import { sendSuccessResponse, sendErrorResponse } from '#middleware/sendResponse.js';
+import { getPaginationParams } from '#utils/helpers.js';
 
 export const getPurchases = async (req, res) => {
     try {
@@ -10,29 +11,51 @@ export const getPurchases = async (req, res) => {
             limit: req.query.limit,
             sortBy: req.query.sortBy,
             order: req.query.order,
+            defaultLimit: 20,
+            maxLimit: 100,
+            defaultSortBy: 'created_at',
+            defaultOrder: 'DESC',
         });
 
-        const result = await purchaseService.getAll({ page, limit, offset, sortBy, order });
+        const { rows, count } = await purchaseService.getAllPurchases({
+            limit,
+            offset,
+            sortBy,
+            order,
+        });
 
         sendSuccessResponse({
             res,
             status: HTTP_STATUS.OK,
-            data: {
-                data: result.data,
-                totalCount: result.meta.total,
-                count: result.data.length,
-                currentPage: result.meta.page,
-                totalPages: result.meta.totalPages,
-            },
+            message: 'Purchases fetched successfully',
+            data: _.isEmpty(rows)
+                ? {
+                    data: [],
+                    totalCount: 0,
+                    count: 0,
+                    currentPage: 1,
+                    totalPages: 1,
+                }
+                : {
+                    data: rows,
+                    totalCount: count,
+                    count: rows.length,
+                    currentPage: page,
+                    totalPages: Math.ceil(count / limit),
+                },
         });
     } catch (error) {
-        sendErrorResponse({ res, status: error.statusCode || HTTP_STATUS.SERVER_ERROR, message: error.message || error });
+        sendErrorResponse({
+            res,
+            status: error.statusCode || HTTP_STATUS.SERVER_ERROR,
+            message: error.message || error,
+        });
     }
 };
 
 export const getPurchaseById = async (req, res) => {
     try {
-        const purchase = await purchaseService.getById(req.params.id);
+        const purchase = await purchaseService.getPurchaseById(req.params.id);
         if (!purchase) {
             return sendErrorResponse({
                 res,
@@ -46,13 +69,17 @@ export const getPurchaseById = async (req, res) => {
             data: purchase,
         });
     } catch (error) {
-        sendErrorResponse({ res, status: error.statusCode || HTTP_STATUS.SERVER_ERROR, message: error.message || error });
+        sendErrorResponse({
+            res,
+            status: error.statusCode || HTTP_STATUS.SERVER_ERROR,
+            message: error.message || error,
+        });
     }
 };
 
 export const createPurchase = async (req, res) => {
     try {
-        const purchase = await purchaseService.create({
+        const purchase = await purchaseService.createPurchase({
             ...req.body,
             created_by: req.user.id,
         });
@@ -63,6 +90,10 @@ export const createPurchase = async (req, res) => {
             message: 'Purchase created successfully',
         });
     } catch (error) {
-        sendErrorResponse({ res, status: error.statusCode || HTTP_STATUS.SERVER_ERROR, message: error.message || error });
+        sendErrorResponse({
+            res,
+            status: error.statusCode || HTTP_STATUS.SERVER_ERROR,
+            message: error.message || error,
+        });
     }
 };
