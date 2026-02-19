@@ -10,8 +10,7 @@ import VendorList from "@pages/Partners/VendorList";
 import CustomerList from "@pages/Partners/CustomerList";
 import PurchaseList from "@pages/Inventory/PurchaseList";
 import PurchaseEntry from "@pages/Inventory/PurchaseEntry";
-import POS from "@pages/Sales/POS";
-import SalesHistory from "@pages/Sales/SalesHistory";
+import Sales from "@pages/Sales";
 import InvoiceDetails from "@pages/Sales/SalesHistory/InvoiceDetails";
 import SalesReturn from "@pages/Sales/SalesReturn";
 import Reports from "@pages/Reports";
@@ -36,8 +35,9 @@ const MainRouter = createBrowserRouter([
       { path: ENDPOINT.PARTNER_CUSTOMERS, element: <CustomerList /> },
       { path: ENDPOINT.PURCHASE.BASE, element: <PurchaseList /> },
       { path: `${ENDPOINT.PURCHASE.BASE}/create`, element: <PurchaseEntry /> },
-      { path: ENDPOINT.SALES.POS, element: <POS /> },
-      { path: ENDPOINT.SALES.ORDERS, element: <SalesHistory /> },
+      { path: ENDPOINT.SALES.BASE, element: <Sales /> },
+      { path: ENDPOINT.SALES.POS, element: <Sales /> },
+      { path: ENDPOINT.SALES_RETURNS, element: <Sales /> },
       { path: `${ENDPOINT.SALES.ORDERS}/:id`, element: <InvoiceDetails /> },
       { path: `${ENDPOINT.SALES.ORDERS}/:id/return`, element: <SalesReturn /> },
       // Inventory Routes Consolidated

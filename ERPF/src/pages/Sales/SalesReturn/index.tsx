@@ -20,7 +20,7 @@ import { fetchSaleById, createSalesReturn } from "@services/salesService";
 import { QUERY_KEY } from "@constants/queryKeys";
 import { useQueryClient } from "@tanstack/react-query";
 
-const SalesReturn = () => {
+const SalesReturn = ({ withHeader = true }: { withHeader?: boolean }) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -124,13 +124,15 @@ const SalesReturn = () => {
     );
 
   return (
-    <Stack p="md" gap="md">
-      <Group justify="space-between">
-        <Title order={3}>Process Return for Invoice #{sale?.bill_no}</Title>
-        <Button variant="default" onClick={() => navigate(-1)}>
-          Cancel
-        </Button>
-      </Group>
+    <Stack p={withHeader ? "md" : 0} gap="md">
+      {withHeader && (
+        <Group justify="space-between">
+          <Title order={3}>Process Return for Invoice #{sale?.bill_no}</Title>
+          <Button variant="default" onClick={() => navigate(-1)}>
+            Cancel
+          </Button>
+        </Group>
+      )}
 
       <Paper withBorder p="md">
         <Table>

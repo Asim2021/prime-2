@@ -18,12 +18,8 @@ export const sidebarData = [
   },
   {
     label: "Sales",
-    link: ENDPOINT.SALES.POS,
+    link: ENDPOINT.SALES.BASE,
     icon: MdPointOfSale,
-    links: [
-      { label: "POS / Billing", link: ENDPOINT.SALES.POS },
-      { label: "History", link: ENDPOINT.SALES.ORDERS },
-    ],
   },
   {
     label: "Purchase",

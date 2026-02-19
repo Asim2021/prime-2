@@ -5,14 +5,14 @@ import POSCart from "./Cart";
 import CheckoutModal from "./CheckoutModal";
 import { useHotkeys } from "@mantine/hooks";
 
-const POS = () => {
+const POS = ({ withHeader = true }: { withHeader?: boolean }) => {
   const [checkoutOpen, setCheckoutOpen] = useState(false);
 
   // Keyboard shortcuts
   useHotkeys([["F2", () => setCheckoutOpen(true)]]);
 
   return (
-    <div className="h-full w-full p-4">
+    <div className={`h-full w-full ${withHeader ? "p-4" : ""}`}>
       <Grid h="100%" gutter="lg">
         {/* Left Side: Search & Product Selection */}
         <Grid.Col span={8} h="100%">

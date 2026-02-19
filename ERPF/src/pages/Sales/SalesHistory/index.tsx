@@ -3,11 +3,37 @@ import { useMemo, useState } from "react";
 import { MdVisibility } from "react-icons/md";
 import MainTable from "@components/Table";
 import { fetchAllSales } from "@services/salesService";
-import { SaleI } from "@types/sales";
-// import InvoiceViewer from "./InvoiceViewer"; // To be implemented
+import { SaleI } from "@src/types/sales";
+import {
+  getCoreRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+  SortingState,
+  PaginationState,
+  ColumnOrderState,
+} from "@tanstack/react-table";
+import { usePaginationDataFetch } from "@hooks/usePaginationDataFetch";
+import { QUERY_KEY } from "@constants/queryKeys";
+import { CustomTableOptions } from "@src/types/table";
+import MainHeader from "@components/Header/MainHeader";
 
-const SalesHistory = () => {
+const SalesHistory = ({ withHeader = true }: { withHeader?: boolean }) => {
   const [viewId, setViewId] = useState<string | null>(null);
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [search, setSearch] = useState("");
+
+  const { data, isError, isFetching, error } = usePaginationDataFetch({
+    queryKey: [QUERY_KEY.SALES, "history"],
+    queryFn: fetchAllSales,
+    search: search,
+    page: pagination.pageIndex + 1,
+    limit: pagination.pageSize,
+  });
 
   const columns = useMemo(
     () => [
@@ -26,14 +52,9 @@ const SalesHistory = () => {
         header: "Customer",
       },
       {
-        accessorKey: "grand_total", // Backend returns 'grand_total' or 'total_amount'?
-        // sale.service.js: total_amount: data.total_amount ... wait, let's check backend response.
-        // It returns 'total_amount' and 'taxable_amount'.
-        // Let's use total_amount as the final payable.
+        accessorKey: "total_amount",
         header: "Amount",
-        cell: (info: any) => (
-          <Text fw={600}>₹{info.row.original.total_amount}</Text>
-        ),
+        cell: (info: any) => <Text fw={600}>₹{info.getValue()}</Text>,
       },
       {
         accessorKey: "payment_mode",
@@ -73,14 +94,53 @@ const SalesHistory = () => {
     [],
   );
 
+  const [columnOrder, setColumnOrder] = useState<ColumnOrderState>(() =>
+    columns?.map((c) => (c as any).accessorKey || (c as any).id),
+  );
+
+  const table = useReactTable({
+    data: data?.data || [],
+    columns,
+    state: { sorting, pagination, columnOrder },
+    pageCount: data?.totalPages || 0,
+    onPaginationChange: setPagination,
+    onSortingChange: setSorting,
+    onColumnOrderChange: setColumnOrder,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    manualPagination: true,
+    tableId: "sales-history-table",
+  } as CustomTableOptions<SaleI>);
+
   return (
-    <>
+    <div className="w-full h-full flex flex-col relative">
+      <MainHeader
+        title={withHeader ? "Sales History" : ""}
+        search={search}
+        setSearch={setSearch}
+        withSearch
+        placeholder="Search Bill No, Customer..."
+      />
       <MainTable
-        queryKey={["sales-history"]}
-        queryFn={fetchAllSales}
-        columns={columns}
-        searchPlaceholder="Search Invoice, Customer..."
-        title="Sales History"
+        className="flex-1 h-auto!"
+        id="sales-history-table"
+        table={table}
+        isLoading={isFetching}
+        isError={isError}
+        error={error}
+        totalCount={data?.totalCount || 0}
+        totalPages={data?.totalPages || 0}
+        setPagination={setPagination}
+        columnOrder={columnOrder}
+        setColumnOrder={setColumnOrder}
+        columnIdsToSort={[
+          "bill_no",
+          "bill_date",
+          "customer_name",
+          "total_amount",
+        ]}
+        withFooter
       />
       {/* {viewId && (
         <InvoiceViewer
@@ -89,7 +149,7 @@ const SalesHistory = () => {
           saleId={viewId}
         />
       )} */}
-    </>
+    </div>
   );
 };
 

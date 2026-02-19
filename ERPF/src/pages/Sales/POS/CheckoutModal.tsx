@@ -47,6 +47,8 @@ const CheckoutModal = ({
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY.DASHBOARD_STATS] });
       reset(); // Clear cart
       onClose();
+      // Full page refresh as requested by user to clear all states (medicine selection, etc.)
+      window.location.reload();
     },
     onError: (err: any) => {
       notifications.show({
