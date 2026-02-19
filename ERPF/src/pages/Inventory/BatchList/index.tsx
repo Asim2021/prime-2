@@ -108,10 +108,10 @@ const BatchList = ({ withHeader = true }: { withHeader?: boolean }) => {
         columnOrder={columnOrder}
         setColumnOrder={setColumnOrder}
         columnIdsToSort={[
-          "batch_number",
-          "item_name",
-          "expiry_date",
-          "current_stock",
+          "batch_no",
+          "medicine.brand_name",
+          "exp_date",
+          "quantity_available",
         ]}
         withFooter
       />

@@ -3,7 +3,7 @@
 ## Core Principles
 
 - **Language**: Plain JavaScript (no TypeScript)
-- **Module System**: ESM (`"type": "module"` in `package.json`)
+- **Module System**: ESM with abosolute import with '#\*.js' (`"type": "module"` in `package.json`) eg ` '#constant/endpoints.js'`
 - **Pattern**: Feature-based modular architecture
 - **Business Logic**: Lives in service file i.e., \*.service.js
 - **Validation**: Joi schemas applied via middleware

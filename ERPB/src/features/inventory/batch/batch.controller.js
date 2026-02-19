@@ -1,7 +1,7 @@
 import * as batchService from './batch.service.js';
-import { HTTP_STATUS } from '../../../constant/httpStatus.js';
-import { sendSuccessResponse, sendErrorResponse } from '../../../middleware/sendResponse.js';
-import { getPaginationParams } from '../../../utils/helpers.js';
+import { HTTP_STATUS } from '#constant/httpStatus.js';
+import { sendSuccessResponse, sendErrorResponse } from '#middleware/sendResponse.js';
+import { getPaginationParams } from '#utils/helpers.js';
 
 export const getAllBatches = async (req, res) => {
   try {
@@ -61,6 +61,19 @@ export const updateBatch = async (req, res) => {
       status: HTTP_STATUS.OK,
       data: batch,
       message: 'Batch updated successfully',
+    });
+  } catch (error) {
+    sendErrorResponse({ res, status: error.statusCode || HTTP_STATUS.SERVER_ERROR, message: error.message || error });
+  }
+};
+export const createBatch = async (req, res) => {
+  try {
+    const batch = await batchService.createBatch(req.body, req.user?.id);
+    sendSuccessResponse({
+      res,
+      status: HTTP_STATUS.CREATED,
+      data: batch,
+      message: 'Batch created successfully',
     });
   } catch (error) {
     sendErrorResponse({ res, status: error.statusCode || HTTP_STATUS.SERVER_ERROR, message: error.message || error });

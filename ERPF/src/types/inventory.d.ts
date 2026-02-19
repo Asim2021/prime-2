@@ -61,6 +61,7 @@ interface BatchI {
   sale_price?: number;
   purchase_price?: number;
   current_stock?: number;
+  medicine?: MedicineI;
 }
 
 interface ManufacturerI {

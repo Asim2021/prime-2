@@ -27,42 +27,40 @@ const useBatchColumns = (deleteHandler: (id: string) => void) => {
   const columns = useMemo<ColumnDef<BatchI>[]>(
     () => [
       {
-        id: "batch_number",
-        accessorKey: "batch_number",
+        id: "batch_no",
+        accessorKey: "batch_no",
         header: "Batch No",
         cell: ({ row }) => (
           <Text size="sm" fw={500}>
-            {row.original.batch_number}
+            {row.original.batch_no}
           </Text>
         ),
       },
       {
-        id: "item_name",
-        accessorKey: "item_name",
+        id: "medicine.brand_name",
+        accessorKey: "medicine.brand_name",
         header: "Medicine",
         cell: ({ row }) => (
-          <Text size="sm">
-            {row.original.item_name || row.original.item_id}
-          </Text>
+          <Text size="sm">{row.original.medicine?.brand_name || "N/A"}</Text>
         ),
       },
       {
-        id: "expiry_date",
-        accessorKey: "expiry_date",
+        id: "exp_date",
+        accessorKey: "exp_date",
         header: "Expiry",
         cell: ({ row }) => (
           <Badge color="red" variant="light">
-            {new Date(row.original.expiry_date).toLocaleDateString()}
+            {new Date(row.original.exp_date).toLocaleDateString()}
           </Badge>
         ),
       },
       {
-        id: "current_stock",
-        accessorKey: "current_stock",
+        id: "quantity_available",
+        accessorKey: "quantity_available",
         header: "Stock",
         cell: ({ row }) => (
           <Text size="sm" fw={700}>
-            {row.original.current_stock}
+            {row.original.quantity_available}
           </Text>
         ),
       },
@@ -95,7 +93,7 @@ const useBatchColumns = (deleteHandler: (id: string) => void) => {
                   children: (
                     <Text size="sm">
                       Are you sure you want to delete batch{" "}
-                      <strong>{row.original.batch_number}</strong>?
+                      <strong>{row.original.batch_no}</strong>?
                     </Text>
                   ),
                   labels: { confirm: "Delete", cancel: "Cancel" },

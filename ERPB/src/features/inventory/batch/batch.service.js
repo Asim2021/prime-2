@@ -1,6 +1,6 @@
-import { Op } from 'sequelize';
+import crypto from 'node:crypto';
 import { HTTP_STATUS } from '#constant/httpStatus.js';
-import { Batch, Medicine, Vendor } from '#models/index.js';
+import { Batch, Medicine, StockLedger, Vendor } from '#models/index.js';
 
 export const getAllBatches = async ({ page, limit, offset, sortBy, order, search, medicine_id }) => {
   const where = {};
@@ -73,4 +73,43 @@ export const updateBatch = async (id, data, userId) => {
   // For now, allow updating what's sent, validation handled by Joi/Frontend
   await batch.update(data);
   return batch;
+  await batch.update(data);
+  return batch;
+};
+
+export const createBatch = async (data, userId) => {
+  return await Batch.sequelize.transaction(async (t) => {
+    const existing = await Batch.findOne({
+      where: {
+        medicine_id: data.medicine_id,
+        batch_no: data.batch_no,
+      },
+      transaction: t,
+    });
+
+    if (existing) {
+      const error = new Error('Batch number already exists for this medicine');
+      error.statusCode = HTTP_STATUS.CONFLICT;
+      throw error;
+    }
+
+    const batch = await Batch.create({
+      id: crypto.randomUUID(),
+      ...data,
+    }, { transaction: t });
+
+    if (data.quantity_available > 0) {
+      // Create Ledger Entry for Opening Stock / Manual Entry
+      await StockLedger.create({
+        id: crypto.randomUUID(),
+        batch_id: batch.id,
+        transaction_type: 'adjustment', // Using adjustment for manual creation
+        reference_id: batch.id,
+        quantity_change: data.quantity_available,
+        balance_after: data.quantity_available,
+      }, { transaction: t });
+    }
+
+    return batch;
+  });
 };
