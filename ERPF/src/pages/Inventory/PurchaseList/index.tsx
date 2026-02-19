@@ -21,6 +21,7 @@ import MainTable from "@components/Table";
 import { ENDPOINT } from "@constants/endpoints";
 import { fetchAllPurchases } from "@services/purchaseService";
 import { CustomTableOptions } from "@src/types/table";
+import { QUERY_KEY } from "@constants/queryKeys";
 import { useMemo } from "react";
 
 const PurchaseList = () => {
@@ -33,8 +34,8 @@ const PurchaseList = () => {
   });
   const [sorting, setSorting] = useState<SortingState>([]);
 
-  const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["purchases", pagination, debouncedSearch, sorting],
+  const { data, isError, isLoading, error } = useQuery({
+    queryKey: [QUERY_KEY.PURCHASES, pagination, debouncedSearch, sorting],
     queryFn: () =>
       fetchAllPurchases({
         page: pagination.pageIndex + 1,

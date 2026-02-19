@@ -19,8 +19,9 @@ import { fetchAllVendors, deleteVendor } from "@services/partnerService";
 import useVendorStore from "@stores/vendorStore";
 import useVendorColumns from "./useVendorColumns";
 import VendorModal from "./VendorModal";
-import { usePaginationDataFetch } from "@hooks/usePaginationDataFetch"; // Check if this hook is exported
-import { CustomTableOptions } from "@src/types/table"; // Check import path
+import { usePaginationDataFetch } from "@hooks/usePaginationDataFetch";
+import { CustomTableOptions } from "@src/types/table";
+import { QUERY_KEY } from "@constants/queryKeys";
 
 const VendorList = () => {
   const [search, setSearch] = useState("");
@@ -46,7 +47,7 @@ const VendorList = () => {
         message: "Vendor deleted",
         color: "green",
       });
-      queryClient.invalidateQueries({ queryKey: ["vendors"] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.VENDORS] });
     },
     onError: (err: any) => {
       notifications.show({
@@ -58,7 +59,7 @@ const VendorList = () => {
   });
 
   const { data, isError, isFetching, error } = usePaginationDataFetch({
-    queryKey: ["vendors"],
+    queryKey: [QUERY_KEY.VENDORS],
     queryFn: fetchAllVendors,
     search: debouncedSearch,
     page: pagination.pageIndex + 1,

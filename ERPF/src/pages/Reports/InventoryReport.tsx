@@ -3,6 +3,7 @@ import { Button, Group, Stack, Text, Paper, Badge } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import MainTable from "@components/Table";
 import { fetchInventoryReport } from "@services/reportService";
+import { QUERY_KEY } from "@constants/queryKeys";
 import { MdDownload } from "react-icons/md";
 import {
   getCoreRowModel,
@@ -23,7 +24,7 @@ const InventoryReport = () => {
   const [sorting, setSorting] = useState<SortingState>([]);
 
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["reports", "inventory"],
+    queryKey: [QUERY_KEY.REPORTS, "inventory"],
     queryFn: () => fetchInventoryReport({}),
   });
 
@@ -95,10 +96,20 @@ const InventoryReport = () => {
         setPagination={setPagination}
         columnOrder={[
           "brand_name",
-          "manufacturer",
-          "current_stock",
-          "stock_value",
-          "status",
+          "generic_name",
+          "batch_no",
+          "exp_date",
+          "quantity_available",
+          "mrp",
+        ]}
+        setColumnOrder={() => {}}
+        columnIdsToSort={[
+          "brand_name",
+          "generic_name",
+          "batch_no",
+          "exp_date",
+          "quantity_available",
+          "mrp",
         ]}
         withFooter
       />

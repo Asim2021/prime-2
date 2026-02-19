@@ -14,6 +14,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { notifications } from "@mantine/notifications";
 import { fetchAllRoles } from "@services/roleService";
 import { addUser, editUser } from "@services/userService";
+import { QUERY_KEY } from "@constants/queryKeys";
 
 interface UserModalProps {
   opened: boolean;
@@ -26,7 +27,7 @@ const UserModal = ({ opened, close, action, detail }: UserModalProps) => {
   const queryClient = useQueryClient();
 
   const { data: rolesData } = useQuery({
-    queryKey: ["roles-select"],
+    queryKey: [QUERY_KEY.ROLES],
     queryFn: () => fetchAllRoles({ page: 1, limit: 100 }),
     enabled: opened,
   });
@@ -84,7 +85,7 @@ const UserModal = ({ opened, close, action, detail }: UserModalProps) => {
         message: `User ${action === "EDIT" ? "updated" : "added"} successfully`,
         color: "green",
       });
-      queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.USERS] });
       close();
     },
     onError: (error: any) => {

@@ -4,6 +4,7 @@ import { DatePickerInput } from "@mantine/dates";
 import { useQuery } from "@tanstack/react-query";
 import MainTable from "@components/Table";
 import { fetchSalesReport } from "@services/reportService";
+import { QUERY_KEY } from "@constants/queryKeys";
 import { MdDownload } from "react-icons/md";
 import {
   getCoreRowModel,
@@ -29,7 +30,7 @@ const SalesReport = () => {
   const [sorting, setSorting] = useState<SortingState>([]);
 
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["reports", "sales", dateRange],
+    queryKey: [QUERY_KEY.REPORTS, "sales", dateRange],
     queryFn: () => {
       const [start, end] = dateRange;
       if (!start || !end) return { data: [], stats: {} };
@@ -125,6 +126,14 @@ const SalesReport = () => {
         totalPages={Math.ceil(tableData.length / pagination.pageSize)}
         setPagination={setPagination}
         columnOrder={[
+          "invoice_no",
+          "invoice_date",
+          "customer_name",
+          "payment_mode",
+          "total_amount",
+        ]}
+        setColumnOrder={() => {}} // Placeholder as it's not and-user editable currently
+        columnIdsToSort={[
           "invoice_no",
           "invoice_date",
           "customer_name",

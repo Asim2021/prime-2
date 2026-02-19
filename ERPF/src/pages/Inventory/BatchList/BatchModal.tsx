@@ -23,6 +23,7 @@ import {
   fetchAllMedicines,
 } from "@services/inventoryService";
 import { fetchAllVendors } from "@services/partnerService";
+import { QUERY_KEY } from "@constants/queryKeys";
 
 const BatchModal = () => {
   const { modalAction, setModalAction, detail, setDetail } = useBatchStore();
@@ -141,7 +142,7 @@ const BatchModal = () => {
         message: `Batch ${modalAction === "ADD" ? "created" : "updated"} successfully`,
         color: "green",
       });
-      queryClient.invalidateQueries({ queryKey: ["batches"] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.BATCHES] });
       handleClose();
     },
     onError: (error: any) => {

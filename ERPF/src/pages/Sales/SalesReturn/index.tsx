@@ -17,13 +17,16 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { fetchSaleById, createSalesReturn } from "@services/salesService";
+import { QUERY_KEY } from "@constants/queryKeys";
+import { useQueryClient } from "@tanstack/react-query";
 
 const SalesReturn = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const { data: sale, isLoading } = useQuery({
-    queryKey: ["sale", id],
+    queryKey: [QUERY_KEY.SALES, id],
     queryFn: () => fetchSaleById(id!),
     enabled: !!id,
   });
@@ -44,6 +47,8 @@ const SalesReturn = () => {
         message: "Return processed successfully",
         color: "green",
       });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.SALES] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.BATCHES] });
       navigate(-1);
     },
     onError: (err: any) => {

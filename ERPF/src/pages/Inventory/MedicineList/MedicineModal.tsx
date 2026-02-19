@@ -14,6 +14,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { notifications } from "@mantine/notifications";
 import useMedicineStore from "@stores/medicineStore";
 import { addMedicine, editMedicine } from "@services/inventoryService";
+import { QUERY_KEY } from "@constants/queryKeys";
 
 const MedicineModal = () => {
   const { modalAction, setModalAction, detail, setDetail } = useMedicineStore();
@@ -67,7 +68,7 @@ const MedicineModal = () => {
         message: `Medicine ${modalAction === "EDIT" ? "updated" : "added"} successfully`,
         color: "green",
       });
-      queryClient.invalidateQueries({ queryKey: ["medicines"] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.MEDICINES] });
       handleClose();
     },
     onError: (error: any) => {

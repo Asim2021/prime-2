@@ -1,5 +1,4 @@
 import {
-  ActionIcon,
   Badge,
   Card,
   Group,
@@ -20,6 +19,7 @@ import {
   fetchSalesTrend,
   fetchLowStock,
 } from "@services/dashboardService";
+import { QUERY_KEY } from "@constants/queryKeys";
 import {
   MdWarning,
   MdInventory,
@@ -106,17 +106,17 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   const { data: stats, isLoading: statsLoading } = useQuery({
-    queryKey: ["dashboard", "stats"],
+    queryKey: [QUERY_KEY.DASHBOARD_STATS],
     queryFn: fetchDashboardStats,
   });
 
   const { data: salesTrend } = useQuery({
-    queryKey: ["dashboard", "trend"],
+    queryKey: [QUERY_KEY.SALES_TREND],
     queryFn: fetchSalesTrend,
   });
 
   const { data: lowStock } = useQuery({
-    queryKey: ["dashboard", "lowStock"],
+    queryKey: [QUERY_KEY.LOW_STOCK],
     queryFn: fetchLowStock,
   });
 

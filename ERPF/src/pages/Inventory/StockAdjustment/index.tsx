@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { Button, Group, Stack, Title, Badge } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import { fetchStockAdjustments } from "@services/inventoryService";
+import { QUERY_KEY } from "@constants/queryKeys";
 import MainTable from "@components/Table";
 import { MdAdd } from "react-icons/md";
 import StockAdjustmentModal from "./StockAdjustmentModal";
@@ -35,7 +36,11 @@ const StockAdjustment = ({ withHeader = true }: { withHeader?: boolean }) => {
   ]);
 
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["stock-adjustments", pagination.pageIndex, pagination.pageSize],
+    queryKey: [
+      QUERY_KEY.STOCK_ADJUSTMENTS,
+      pagination.pageIndex,
+      pagination.pageSize,
+    ],
     queryFn: () =>
       fetchStockAdjustments({
         page: pagination.pageIndex + 1,
@@ -120,7 +125,7 @@ const StockAdjustment = ({ withHeader = true }: { withHeader?: boolean }) => {
       )}
 
       <MainTable
-        className="flex-1 !h-auto"
+        className="flex-1 h-auto!"
         id="stock-adjustment-table"
         table={table}
         isLoading={isLoading}

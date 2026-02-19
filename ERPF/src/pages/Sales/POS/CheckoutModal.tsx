@@ -12,6 +12,8 @@ import { notifications } from "@mantine/notifications";
 import { useMutation } from "@tanstack/react-query";
 import { useCartStore } from "@stores/cartStore";
 import { createSale } from "@services/salesService";
+import { useQueryClient } from "@tanstack/react-query";
+import { QUERY_KEY } from "@constants/queryKeys";
 
 const CheckoutModal = ({
   opened,
@@ -29,6 +31,7 @@ const CheckoutModal = ({
     setCustomer,
     reset,
   } = useCartStore();
+  const queryClient = useQueryClient();
   const totals = getTotals();
 
   const mutation = useMutation({
@@ -39,6 +42,9 @@ const CheckoutModal = ({
         message: "Sale completed successfully!",
         color: "green",
       });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.SALES] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.BATCHES] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.DASHBOARD_STATS] });
       reset(); // Clear cart
       onClose();
     },
@@ -63,11 +69,11 @@ const CheckoutModal = ({
       cgst_amount: totals.gst / 2, // Simplified tax split
       sgst_amount: totals.gst / 2,
       igst_amount: 0,
-      items: items.map((item) => ({
+      items: (items as any[]).map((item) => ({
         batch_id: item.id,
         quantity: item.cartQty,
         selling_price: item.cartPrice,
-        mrp_at_sale: item.mrp,
+        mrp_at_sale: item.mrp || 0,
       })),
     };
     mutation.mutate(payload as any);

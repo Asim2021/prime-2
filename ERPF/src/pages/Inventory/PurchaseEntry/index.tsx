@@ -24,12 +24,15 @@ import { createPurchase } from "@services/purchaseService";
 import { fetchAllVendors } from "@services/partnerService";
 import { fetchAllMedicines } from "@services/inventoryService";
 import dayjs from "dayjs";
+import { QUERY_KEY } from "@constants/queryKeys";
+import { useQueryClient } from "@tanstack/react-query";
 
 // Helper components for async select could be abstracted, but keeping simple here
 // For Medicine Select, we need to fetch medicines.
 
 const PurchaseEntry = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [vendors, setVendors] = useState<{ value: string; label: string }[]>(
     [],
   );
@@ -39,13 +42,13 @@ const PurchaseEntry = () => {
 
   // 1. Fetch Vendors
   const { data: vendorData } = useQuery({
-    queryKey: ["vendors", "all"],
+    queryKey: [QUERY_KEY.VENDORS, "all"],
     queryFn: () => fetchAllVendors({ page: 1, limit: 100 }), // Simplified for now
   });
 
   // 2. Fetch Medicines
   const { data: medicineData } = useQuery({
-    queryKey: ["medicines", "all"],
+    queryKey: [QUERY_KEY.MEDICINES, "all"],
     queryFn: () => fetchAllMedicines({ page: 1, limit: 1000 }), // Fetching large list for dropdown
   });
 
@@ -141,6 +144,10 @@ const PurchaseEntry = () => {
         message: "Purchase entry created successfully",
         color: "green",
       });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.PURCHASES] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.BATCHES] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.MEDICINES] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.VENDORS] });
       navigate(ENDPOINT.PURCHASE.BASE);
     },
     onError: (error: any) => {

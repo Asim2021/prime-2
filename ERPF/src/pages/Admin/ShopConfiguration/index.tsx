@@ -13,6 +13,7 @@ import {
   LoadingOverlay,
 } from "@mantine/core";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { QUERY_KEY } from "@constants/queryKeys";
 import { notifications } from "@mantine/notifications";
 import MainHeader from "@components/Header/MainHeader";
 import { fetchShopSettings, updateShopSettings } from "@services/shopService";
@@ -22,7 +23,7 @@ const ShopConfiguration = () => {
 
   // @ts-ignore
   const { data: shopSettings, isLoading } = useQuery({
-    queryKey: ["shopSettings"], // Should use constant
+    queryKey: [QUERY_KEY.SHOP_SETTINGS],
     queryFn: fetchShopSettings,
   });
 
@@ -70,7 +71,7 @@ const ShopConfiguration = () => {
         message: "Shop settings updated successfully",
         color: "green",
       });
-      queryClient.invalidateQueries({ queryKey: ["shopSettings"] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.SHOP_SETTINGS] });
     },
     onError: (error: any) => {
       notifications.show({

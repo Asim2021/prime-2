@@ -14,6 +14,7 @@ import {
   fetchAllMedicines,
   fetchBatchesByMedicine,
 } from "@services/inventoryService";
+import { QUERY_KEY } from "@constants/queryKeys";
 import { useState } from "react";
 import { useCartStore } from "@stores/cartStore";
 
@@ -31,13 +32,13 @@ const ProductSearch = () => {
 
   // Fetch Medicines
   const { data: medicines } = useQuery({
-    queryKey: ["medicines", debouncedSearch],
+    queryKey: [QUERY_KEY.MEDICINES, debouncedSearch],
     queryFn: () =>
       fetchAllMedicines({ search: debouncedSearch, page: 1, limit: 10 }),
   });
 
   const { data: batches } = useQuery({
-    queryKey: ["batches", selectedMedicine?.id],
+    queryKey: [QUERY_KEY.BATCHES, selectedMedicine?.id],
     queryFn: () => fetchBatchesByMedicine(selectedMedicine.id),
     enabled: !!selectedMedicine,
   });

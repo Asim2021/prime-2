@@ -26,6 +26,7 @@ import { useNavigate } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import { fetchAllMedicines } from "@services/inventoryService";
 import { fetchAllCustomers, fetchAllVendors } from "@services/partnerService";
+import { QUERY_KEY } from "@constants/queryKeys";
 
 interface SearchResultI {
   id: string;
@@ -47,21 +48,21 @@ const GlobalSearch = () => {
   const enabled = debouncedQuery.length > 2;
 
   const { data: medicines, isLoading: loadingMedicines } = useQuery({
-    queryKey: ["search", "medicines", debouncedQuery],
+    queryKey: [QUERY_KEY.SEARCH, "medicines", debouncedQuery],
     queryFn: () =>
       fetchAllMedicines({ page: 1, limit: 5, search: debouncedQuery }),
     enabled,
   });
 
   const { data: customers, isLoading: loadingCustomers } = useQuery({
-    queryKey: ["search", "customers", debouncedQuery],
+    queryKey: [QUERY_KEY.SEARCH, "customers", debouncedQuery],
     queryFn: () =>
       fetchAllCustomers({ page: 1, limit: 3, search: debouncedQuery }),
     enabled,
   });
 
   const { data: vendors, isLoading: loadingVendors } = useQuery({
-    queryKey: ["search", "vendors", debouncedQuery],
+    queryKey: [QUERY_KEY.SEARCH, "vendors", debouncedQuery],
     queryFn: () =>
       fetchAllVendors({ page: 1, limit: 3, search: debouncedQuery }),
     enabled,

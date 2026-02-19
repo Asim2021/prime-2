@@ -3,7 +3,7 @@ import { StockAdjustment, Batch, StockLedger, Medicine } from '#models/index.js'
 
 export const stockAdjustmentService = {
   create: async (data, userId) => {
-    return await db.sequelize.transaction(async (t) => {
+    return await StockAdjustment.sequelize.transaction(async (t) => {
       const batch = await Batch.findByPk(data.batch_id, { transaction: t, lock: true });
       if (!batch) {
         throw new Error('Batch not found');

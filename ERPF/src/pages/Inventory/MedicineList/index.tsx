@@ -22,6 +22,7 @@ import MedicineModal from "./MedicineModal";
 import { usePaginationDataFetch } from "@hooks/usePaginationDataFetch";
 import { CustomTableOptions } from "@src/types/table";
 import { INITIAL_ALL_TABLE_PINNING } from "@constants/items";
+import { QUERY_KEY } from "@constants/queryKeys";
 
 const MedicineList = ({ withHeader = true }: { withHeader?: boolean }) => {
   const [search, setSearch] = useState("");
@@ -47,7 +48,7 @@ const MedicineList = ({ withHeader = true }: { withHeader?: boolean }) => {
         message: "Medicine deleted",
         color: "green",
       });
-      queryClient.invalidateQueries({ queryKey: ["medicines"] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.MEDICINES] });
     },
     onError: (err: any) => {
       notifications.show({
@@ -59,7 +60,7 @@ const MedicineList = ({ withHeader = true }: { withHeader?: boolean }) => {
   });
 
   const { data, isError, isFetching, error } = usePaginationDataFetch({
-    queryKey: ["medicines"],
+    queryKey: [QUERY_KEY.MEDICINES],
     queryFn: fetchAllMedicines,
     search: debouncedSearch,
     page: pagination.pageIndex + 1,
@@ -101,7 +102,7 @@ const MedicineList = ({ withHeader = true }: { withHeader?: boolean }) => {
         }
       />
       <MainTable
-        className="flex-1 !h-auto"
+        className="flex-1 h-auto!"
         id="medicines-table"
         table={table}
         isLoading={isFetching}

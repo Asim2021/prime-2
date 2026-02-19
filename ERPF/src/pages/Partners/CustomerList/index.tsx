@@ -21,6 +21,7 @@ import useCustomerColumns from "./useCustomerColumns";
 import CustomerModal from "./CustomerModal";
 import { usePaginationDataFetch } from "@hooks/usePaginationDataFetch";
 import { CustomTableOptions } from "@src/types/table";
+import { QUERY_KEY } from "@constants/queryKeys";
 
 const CustomerList = () => {
   const [search, setSearch] = useState("");
@@ -46,7 +47,7 @@ const CustomerList = () => {
         message: "Customer deleted",
         color: "green",
       });
-      queryClient.invalidateQueries({ queryKey: ["customers"] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.CUSTOMERS] });
     },
     onError: (err: any) => {
       notifications.show({
@@ -58,7 +59,7 @@ const CustomerList = () => {
   });
 
   const { data, isError, isFetching, error } = usePaginationDataFetch({
-    queryKey: ["customers"],
+    queryKey: [QUERY_KEY.CUSTOMERS],
     queryFn: fetchAllCustomers,
     search: debouncedSearch,
     page: pagination.pageIndex + 1,

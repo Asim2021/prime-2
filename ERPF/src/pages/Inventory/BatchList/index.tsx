@@ -20,6 +20,7 @@ import useBatchColumns, { useBatchStore } from "./useBatchColumns";
 import BatchModal from "./BatchModal";
 import { usePaginationDataFetch } from "@hooks/usePaginationDataFetch";
 import { CustomTableOptions } from "@src/types/table";
+import { QUERY_KEY } from "@constants/queryKeys";
 
 const BatchList = ({ withHeader = true }: { withHeader?: boolean }) => {
   const [search, setSearch] = useState("");
@@ -45,7 +46,7 @@ const BatchList = ({ withHeader = true }: { withHeader?: boolean }) => {
         message: "Batch deleted",
         color: "green",
       });
-      queryClient.invalidateQueries({ queryKey: ["batches"] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.BATCHES] });
     },
     onError: (err: any) => {
       notifications.show({
@@ -57,7 +58,7 @@ const BatchList = ({ withHeader = true }: { withHeader?: boolean }) => {
   });
 
   const { data, isError, isFetching, error } = usePaginationDataFetch({
-    queryKey: ["batches"],
+    queryKey: [QUERY_KEY.BATCHES],
     queryFn: fetchAllBatches,
     search: debouncedSearch,
     page: pagination.pageIndex + 1,
@@ -96,7 +97,7 @@ const BatchList = ({ withHeader = true }: { withHeader?: boolean }) => {
         }
       />
       <MainTable
-        className="flex-1 !h-auto"
+        className="flex-1 h-auto!"
         id="batches-table"
         table={table}
         isLoading={isFetching}

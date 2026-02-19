@@ -12,6 +12,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { notifications } from "@mantine/notifications";
 import useCustomerStore from "@stores/customerStore";
 import { addCustomer, editCustomer } from "@services/partnerService";
+import { QUERY_KEY } from "@constants/queryKeys";
 
 const CustomerModal = () => {
   const { modalAction, setModalAction, detail, setDetail } = useCustomerStore();
@@ -52,7 +53,7 @@ const CustomerModal = () => {
         message: `Customer ${modalAction === "EDIT" ? "updated" : "added"} successfully`,
         color: "green",
       });
-      queryClient.invalidateQueries({ queryKey: ["customers"] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.CUSTOMERS] });
       handleClose();
     },
     onError: (error: any) => {

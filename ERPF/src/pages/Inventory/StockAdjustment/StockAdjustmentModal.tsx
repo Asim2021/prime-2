@@ -20,6 +20,7 @@ import {
   createStockAdjustment,
 } from "@services/inventoryService";
 import { MdInfo } from "react-icons/md";
+import { QUERY_KEY } from "@constants/queryKeys";
 
 interface StockAdjustmentModalProps {
   opened: boolean;
@@ -78,7 +79,7 @@ const StockAdjustmentModal = ({ opened, close }: StockAdjustmentModalProps) => {
           setBatches(
             data.map((b: any) => ({
               value: b.id,
-              label: `${b.batch_number} (Exp: ${new Date(b.expiry_date).toLocaleDateString()})`,
+              label: `${b.batch_no} (Exp: ${new Date(b.exp_date).toLocaleDateString()})`,
               ...b,
             })),
           );
@@ -108,7 +109,10 @@ const StockAdjustmentModal = ({ opened, close }: StockAdjustmentModalProps) => {
         message: "Stock adjustment recorded successfully",
         color: "green",
       });
-      queryClient.invalidateQueries({ queryKey: ["stock-adjustments"] });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEY.STOCK_ADJUSTMENTS],
+      });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.BATCHES] });
       close();
     },
     onError: (error: any) => {
@@ -122,7 +126,8 @@ const StockAdjustmentModal = ({ opened, close }: StockAdjustmentModalProps) => {
   });
 
   const handleSubmit = (values: any) => {
-    mutation.mutate(values as Partial<StockAdjustmentI>);
+    const { medicine_id, ...payload } = values;
+    mutation.mutate(payload as Partial<StockAdjustmentI>);
   };
 
   return (
@@ -161,19 +166,17 @@ const StockAdjustmentModal = ({ opened, close }: StockAdjustmentModalProps) => {
             >
               <Group justify="space-between">
                 <Text size="sm">
-                  Current Stock: <b>{selectedBatch.current_stock}</b>
+                  Current Stock: <b>{selectedBatch.quantity_available}</b>
                 </Text>
                 <Text size="sm">
                   Expiry:{" "}
-                  <b>
-                    {new Date(selectedBatch.expiry_date).toLocaleDateString()}
-                  </b>
+                  <b>{new Date(selectedBatch.exp_date).toLocaleDateString()}</b>
                 </Text>
               </Group>
               <Text size="xs" mt={4}>
                 New stock will be:{" "}
                 <b>
-                  {Number(selectedBatch.current_stock) +
+                  {Number(selectedBatch.quantity_available) +
                     Number(form.values.quantity_change)}
                 </b>
               </Text>

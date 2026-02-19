@@ -12,6 +12,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { notifications } from "@mantine/notifications";
 import useVendorStore from "@stores/vendorStore";
 import { addVendor, editVendor } from "@services/partnerService";
+import { QUERY_KEY } from "@constants/queryKeys";
 
 const VendorModal = () => {
   const { modalAction, setModalAction, detail, setDetail } = useVendorStore();
@@ -53,7 +54,7 @@ const VendorModal = () => {
         message: `Vendor ${modalAction === "EDIT" ? "updated" : "added"} successfully`,
         color: "green",
       });
-      queryClient.invalidateQueries({ queryKey: ["vendors"] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.VENDORS] });
       handleClose();
     },
     onError: (error: any) => {

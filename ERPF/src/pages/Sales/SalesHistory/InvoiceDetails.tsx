@@ -14,6 +14,7 @@ import { useParams, useNavigate } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import { MdArrowBack, MdPrint } from "react-icons/md";
 import { fetchSaleById } from "@services/salesService";
+import { QUERY_KEY } from "@constants/queryKeys";
 import dayjs from "dayjs";
 import { useRef } from "react";
 import { useReactToPrint } from "react-to-print";
@@ -28,7 +29,7 @@ const InvoiceDetails = () => {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["sale", id],
+    queryKey: [QUERY_KEY.SALES, id],
     queryFn: () => fetchSaleById(id!),
     enabled: !!id,
   });
