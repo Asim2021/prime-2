@@ -5,7 +5,7 @@
 - **Language**: Plain JavaScript (no TypeScript)
 - **Module System**: ESM (`"type": "module"` in `package.json`)
 - **Pattern**: Feature-based modular architecture
-- **Business Logic**: Lives in service file i.e., *.service.js
+- **Business Logic**: Lives in service file i.e., \*.service.js
 - **Validation**: Joi schemas applied via middleware
 - **Error Handling**: Centralized via `error.middleware.js`
 - **Responses**: Always use standardized helpers
@@ -27,23 +27,16 @@ ERPB/
 │   ├── db/
 │   │   ├── migrations/      # Sequelize Migrations
 │   │   └── seeders/           # Sequelize Seeds
-│   ├── config/
-│   │   ├── database.js       # Database configuration
-│   │   ├── env.js            # Environment variables
-│   │   └── logger.js         # Logging configuration
 │   ├── features/
 │   │   ├── auth/
 │   │   │   ├── auth.controller.js
-│   │   │   ├── auth.service.js
 │   │   │   ├── auth.router.js
 │   │   │   └── auth.schema.js     # Joi Schema
-│   │   ├── hr/               # Grouped Feature (Multiple controllers/routers)
-│   │   │   ├── attendance.controller.js
-│   │   │   ├── attendance.service.js
-│   │   │   ├── leave.controller.js
-│   │   │   ├── leave.service.js
-│   │   │   ├── xxxx.router.js
-│   │   │   └── ...
+│   │   ├── medicine/               # Grouped Feature (Multiple controllers/routers)
+│   │   │   ├── medicine.controller.js
+│   │   │   ├── medicine.router.js
+│   │   │   ├── medicine.service.js
+│   │   │   └── medicine.schema.js
 │   │   ├── user/
 │   │   │   ├── user.controller.js
 │   │   │   ├── user.service.js
@@ -54,14 +47,13 @@ ERPB/
 │   │   └── index.js # Export main root router
 │   ├── lib/      # helpers
 │   │   ├── config.js        # .env export config
-│   │   ├── mail.js    # nodemailer setup
 │   │   ├── rateLimit.js      # API rate limiter
 │   │   └── sqlConfig.js       # MySql Config with Sequelize
 │   ├── middleware/
-│   │   ├── auth.middleware.js
 │   │   ├── error.middleware.js
-│   │   ├── validation.middleware.js
-│   │   └── logger.middleware.js
+│   │   ├── notFound.handler.js
+│   │   ├── sendResponse.js
+│   │   └── verifyTokens.js
 │   ├── models/        # Sequelize Model definitions
 │   │   ├── users/
 │   │   │   └── user.model.js
@@ -69,7 +61,6 @@ ERPB/
 │   │   │   └── role.model.js
 │   │   └── index.js     # Sequelize model with associations defined
 │   ├── utils/
-│   │   ├── logger.js
 │   │   ├── ...
 │   │   ├── joiValidator.js  # Joi Schema Validator Func
 │   │   └── helpers.js
@@ -119,14 +110,14 @@ ERPB/
 import { getPaginationParams } from '../../utils/helpers.js';
 
 const { page, limit, offset, sortBy, order } = getPaginationParams({
-  page: req?.query?.page,
-  limit: req?.query?.limit,
-  sortBy: req?.query?.sortBy,
-  order: req?.query?.order,
-  defaultLimit: 20,
-  maxLimit: 100,
-  defaultSortBy: 'createdAt',
-  defaultOrder: 'DESC',
+	page: req?.query?.page,
+	limit: req?.query?.limit,
+	sortBy: req?.query?.sortBy,
+	order: req?.query?.order,
+	defaultLimit: 20,
+	maxLimit: 100,
+	defaultSortBy: 'createdAt',
+	defaultOrder: 'DESC',
 });
 ```
 
@@ -171,28 +162,62 @@ import { sendSuccessResponse, sendErrorResponse } from '../../middleware/sendRes
 ### Template
 
 ```javascript
-import { TABLES } from '../../constant/strings.js';
-
-const Role = (sequelize, DataTypes) => {
-	return sequelize.define(TABLES.ROLES, {
+import { DataTypes, Model } from 'sequelize';
+import sequelize from '#lib/sqlConfig.js';
+export class User extends Model {}
+User.init(
+	{
 		id: {
-			type: DataTypes.UUID,
-			defaultValue: DataTypes.UUIDV4,
-			allowNull: false,
+			type: DataTypes.CHAR(36),
 			primaryKey: true,
 		},
-		name: {
+		username: {
+			type: DataTypes.STRING(100),
+			allowNull: false,
+			unique: true,
+		},
+		email: {
+			type: DataTypes.STRING(150),
+			allowNull: false,
+			unique: true,
+		},
+		password_hash: {
 			type: DataTypes.STRING(255),
 			allowNull: false,
 		},
-		code: {
-			type: DataTypes.STRING(255),
+		role_id: {
+			type: DataTypes.CHAR(36),
 			allowNull: false,
 		},
-	});
-};
-
-export default Role;
+		is_active: {
+			type: DataTypes.BOOLEAN,
+			defaultValue: true,
+		},
+		last_login_at: {
+			type: DataTypes.DATE,
+			allowNull: true,
+		},
+		session_token: {
+			type: DataTypes.STRING(255),
+			allowNull: true,
+		},
+		created_at: {
+			type: DataTypes.DATE,
+			defaultValue: DataTypes.NOW,
+		},
+		updated_at: {
+			type: DataTypes.DATE,
+			defaultValue: DataTypes.NOW,
+		},
+	},
+	{
+		sequelize,
+		tableName: 'users',
+		timestamps: true,
+		createdAt: 'created_at',
+		updatedAt: 'updated_at',
+	},
+);
 ```
 
 ### Rules
@@ -219,77 +244,102 @@ export default Role;
 ### Template
 
 ```javascript
-// itemStore.controller.js
+// user.controller.js
 import _ from 'lodash';
-import { Op } from 'sequelize';
+import * as userService from './user.service.js';
+import { HTTP_STATUS } from '#constant/httpStatus.js';
+import { sendSuccessResponse, sendErrorResponse } from '#middleware/sendResponse.js';
+import { getPaginationParams, parseBoolean } from '#utils/helpers.js';
+import { USERS_STRING } from '#constant/strings.js';
 
-import { HTTP_STATUS } from '../../constant/httpStatus.js';
-import { ITEM_STORE_STRING } from '../../constant/strings.js';
-import { sendSuccessResponse, sendErrorResponse } from '../../middleware/sendResponse.js';
-import db from '../../models/index.js';
-import { parseBoolean } from '../../utils/helpers.js';
-
-const { itemstores: ItemStores } = db;
-
-//// GET /////
-async function getAllItemStores(req, res) {
+export const list = async (req, res) => {
 	try {
-		const page = req?.query?.page ? Math.max(Number(req?.query?.page), 1) : undefined;
-		const limit = req?.query?.limit ? Number(req?.query?.limit) : 100;
+		const { page, limit, offset, sortBy, order } = getPaginationParams({
+			page: req?.query?.page,
+			limit: req?.query?.limit,
+			sortBy: req?.query?.sort_by,
+			order: req?.query?.order,
+			defaultLimit: 10,
+			maxLimit: 100,
+			defaultSortBy: 'created_at',
+			defaultOrder: 'DESC',
+		});
 		const search = req?.query?.search ? decodeURIComponent(req.query.search).trim() : undefined;
-		const sortBy = req?.query?.sortBy || 'updatedAt';
-		const order = req?.query?.order || 'DESC';
-		const offset = page && limit ? Math.max(page - 1, 0) * limit : 0;
-		const active = parseBoolean(req?.query?.active);
-		const isActiveKey = Object.keys(req.query).includes('active');
-
-		const whereClause = search
-			? {
-					[Op.or]: [{ discount: { [Op.like]: `%${search}%` } }, { creator: { [Op.like]: `%${search}%` } }],
-					...(isActiveKey && { active }),
-				}
-			: undefined;
-
-		const { rows = [], count } = await ItemStores.findAndCountAll({
-			raw: true,
-			where: whereClause,
-			limit: req.query.limit ? limit : undefined,
-			offset: req.query.page ? offset : undefined,
-			order: [[sortBy, order]],
+		const active = parseBoolean(req?.query?.filter?.active);
+		const { rows, count } = await userService.getAllUsers({
+			page,
+			limit,
+			offset,
+			sortBy,
+			order,
+			search,
+			active,
 		});
 
-		if (_.isEmpty(rows)) {
-			return sendSuccessResponse({
-				res,
-				status: HTTP_STATUS.OK,
-				data: {
-					data: [],
-					totalCount: 0,
-					count: 0,
-					currentPage: 1,
-					totalPages: 1,
-				},
-				message: ITEM_STORE_STRING.NOT_FOUND,
-			});
-		}
 		sendSuccessResponse({
 			res,
 			status: HTTP_STATUS.OK,
-			data: {
-				data: rows,
-				totalCount: count,
-				count: rows.length,
-				currentPage: page,
-				totalPages: Math.ceil(count / limit),
-			},
-			message: ITEM_STORE_STRING.FETCHED,
+			message: USERS_STRING.USER_FETCHED,
+			data: _.isEmpty(rows)
+				? {
+						data: [],
+						totalCount: 0,
+						count: 0,
+						currentPage: 1,
+						totalPages: 1,
+					}
+				: {
+						data: rows,
+						totalCount: count,
+						count: rows.length,
+						currentPage: page,
+						totalPages: Math.ceil(count / limit),
+					},
 		});
 	} catch (error) {
-		sendErrorResponse({ res, status: HTTP_STATUS.SERVER_ERROR, message: error });
+		sendErrorResponse({
+			res,
+			status: error.statusCode || HTTP_STATUS.SERVER_ERROR,
+			message: error.message || error,
+		});
 	}
-}
+};
 
 // ... other CRUD methods
+```
+
+```javascript
+// user.service.js
+import { Op, Sequelize } from 'sequelize';
+import { User, Role } from '#models/index.js';
+import { createError } from '#middleware/error.middleware.js';
+import { HTTP_STATUS } from '#constant/httpStatus.js';
+
+/**
+ * Get all users with their roles.
+ */
+export const getAllUsers = async ({ page, limit, offset, sortBy, order, search, active }) => {
+	return User.findAndCountAll({
+		raw: true,
+		include: [{ model: Role, as: 'role', attributes: [] }],
+		attributes: {
+			exclude: ['password_hash', 'session_token'],
+			include: [
+				[Sequelize.col('role.name'), 'role_name'],
+				[Sequelize.col('role.code'), 'role_code'],
+			],
+		},
+		where: {
+			...(search && {
+				username: { [Op.like]: `%${search.trim()}%` },
+			}),
+			...(active && { is_active: active }),
+		},
+		limit,
+		offset,
+		order: [[sortBy, order]],
+	});
+};
 ```
 
 ## Route Guidelines
@@ -308,31 +358,30 @@ async function getAllItemStores(req, res) {
 // itemStore.router.js
 import { Router } from 'express';
 
-import { idSchema, querySchema } from '../../common/joiSchema.js';
-import { ENDPOINT } from '../../constant/endpoints.js';
-import { joiValidate, JOI_TYPES } from '../../utils/joiValidator.js';
-const {
-	getAllItemStores,
-	getItemStoresById,
-	addItemStores,
-	updateItemStores,
-	deleteItemStores,
-} from './itemStore.controller.js';
+import { verifyAccessToken, verifyUserRole } from '#middleware/verifyTokens.js';
+import { JOI_TYPES, joiValidate } from '#utils/joiValidator.js';
+import { ENDPOINT } from '#constant/endpoints.js';
+import { list, getById, create, update, deactivate } from './user.controller.js';
+import { createUserSchema, getAllUserSchema, updateUserSchema, userIdParamSchema } from './user.schema.js';
 
-const itemStoreRouter = Router();
+const router = Router();
 
-itemStoreRouter.get(ENDPOINT.BASE, joiValidate(querySchema, JOI_TYPES.QUERY), getAllItemStores);
-itemStoreRouter.get(ENDPOINT.ID, joiValidate(idSchema, JOI_TYPES.PARAMS), getItemStoresById);
-itemStoreRouter.post(ENDPOINT.BASE, joiValidate(addItemStoresSchema, JOI_TYPES.BODY), addItemStores);
-itemStoreRouter.put(
+// All user routes require authentication
+router.use(verifyAccessToken);
+
+router.get(ENDPOINT.BASE, verifyUserRole(['admin']), joiValidate(getAllUserSchema, JOI_TYPES.QUERY), list);
+router.get(ENDPOINT.ID, joiValidate(userIdParamSchema, JOI_TYPES.PARAMS), getById);
+router.post(ENDPOINT.BASE, verifyUserRole(['admin']), joiValidate(createUserSchema, JOI_TYPES.BODY), create);
+router.patch(
 	ENDPOINT.ID,
-	joiValidate(updateItemStoresSchema, JOI_TYPES.BODY),
-	joiValidate(idSchema, JOI_TYPES.PARAMS),
-	updateItemStores,
+	verifyUserRole(['admin']),
+	joiValidate(userIdParamSchema, JOI_TYPES.PARAMS),
+	joiValidate(updateUserSchema, JOI_TYPES.BODY),
+	update,
 );
-itemStoreRouter.delete(ENDPOINT.ID, joiValidate(idSchema, JOI_TYPES.PARAMS), deleteItemStores);
+router.delete(ENDPOINT.ID, verifyUserRole(['admin']), joiValidate(userIdParamSchema, JOI_TYPES.PARAMS), deactivate);
 
-export default itemStoreRouter;
+export default router;
 ```
 
 ## Error Handling
@@ -348,7 +397,7 @@ export default itemStoreRouter;
 - **Transactions**: Use `db.sequelize.transaction()` for operations involving multiple tables (e.g., Creating Invoice & Items).
 
 ```javascript
-import db from '../models/index.js';
+import db from '#models/index.js';
 
 await db.sequelize.transaction(async (t) => {
 	await Model1.create(data1, { transaction: t });
