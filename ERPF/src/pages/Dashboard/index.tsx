@@ -14,11 +14,7 @@ import {
   UnstyledButton,
 } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
-import {
-  fetchDashboardStats,
-  fetchSalesTrend,
-  fetchLowStock,
-} from "@services/dashboardService";
+import { fetchDashboardStats, fetchLowStock } from "@services/dashboardService";
 import { QUERY_KEY } from "@constants/queryKeys";
 import {
   MdWarning,
@@ -105,15 +101,13 @@ const QuickAction = ({ icon, label, color, onClick }: any) => (
 const Dashboard = () => {
   const navigate = useNavigate();
 
-  const { data: stats, isLoading: statsLoading } = useQuery({
+  const { data: dashboardData, isLoading: statsLoading } = useQuery({
     queryKey: [QUERY_KEY.DASHBOARD_STATS],
     queryFn: fetchDashboardStats,
   });
 
-  const { data: salesTrend } = useQuery({
-    queryKey: [QUERY_KEY.SALES_TREND],
-    queryFn: fetchSalesTrend,
-  });
+  const stats = dashboardData?.data;
+  const salesTrend = stats?.salesTrend;
 
   const { data: lowStock } = useQuery({
     queryKey: [QUERY_KEY.LOW_STOCK],
@@ -185,7 +179,7 @@ const Dashboard = () => {
       <SimpleGrid cols={{ base: 1, sm: 2, lg: 4 }} spacing="md">
         <StatCard
           title="Total Sales"
-          value={`₹${stats?.totalSales?.toLocaleString() || 0}`}
+          value={`₹${stats?.todaysSales?.toLocaleString() || 0}`}
           icon={<MdAttachMoney size={26} />}
           color="teal"
           gradient={{ from: "teal", to: "green", deg: 45 }}
@@ -212,7 +206,7 @@ const Dashboard = () => {
         />
         <StatCard
           title="Expiring Soon"
-          value={stats?.expiryCount || 0}
+          value={stats?.nearExpiryCount || 0}
           icon={<MdTrendingUp size={26} />} // Using TrendingUp as a placeholder or maybe MdTimer
           color="red"
           gradient={{ from: "red", to: "pink", deg: 45 }}

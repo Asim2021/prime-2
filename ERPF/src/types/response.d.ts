@@ -11,4 +11,10 @@ interface PaginationResponseI<T> {
   currentPage: number;
   totalPages: number;
   count: number;
+  meta?: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
 }

@@ -19,7 +19,6 @@ import { CustomTableOptions } from "@src/types/table";
 import MainHeader from "@components/Header/MainHeader";
 
 const SalesHistory = ({ withHeader = true }: { withHeader?: boolean }) => {
-  const [viewId, setViewId] = useState<string | null>(null);
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -82,7 +81,7 @@ const SalesHistory = ({ withHeader = true }: { withHeader?: boolean }) => {
               <ActionIcon
                 variant="subtle"
                 color="blue"
-                onClick={() => setViewId(info.row.original.id)}
+                onClick={() => {}} // Placeholder for now
               >
                 <MdVisibility size={18} />
               </ActionIcon>
@@ -129,8 +128,8 @@ const SalesHistory = ({ withHeader = true }: { withHeader?: boolean }) => {
         isLoading={isFetching}
         isError={isError}
         error={error}
-        totalCount={data?.totalCount || 0}
-        totalPages={data?.totalPages || 0}
+        totalCount={data?.meta?.total || 0}
+        totalPages={data?.meta?.totalPages || 0}
         setPagination={setPagination}
         columnOrder={columnOrder}
         setColumnOrder={setColumnOrder}

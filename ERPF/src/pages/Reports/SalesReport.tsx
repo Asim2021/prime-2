@@ -31,13 +31,18 @@ const SalesReport = () => {
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: [QUERY_KEY.REPORTS, "sales", dateRange],
-    queryFn: () => {
+    queryFn: async () => {
       const [start, end] = dateRange;
-      if (!start || !end) return { data: [], stats: {} };
-      return fetchSalesReport({
+      if (!start || !end)
+        return {
+          data: [],
+          stats: { total_revenue: 0, total_orders: 0 },
+        } as any;
+      const res = await fetchSalesReport({
         startDate: start.toISOString(),
         endDate: end.toISOString(),
       });
+      return res;
     },
     enabled: !!dateRange[0] && !!dateRange[1],
   });
@@ -62,7 +67,11 @@ const SalesReport = () => {
     [],
   );
 
-  const tableData = data?.data || [];
+  const tableData = useMemo(() => {
+    if (Array.isArray(data)) return data;
+    if (data?.data && Array.isArray(data.data)) return data.data;
+    return [];
+  }, [data]);
 
   const table = useReactTable({
     data: tableData,
@@ -79,7 +88,17 @@ const SalesReport = () => {
     tableId: "sales-report-table",
   } as CustomTableOptions<any>);
 
-  const stats = data?.stats || { total_revenue: 0, total_orders: 0 };
+  const stats = useMemo(() => {
+    if (data?.stats) return data.stats;
+    const total_revenue = tableData.reduce(
+      (acc: number, item: any) => acc + Number(item.total_amount || 0),
+      0,
+    );
+    return {
+      total_revenue,
+      total_orders: tableData.length,
+    };
+  }, [data, tableData]);
 
   return (
     <Stack>

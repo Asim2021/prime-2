@@ -1,16 +1,15 @@
 import erpApi from "@lib/axiosInstance";
-import type { DashboardStatsI, SalesTrendI } from "../types/dashboard";
+import type { SalesTrendI } from "../types/dashboard";
 
-export const fetchDashboardStats = async (): Promise<DashboardStatsI> => {
-  const { data } = await erpApi.get("/reports/dashboard");
-  return data;
+export const fetchDashboardStats = async (): Promise<any> => {
+  const res = await erpApi.get("/reports/dashboard");
+  return res; // Interceptor already returns response.data
 };
 
 export const fetchSalesTrend = async (): Promise<SalesTrendI[]> => {
-  // Sales trend not yet a separate endpoint — use dashboard data or mock
   try {
-    const { data } = await erpApi.get("/reports/dashboard");
-    return data?.salesTrend || [];
+    const res: any = await erpApi.get("/reports/dashboard");
+    return res?.data?.salesTrend || [];
   } catch {
     return [];
   }
