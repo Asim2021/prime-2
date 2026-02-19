@@ -79,3 +79,16 @@ export const createBatch = async (req, res) => {
     sendErrorResponse({ res, status: error.statusCode || HTTP_STATUS.SERVER_ERROR, message: error.message || error });
   }
 };
+
+export const deleteBatch = async (req, res) => {
+  try {
+    await batchService.deleteBatch(req.params.id);
+    sendSuccessResponse({
+      res,
+      status: HTTP_STATUS.OK,
+      message: 'Batch deleted successfully',
+    });
+  } catch (error) {
+    sendErrorResponse({ res, status: error.statusCode || HTTP_STATUS.SERVER_ERROR, message: error.message || error });
+  }
+};

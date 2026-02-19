@@ -81,7 +81,7 @@ ERPB/
     npm run feature:create  [featureName]
     ```
 2. Script auto-generates:
-    - src/features/[featureName]/ with controller, router, schema
+    - src/features/[featureName]/ with controller,service, router, schema
     - src/models/[featureName]/[featureName].model.js
     - Optional migration file (if flag[just pass true as 2nd arg] provided)
 
@@ -308,6 +308,12 @@ export const list = async (req, res) => {
 // ... other CRUD methods
 ```
 
+## Service Guidelines
+
+### File Location
+
+`src/features/[featureName]/[featureName].service.js`
+
 ```javascript
 // user.service.js
 import { Op, Sequelize } from 'sequelize';
@@ -355,7 +361,7 @@ export const getAllUsers = async ({ page, limit, offset, sortBy, order, search, 
 ### Template
 
 ```javascript
-// itemStore.router.js
+// user.router.js
 import { Router } from 'express';
 
 import { verifyAccessToken, verifyUserRole } from '#middleware/verifyTokens.js';

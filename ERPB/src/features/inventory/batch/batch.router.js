@@ -25,4 +25,10 @@ router.post(
   batchController.createBatch,
 );
 
+router.delete(
+  ENDPOINT.ID,
+  verifyUserRole([ 'admin', 'pharmacist' ]),
+  batchController.deleteBatch,
+);
+
 export default router;

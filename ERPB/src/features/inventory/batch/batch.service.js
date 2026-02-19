@@ -111,5 +111,28 @@ export const createBatch = async (data, userId) => {
     }
 
     return batch;
+    return batch;
   });
+};
+
+export const deleteBatch = async (id) => {
+  const batch = await Batch.findByPk(id);
+  if (!batch) {
+    const error = new Error('Batch not found');
+    error.statusCode = HTTP_STATUS.NOT_FOUND;
+    throw error;
+  }
+
+  // Check for dependencies (Sales, Stock Ledger, etc.)
+  // For strict data integrity, we should probably soft delete or preventing delete if used.
+  // Checking StockLedger usage
+  const ledgerCount = await StockLedger.count({ where: { batch_id: id } });
+  if (ledgerCount > 0) {
+    const error = new Error('Cannot delete batch with existing stock transactions.');
+    error.statusCode = HTTP_STATUS.BAD_REQUEST;
+    throw error;
+  }
+
+  await batch.destroy();
+  return true;
 };

@@ -73,8 +73,8 @@ export const fetchAllCategories = async (): Promise<CategoryI[]> => {
 };
 
 export const fetchBatchesByMedicine = async (medicineId: string) => {
-  const { data } = await erpApi.get(`/medicines/${medicineId}/batches`);
-  return data;
+  const { data } = await erpApi.get(`/batches?medicine_id=${medicineId}`);
+  return data?.data || []; // Handle pagination response structure
 };
 
 // Stock Adjustment

@@ -3,7 +3,7 @@ import Joi from 'joi';
 export const createStockAdjustmentSchema = Joi.object({
   batch_id: Joi.string().uuid().required(),
   quantity_change: Joi.number().integer().required(), // Can be negative or positive
-  reason: Joi.string().valid('damaged', 'expired', 'lost', 'correction', 'returned').required(),
+  reason: Joi.string().valid('damage', 'expired', 'theft', 'manual_correction', 'other').required(),
   note: Joi.string().allow('', null),
 });
 
