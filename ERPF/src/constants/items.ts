@@ -3,21 +3,9 @@ import { ComboboxItem } from "@mantine/core";
 import { UseFormReturnType } from "@mantine/form";
 import { isEqual } from "lodash-es";
 
-
 export const INITIAL_ALL_TABLE_PINNING = {
   left: [],
   right: ["action"],
-};
-
-
-export const INITIAL_SEARCH_STATE = {
-  itemGroup: "",
-  make: "",
-  itemUnitType: "",
-  currencyType: "",
-  exciseDuty: "",
-  discountGroup: "",
-  storeLocation: "",
 };
 
 export type SectionI = UseFormReturnType<any>;
@@ -34,7 +22,7 @@ export const gridSpan = { xs: 5, sm: 4, md: 3, lg: 2 };
 
 export const getSelectValue = (
   array: ComboboxItem[] | undefined,
-  value: OnChangeI
+  value: OnChangeI,
 ): SelectValueI => array?.find((option) => option.value === value);
 
 type FormLike = {
@@ -44,7 +32,7 @@ type FormLike = {
 
 export const areFormEqual = <T extends { form: FormLike }>(
   relevantFormValues: string[],
-  extraKeys?: (keyof T)[]
+  extraKeys?: (keyof T)[],
 ) => {
   return (prev: T, next: T) => {
     // 1. Compare Form Values (fastest check first)

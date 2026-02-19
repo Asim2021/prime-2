@@ -2,10 +2,11 @@ import { useState, useMemo } from "react";
 import { Button, Group, Stack, Text, Paper, SimpleGrid } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { useQuery } from "@tanstack/react-query";
+import { MdDownload } from "react-icons/md";
+import dayJs from "dayjs";
 import MainTable from "@components/Table";
 import { fetchSalesReport } from "@services/reportService";
 import { QUERY_KEY } from "@constants/queryKeys";
-import { MdDownload } from "react-icons/md";
 import {
   getCoreRowModel,
   getPaginationRowModel,
@@ -30,7 +31,7 @@ const SalesReport = () => {
   const [sorting, setSorting] = useState<SortingState>([]);
 
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: [QUERY_KEY.REPORTS, "sales", dateRange],
+    queryKey: [QUERY_KEY.REPORTS, "sales", dateRange[0], dateRange[1]],
     queryFn: async () => {
       const [start, end] = dateRange;
       if (!start || !end)
@@ -49,16 +50,26 @@ const SalesReport = () => {
 
   const columns = useMemo<ColumnDef<any>[]>(
     () => [
-      { accessorKey: "invoice_no", header: "Invoice No" },
+      { id: "bill_no", accessorKey: "bill_no", header: "Invoice No" },
       {
-        accessorKey: "invoice_date",
+        id: "created_at",
+        accessorKey: "created_at",
         header: "Date",
-        cell: (info) =>
-          new Date(info.getValue() as string).toLocaleDateString(),
+        cell: (value) => (
+          <Text
+            size="sm"
+            title={dayJs(value.getValue() as string).format(
+              "DD-MM-YY hh:mm:ss",
+            )}
+          >
+            {dayJs(value.getValue() as string).format("DD-MM-YY")}
+          </Text>
+        ),
       },
-      { accessorKey: "customer_name", header: "Customer" },
-      { accessorKey: "payment_mode", header: "Mode" },
+      { id: "customer_name", accessorKey: "customer_name", header: "Customer" },
+      { id: "payment_mode", accessorKey: "payment_mode", header: "Mode" },
       {
+        id: "total_amount",
         accessorKey: "total_amount",
         header: "Amount",
         cell: (info) => `₹${info.getValue()}`,
@@ -74,11 +85,15 @@ const SalesReport = () => {
   }, [data]);
 
   const table = useReactTable({
+    id: "sales-report-table",
     data: tableData,
     columns,
     state: {
       sorting,
       pagination,
+    },
+    initialState: {
+      columnPinning: { left: ["bill_no"], right: ["total_amount"] },
     },
     onPaginationChange: setPagination,
     onSortingChange: setSorting,
