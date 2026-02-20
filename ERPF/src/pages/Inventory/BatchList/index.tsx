@@ -21,6 +21,7 @@ import BatchModal from "./BatchModal";
 import { usePaginationDataFetch } from "@hooks/usePaginationDataFetch";
 import { CustomTableOptions } from "@src/types/table";
 import { QUERY_KEY } from "@constants/queryKeys";
+import { Divider } from "@mantine/core";
 
 const BatchList = ({ withHeader = true }: { withHeader?: boolean }) => {
   const [search, setSearch] = useState("");
@@ -96,6 +97,7 @@ const BatchList = ({ withHeader = true }: { withHeader?: boolean }) => {
           </ModalTriggerButton>
         }
       />
+      <Divider />
       <MainTable
         className="flex-1 h-auto!"
         id="batches-table"

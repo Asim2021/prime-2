@@ -23,6 +23,7 @@ import { usePaginationDataFetch } from "@hooks/usePaginationDataFetch";
 import { CustomTableOptions } from "@src/types/table";
 import { INITIAL_ALL_TABLE_PINNING } from "@constants/items";
 import { QUERY_KEY } from "@constants/queryKeys";
+import { Divider } from "@mantine/core";
 
 const MedicineList = ({ withHeader = true }: { withHeader?: boolean }) => {
   const [search, setSearch] = useState("");
@@ -101,6 +102,7 @@ const MedicineList = ({ withHeader = true }: { withHeader?: boolean }) => {
           </ModalTriggerButton>
         }
       />
+      <Divider />
       <MainTable
         className="flex-1 h-auto!"
         id="medicines-table"

@@ -5,7 +5,10 @@ import { useQuery } from "@tanstack/react-query";
 import { MdDownload } from "react-icons/md";
 import dayJs from "dayjs";
 import MainTable from "@components/Table";
-import { fetchSalesReport } from "@services/reportService";
+import {
+  fetchSalesReport,
+  SalesReportResponseI,
+} from "@services/reportService";
 import { QUERY_KEY } from "@constants/queryKeys";
 import {
   getCoreRowModel,
@@ -30,18 +33,12 @@ const SalesReport = () => {
   });
   const [sorting, setSorting] = useState<SortingState>([]);
 
-  const { data, isLoading, isError, error } = useQuery({
-    queryKey: [QUERY_KEY.REPORTS, "sales", dateRange[0], dateRange[1]],
+  const { data, isLoading, isError, error } = useQuery<SalesReportResponseI>({
+    queryKey: [QUERY_KEY.REPORTS, "sales", dateRange],
     queryFn: async () => {
-      const [start, end] = dateRange;
-      if (!start || !end)
-        return {
-          data: [],
-          stats: { total_revenue: 0, total_orders: 0 },
-        } as any;
       const res = await fetchSalesReport({
-        startDate: start.toISOString(),
-        endDate: end.toISOString(),
+        startDate: dayJs(dateRange[0]).format("YYYY-MM-DD"),
+        endDate: dayJs(dateRange[1]).format("YYYY-MM-DD"),
       });
       return res;
     },
@@ -79,8 +76,8 @@ const SalesReport = () => {
   );
 
   const tableData = useMemo(() => {
-    if (Array.isArray(data)) return data;
     if (data?.data && Array.isArray(data.data)) return data.data;
+    if (Array.isArray(data)) return data;
     return [];
   }, [data]);
 

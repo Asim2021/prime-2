@@ -27,8 +27,8 @@ const Inventory = () => {
   };
 
   return (
-    <div className="w-full h-full p-2">
-      <Paper p="md" radius="md" h="100%" className="flex flex-col">
+    <div className="w-full h-full">
+      <Paper radius="md" h="100dvh" className="flex flex-col">
         <Tabs value={activeTab} onChange={handleTabChange} keepMounted={false}>
           <Tabs.List mb="md">
             <Tabs.Tab
@@ -45,16 +45,16 @@ const Inventory = () => {
             </Tabs.Tab>
           </Tabs.List>
 
-          <Tabs.Panel value="medicines" h="calc(100% - 60px)">
+          <Tabs.Panel value="medicines" h="calc(100dvh - 54px)">
             {/* We hide the title to avoid duplication with Tab label */}
             <MedicineList withHeader={false} />
           </Tabs.Panel>
 
-          <Tabs.Panel value="batches" h="calc(100% - 60px)">
+          <Tabs.Panel value="batches" h="calc(100dvh - 54px)">
             <BatchList withHeader={false} />
           </Tabs.Panel>
 
-          <Tabs.Panel value="adjustments" h="calc(100% - 60px)">
+          <Tabs.Panel value="adjustments" h="calc(100dvh - 54px)">
             <StockAdjustment withHeader={false} />
           </Tabs.Panel>
         </Tabs>

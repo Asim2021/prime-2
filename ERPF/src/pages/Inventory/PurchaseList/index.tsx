@@ -96,7 +96,7 @@ const PurchaseList = () => {
         ),
       },
       {
-        id: "actions",
+        id: "action",
         cell: ({ row }) => (
           <ActionIcon
             variant="subtle"

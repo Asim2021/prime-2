@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Button, Group, Stack, Title, Badge } from "@mantine/core";
+import { Button, Badge, Divider } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import { fetchStockAdjustments } from "@services/inventoryService";
 import { QUERY_KEY } from "@constants/queryKeys";
@@ -18,6 +18,7 @@ import {
   ColumnOrderState,
 } from "@tanstack/react-table";
 import { CustomTableOptions } from "@src/types/table";
+import MainHeader from "@components/Header/MainHeader";
 
 const StockAdjustment = ({ withHeader = true }: { withHeader?: boolean }) => {
   const [opened, { open, close }] = useDisclosure(false);
@@ -106,24 +107,16 @@ const StockAdjustment = ({ withHeader = true }: { withHeader?: boolean }) => {
   } as CustomTableOptions<any>);
 
   return (
-    <Stack h="100%" gap="md">
-      {withHeader && (
-        <Group justify="space-between">
-          <Title order={3}>Stock Adjustments</Title>
+    <div className="w-full h-full flex flex-col relative">
+      <MainHeader
+        title=""
+        modalButton={
           <Button leftSection={<MdAdd />} onClick={open}>
             New Adjustment
           </Button>
-        </Group>
-      )}
-
-      {!withHeader && (
-        <Group justify="flex-end">
-          <Button leftSection={<MdAdd />} onClick={open}>
-            New Adjustment
-          </Button>
-        </Group>
-      )}
-
+        }
+      />
+      <Divider />
       <MainTable
         className="flex-1 h-auto!"
         id="stock-adjustment-table"
@@ -139,9 +132,8 @@ const StockAdjustment = ({ withHeader = true }: { withHeader?: boolean }) => {
         columnIdsToSort={["created_at", "quantity_change"]}
         withFooter
       />
-
       <StockAdjustmentModal opened={opened} close={close} />
-    </Stack>
+    </div>
   );
 };
 

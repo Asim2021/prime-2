@@ -17,6 +17,7 @@ import { usePaginationDataFetch } from "@hooks/usePaginationDataFetch";
 import { QUERY_KEY } from "@constants/queryKeys";
 import { CustomTableOptions } from "@src/types/table";
 import MainHeader from "@components/Header/MainHeader";
+import dayJs from "@utils/daysJs";
 
 const SalesHistory = ({ withHeader = true }: { withHeader?: boolean }) => {
   const [pagination, setPagination] = useState<PaginationState>({
@@ -37,25 +38,37 @@ const SalesHistory = ({ withHeader = true }: { withHeader?: boolean }) => {
   const columns = useMemo(
     () => [
       {
+        id: "bill_no",
         accessorKey: "bill_no",
         header: "Bill No",
-        cell: (info: any) => <Text fw={500}>{info.getValue()}</Text>,
       },
       {
+        id: "bill_date",
         accessorKey: "bill_date",
         header: "Date",
-        cell: (info: any) => new Date(info.getValue()).toLocaleDateString(),
+        cell: (value: any) => (
+          <Text
+            size="sm"
+            title={dayJs(value.getValue() as string).format(
+              "DD-MM-YY hh:mm:ss",
+            )}
+          >
+            {dayJs(value.getValue() as string).format("DD-MM-YY")}
+          </Text>
+        ),
       },
       {
+        id: "customer_name",
         accessorKey: "customer_name",
         header: "Customer",
       },
       {
+        id: "total_amount",
         accessorKey: "total_amount",
         header: "Amount",
-        cell: (info: any) => <Text fw={600}>₹{info.getValue()}</Text>,
       },
       {
+        id: "payment_mode",
         accessorKey: "payment_mode",
         header: "Mode",
         cell: (info: any) => (
@@ -73,9 +86,8 @@ const SalesHistory = ({ withHeader = true }: { withHeader?: boolean }) => {
         ),
       },
       {
-        id: "actions",
-        header: "Action",
-        cell: (info: any) => (
+        id: "action",
+        cell: () => (
           <Group gap="xs">
             <Tooltip label="View Invoice">
               <ActionIcon

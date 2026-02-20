@@ -122,7 +122,7 @@ const Dashboard = () => {
     );
 
   return (
-    <Stack gap="lg" p="md" pb="xl" h="100%" style={{ overflowY: "auto" }}>
+    <Stack gap="lg" p="xs" pb="xl" h="100%" style={{ overflowY: "auto" }}>
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <Title order={2} fw={800} style={{ letterSpacing: -1 }}>

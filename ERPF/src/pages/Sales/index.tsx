@@ -28,8 +28,8 @@ const Sales = () => {
   };
 
   return (
-    <div className="w-full h-full p-2">
-      <Paper p="md" radius="md" h="100%" className="flex flex-col">
+    <div className="w-full h-full">
+      <Paper radius="md" h="100dvh" className="flex flex-col">
         <Tabs value={activeTab} onChange={handleTabChange} keepMounted={false}>
           <Tabs.List mb="md">
             <Tabs.Tab value="pos" leftSection={<MdPointOfSale size={16} />}>
@@ -46,15 +46,15 @@ const Sales = () => {
             </Tabs.Tab>
           </Tabs.List>
 
-          <Tabs.Panel value="pos" h="calc(100% - 60px)">
+          <Tabs.Panel value="pos" h="calc(100dvh - 54px)">
             <POS withHeader={false} />
           </Tabs.Panel>
 
-          <Tabs.Panel value="history" h="calc(100% - 60px)">
+          <Tabs.Panel value="history" h="calc(100dvh - 54px)">
             <SalesHistory withHeader={false} />
           </Tabs.Panel>
 
-          <Tabs.Panel value="returns" h="calc(100% - 60px)">
+          <Tabs.Panel value="returns" h="calc(100dvh - 54px)">
             <SalesReturn withHeader={false} />
           </Tabs.Panel>
         </Tabs>
