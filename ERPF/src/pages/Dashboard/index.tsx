@@ -122,21 +122,18 @@ const Dashboard = () => {
     );
 
   return (
-    <Stack gap="lg" p="xs" pb="xl" h="100%" style={{ overflowY: "auto" }}>
+    <Stack gap="md" p="xs" pb="xl" h="100%" style={{ overflowY: "auto" }}>
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <Title order={2} fw={800} style={{ letterSpacing: -1 }}>
             Dashboard
           </Title>
-          <Text size="sm" c="dimmed">
-            Overview of your pharmacy performance
-          </Text>
         </div>
         <Text
           size="sm"
-          fw={500}
+          fw={600}
           c="dimmed"
-          className="bg-gray-100 px-3 py-1 rounded-full"
+          className="bg-gray-100 px-3! py-0.5! rounded-full"
         >
           {new Date().toLocaleDateString("en-US", {
             weekday: "long",
@@ -148,7 +145,7 @@ const Dashboard = () => {
       </div>
 
       {/* Quick Actions */}
-      <SimpleGrid cols={{ base: 2, sm: 4 }} spacing="md">
+      <SimpleGrid cols={{ base: 2, sm: 4 }} spacing="sm">
         <QuickAction
           icon={<MdReceipt size={22} />}
           label="New Sale"

@@ -13,7 +13,6 @@ import {
 import { ActionIcon, Badge, Text, Button, Divider } from "@mantine/core";
 import { MdAdd, MdVisibility } from "react-icons/md";
 import { useNavigate } from "react-router";
-import dayjs from "dayjs";
 import { useQuery } from "@tanstack/react-query";
 
 import MainHeader from "@components/Header/MainHeader";
@@ -23,6 +22,7 @@ import { fetchAllPurchases } from "@services/purchaseService";
 import { CustomTableOptions } from "@src/types/table";
 import { QUERY_KEY } from "@constants/queryKeys";
 import { useMemo } from "react";
+import dayJs from "@utils/daysJs";
 
 const PurchaseList = ({
   handleTabChange,
@@ -58,8 +58,16 @@ const PurchaseList = ({
         id: "invoice_date",
         accessorKey: "invoice_date",
         header: "Date",
-        cell: ({ row }) =>
-          dayjs(row.original.invoice_date).format("DD MMM YYYY"),
+        cell: (value: any) => (
+          <Text
+            size="sm"
+            title={dayJs(value.getValue() as string).format(
+              "DD-MM-YY hh:mm:ss",
+            )}
+          >
+            {dayJs(value.getValue() as string).format("DD-MM-YY")}
+          </Text>
+        ),
       },
       {
         id: "invoice_no",
