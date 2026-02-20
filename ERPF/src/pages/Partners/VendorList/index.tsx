@@ -22,6 +22,7 @@ import VendorModal from "./VendorModal";
 import { usePaginationDataFetch } from "@hooks/usePaginationDataFetch";
 import { CustomTableOptions } from "@src/types/table";
 import { QUERY_KEY } from "@constants/queryKeys";
+import { Divider } from "@mantine/core";
 
 const VendorList = () => {
   const [search, setSearch] = useState("");
@@ -84,7 +85,7 @@ const VendorList = () => {
   return (
     <div className="w-full h-full pb-24 relative">
       <MainHeader
-        title="Vendors"
+        title=""
         search={search}
         setSearch={setSearch}
         withSearch
@@ -97,6 +98,7 @@ const VendorList = () => {
           </ModalTriggerButton>
         }
       />
+      <Divider />
       <MainTable
         id="vendors-table"
         table={table}

@@ -1,8 +1,4 @@
-import {
-  createTheme,
-  CSSVariablesResolver,
-  rem,
-} from "@mantine/core";
+import { createTheme, CSSVariablesResolver, rem } from "@mantine/core";
 
 import focusClasses from "./mantineStyles/focus.module.css";
 
@@ -17,7 +13,7 @@ const theme = createTheme({
     erpPink: "#D5006C",
     erpPinkDark: "#AF0059",
     danger: "#EB0000",
-    sidebarWidth: rem(240),
+    sidebarWidth: rem(220),
     sidebarCollapseWidth: rem(74),
   },
 });

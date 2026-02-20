@@ -46,15 +46,15 @@ const Sales = () => {
             </Tabs.Tab>
           </Tabs.List>
 
-          <Tabs.Panel value="pos" h="calc(100dvh - 54px)">
+          <Tabs.Panel value="pos" h="calc(100dvh - 48px)">
             <POS withHeader={false} />
           </Tabs.Panel>
 
-          <Tabs.Panel value="history" h="calc(100dvh - 54px)">
+          <Tabs.Panel value="history" h="calc(100dvh - 48px)">
             <SalesHistory withHeader={false} />
           </Tabs.Panel>
 
-          <Tabs.Panel value="returns" h="calc(100dvh - 54px)">
+          <Tabs.Panel value="returns" h="calc(100dvh - 48px)">
             <SalesReturn withHeader={false} />
           </Tabs.Panel>
         </Tabs>

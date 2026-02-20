@@ -28,12 +28,12 @@ export const sidebarData = [
   },
   {
     label: "Partners",
-    link: ENDPOINT.PARTNER_VENDORS,
+    link: ENDPOINT.PARTNERS,
     icon: MdPeople,
-    links: [
-      { label: "Vendors", link: ENDPOINT.PARTNER_VENDORS },
-      { label: "Customers", link: ENDPOINT.PARTNER_CUSTOMERS },
-    ],
+    // links: [
+    //   { label: "Vendors", link: ENDPOINT.PARTNER_VENDORS },
+    //   { label: "Customers", link: ENDPOINT.PARTNER_CUSTOMERS },
+    // ],
   },
   {
     label: "Reports",

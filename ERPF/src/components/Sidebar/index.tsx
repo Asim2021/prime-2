@@ -8,6 +8,7 @@ import {
   ScrollArea,
   Text,
   ThemeIcon,
+  Tooltip,
 } from "@mantine/core";
 import { MdChevronRight, MdRocketLaunch } from "react-icons/md";
 
@@ -57,25 +58,27 @@ export function Sidebar({
 
   return (
     <AppShell.Navbar>
-      <ActionIcon
-        className={"!absolute -right-3 top-[50px] !rounded-full z-50"}
-        aria-label={"Collapse Sidebar"}
-        title={collapseSidebar ? "Expand" : "Collapse"}
-        variant="filled"
-        size={"sm"}
-        onClick={() => setCollapseSidebar(!collapseSidebar)}
-      >
-        <MdChevronRight
-          className={clsx(
-            "transition-all duration-300",
-            !collapseSidebar && "rotate-180",
-          )}
-        />
-      </ActionIcon>
+      <Tooltip label={collapseSidebar ? "Expand" : "Collapse"}>
+        <ActionIcon
+          className={"!absolute -right-3 top-[50px] !rounded-full z-50"}
+          aria-label={"Collapse Sidebar"}
+          variant="filled"
+          size={"sm"}
+          onClick={() => setCollapseSidebar(!collapseSidebar)}
+        >
+          <MdChevronRight
+            className={clsx(
+              "transition-all duration-300",
+              !collapseSidebar && "rotate-180",
+            )}
+          />
+        </ActionIcon>
+      </Tooltip>
       <AppShell.Section className={classes.sidebar_header}>
         <Group
           justify={collapseSidebar ? "center" : "space-between"}
           align="center"
+          gap={"xs"}
         >
           {isCompanyImage && !collapseSidebar ? (
             <img

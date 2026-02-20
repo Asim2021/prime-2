@@ -11,6 +11,7 @@ import {
   Menu,
   Text,
   ThemeIcon,
+  Tooltip,
   UnstyledButton,
 } from "@mantine/core";
 
@@ -48,7 +49,7 @@ export const SidebarLinkGroup = ({
       <Text
         className={clsx(
           classes.sublink,
-          pathname === link.link && classes.active
+          pathname === link.link && classes.active,
         )}
         id="sublink_text"
         component="strong"
@@ -63,14 +64,14 @@ export const SidebarLinkGroup = ({
       <Menu.Item
         className={clsx(
           classes.sub_menu_option,
-          pathname === link.link && " highlight_bg"
+          pathname === link.link && " highlight_bg",
         )}
         title={"Go to " + link.label}
       >
         <Text
           className={clsx(
             "sublink_text",
-            pathname === link.link && classes.active
+            pathname === link.link && classes.active,
           )}
           id="sublink_text"
           size="sm"
@@ -103,7 +104,7 @@ export const SidebarLinkGroup = ({
       <Flex
         className={clsx(
           collapseSidebar ? classes.control_mobile : classes.control,
-          isAllCollapsible && "active"
+          isAllCollapsible && "active",
         )}
       >
         <section id="main-menu">
@@ -116,7 +117,7 @@ export const SidebarLinkGroup = ({
               "overflow-x-hidden",
               (pathname === link || subLinkActive) &&
                 !collapseSidebar &&
-                classes.main_menu_active
+                classes.main_menu_active,
             )}
             pos={"relative"}
           >
@@ -129,28 +130,29 @@ export const SidebarLinkGroup = ({
               id="link_box"
               className={clsx(collapseSidebar && classes.link_box)}
             >
-              <ThemeIcon
-                variant={
-                  (pathname === link || subLinkActive) && collapseSidebar
-                    ? "outline"
-                    : "transparent"
-                }
-                size="lg"
-                title={label}
-                className={clsx(
-                  (pathname === link || subLinkActive) &&
-                    collapseSidebar &&
-                    classes.main_icon
-                )}
-              >
-                <Icon size="1.25rem" />
-              </ThemeIcon>
+              <Tooltip label={label}>
+                <ThemeIcon
+                  variant={
+                    (pathname === link || subLinkActive) && collapseSidebar
+                      ? "outline"
+                      : "transparent"
+                  }
+                  size="lg"
+                  className={clsx(
+                    (pathname === link || subLinkActive) &&
+                      collapseSidebar &&
+                      classes.main_icon,
+                  )}
+                >
+                  <Icon size="1.25rem" />
+                </ThemeIcon>
+              </Tooltip>
               {!collapseSidebar && (
                 <Box ml="xs">
                   <Text
                     className={clsx(
                       classes.link_main,
-                      (pathname === link || subLinkActive) && classes.active
+                      (pathname === link || subLinkActive) && classes.active,
                     )}
                   >
                     {label}
@@ -173,7 +175,7 @@ export const SidebarLinkGroup = ({
                     className={clsx(
                       "cursor-pointer hover:scale-105 z-10",
                       subLinkActive && "text-primary-600",
-                      collapseSidebar && classes.link_box
+                      collapseSidebar && classes.link_box,
                     )}
                     title="Open Menu"
                   >
@@ -190,7 +192,7 @@ export const SidebarLinkGroup = ({
                 aria-label="Expand More"
                 className={clsx(
                   classes.expand_btn,
-                  currentOpen.includes(label) && classes.icon_active
+                  currentOpen.includes(label) && classes.icon_active,
                 )}
                 onClick={onClickHandler}
               >
@@ -198,7 +200,7 @@ export const SidebarLinkGroup = ({
                   size="20px"
                   className={clsx(
                     classes.chevron,
-                    isAllCollapsible && classes.chevron_rotate
+                    isAllCollapsible && classes.chevron_rotate,
                   )}
                 />
               </UnstyledButton>

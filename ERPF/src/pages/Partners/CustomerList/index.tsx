@@ -22,6 +22,7 @@ import CustomerModal from "./CustomerModal";
 import { usePaginationDataFetch } from "@hooks/usePaginationDataFetch";
 import { CustomTableOptions } from "@src/types/table";
 import { QUERY_KEY } from "@constants/queryKeys";
+import { Divider } from "@mantine/core";
 
 const CustomerList = () => {
   const [search, setSearch] = useState("");
@@ -84,7 +85,7 @@ const CustomerList = () => {
   return (
     <div className="w-full h-full pb-24 relative">
       <MainHeader
-        title="Customers"
+        title=""
         search={search}
         setSearch={setSearch}
         withSearch
@@ -97,6 +98,7 @@ const CustomerList = () => {
           </ModalTriggerButton>
         }
       />
+      <Divider />
       <MainTable
         id="customers-table"
         table={table}

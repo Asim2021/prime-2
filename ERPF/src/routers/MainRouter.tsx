@@ -17,6 +17,7 @@ import Reports from "@pages/Reports";
 import RolesManagement from "@pages/Admin/RolesManagement";
 import Inventory from "@pages/Inventory";
 import Purchase from "@pages/Purchase";
+import Partners from "@pages/Partners";
 
 const MainRouter = createBrowserRouter([
   {
@@ -31,7 +32,8 @@ const MainRouter = createBrowserRouter([
       { path: ENDPOINT.AUTH.LOGOUT, element: <Logout /> },
       { path: ENDPOINT.USERS.BASE, element: <Users /> },
       { path: ENDPOINT.SHOP, element: <ShopConfiguration /> },
-      { path: "/roles", element: <RolesManagement /> },
+      { path: ENDPOINT.ROLES, element: <RolesManagement /> },
+      { path: ENDPOINT.PARTNERS, element: <Partners /> },
       { path: ENDPOINT.PARTNER_VENDORS, element: <VendorList /> },
       { path: ENDPOINT.PARTNER_CUSTOMERS, element: <CustomerList /> },
       { path: ENDPOINT.PURCHASE.BASE, element: <Purchase /> },

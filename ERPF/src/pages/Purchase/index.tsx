@@ -30,11 +30,11 @@ const Purchase = () => {
             </Tabs.Tab>
           </Tabs.List>
 
-          <Tabs.Panel value="new_purchase" h="calc(100dvh - 54px)">
+          <Tabs.Panel value="new_purchase" h="calc(100dvh - 48px)">
             <PurchaseEntry />
           </Tabs.Panel>
 
-          <Tabs.Panel value="purchase_history" h="calc(100dvh - 54px)">
+          <Tabs.Panel value="purchase_history" h="calc(100dvh - 48px)">
             <PurchaseList handleTabChange={handleTabChange} />
           </Tabs.Panel>
         </Tabs>

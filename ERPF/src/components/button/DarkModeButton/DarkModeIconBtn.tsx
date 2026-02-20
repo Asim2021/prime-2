@@ -1,4 +1,4 @@
-import { ActionIcon, useMantineColorScheme } from "@mantine/core";
+import { ActionIcon, Tooltip, useMantineColorScheme } from "@mantine/core";
 import { MdLightMode, MdDarkMode } from "react-icons/md";
 
 const DarkModeIconBtn = () => {
@@ -10,15 +10,16 @@ const DarkModeIconBtn = () => {
   };
 
   return (
-    <ActionIcon
-      variant="outline"
-      color={dark ? "yellow" : undefined}
-      onClick={clickHandler}
-      title={dark ? "Enable Light Mode" : "Enable Dark Mode"}
-      size="lg"
-    >
-      {dark ? <MdLightMode size="20px" /> : <MdDarkMode size="20px" />}
-    </ActionIcon>
+    <Tooltip label={dark ? "Enable Light Mode" : "Enable Dark Mode"}>
+      <ActionIcon
+        variant="outline"
+        color={dark ? "yellow" : undefined}
+        onClick={clickHandler}
+        size="lg"
+      >
+        {dark ? <MdLightMode size="20px" /> : <MdDarkMode size="20px" />}
+      </ActionIcon>
+    </Tooltip>
   );
 };
 

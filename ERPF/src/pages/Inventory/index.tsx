@@ -45,16 +45,16 @@ const Inventory = () => {
             </Tabs.Tab>
           </Tabs.List>
 
-          <Tabs.Panel value="medicines" h="calc(100dvh - 54px)">
+          <Tabs.Panel value="medicines" h="calc(100dvh - 48px)">
             {/* We hide the title to avoid duplication with Tab label */}
             <MedicineList withHeader={false} />
           </Tabs.Panel>
 
-          <Tabs.Panel value="batches" h="calc(100dvh - 54px)">
+          <Tabs.Panel value="batches" h="calc(100dvh - 48px)">
             <BatchList withHeader={false} />
           </Tabs.Panel>
 
-          <Tabs.Panel value="adjustments" h="calc(100dvh - 54px)">
+          <Tabs.Panel value="adjustments" h="calc(100dvh - 48px)">
             <StockAdjustment withHeader={false} />
           </Tabs.Panel>
         </Tabs>

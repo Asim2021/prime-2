@@ -12,18 +12,6 @@ export const ENDPOINT = {
     RESET_PASSWORD: "/auth/reset-password",
     VERIFY: "/auth/verify",
   },
-  TWO_FACTOR: {
-    STATUS: "/2fa/status",
-    GENERATE: "/2fa/generate",
-    ENABLE: "/2fa/enable",
-    DISABLE: "/2fa/disable",
-    VERIFY: "/2fa/verify",
-  },
-  SESSIONS: {
-    GET_ALL: "/sessions",
-    REVOKE: "/sessions", // /:id
-    REVOKE_ALL: "/sessions/revoke-all",
-  },
   BASE: "/",
   ITEMS: "/medicines",
   // BATCHES: "/batches", // Not implemented on backend yet
@@ -34,13 +22,7 @@ export const ENDPOINT = {
     DETAILS: "/purchases/details", // placeholder
     HISTORY: "/purchases/history", // placeholder
   },
-  ITEM_FIELDS: "/item-fields",
-  ITEM_GROUPS: "/item-groups",
-  ITEM_OTHERS: "/item-others",
-  ITEM_MAKE: "/item-make",
-  ITEM_EXCISE: "/item-excise",
-  ITEM_DISCOUNT: "/item-discount",
-  ITEM_STORE: "/item-store",
+  PARTNERS: "/partners",
   PARTNER_VENDORS: "/vendors",
   PARTNER_CUSTOMERS: "/customers",
   INVENTORY_ITEMS: "/medicines",
@@ -49,72 +31,27 @@ export const ENDPOINT = {
     PROFILE: "/users/profile",
   },
   VENDOR_MASTER: "/vendor-master",
-  // Purchase Routes
-  PURCHASE_VENDORS: "/purchase/vendors",
-  PURCHASE_ORDERS: "/purchase/orders",
-  PURCHASE_GRN: "/purchase/grn",
   // Sales Routes
   SALES: {
     BASE: "/sales",
     POS: "/sales/pos",
     ORDERS: "/sales", // History
   },
-  SALES_CUSTOMERS: "/sales/customers",
-  SALES_ORDERS: "/sales/orders",
-  SALES_DELIVERY: "/sales/delivery",
-  SALES_INVOICES: "/sales/invoices",
   SALES_RETURNS: "/sales/returns",
   SETTINGS: "/settings",
   ROLES: "/roles",
   SHOP: "/shop-settings",
   AUDIT_LOGS: "/audit-logs",
-  FINANCE: {
-    TRIAL_BALANCE: "/finance/reports/trial-balance",
-    PNL: "/finance/reports/pnl",
-    BALANCE_SHEET: "/finance/reports/balance-sheet",
-    CASH_FLOW: "/finance/reports/cash-flow",
-    AGING_RECEIVABLES: "/finance/reports/aging/receivables",
-    AGING_PAYABLES: "/finance/reports/aging/payables",
-    CASH_FLOW_EXPORT: "/finance/reports/cash-flow/export",
-    AGING_RECEIVABLES_EXPORT: "/finance/reports/aging/receivables/export",
-    AGING_PAYABLES_EXPORT: "/finance/reports/aging/payables/export",
-  },
-  FINANCE_UI: {
-    BASE: "/finance",
-    TAB: "/finance/:tabValue",
-  },
   // Inventory Routes
   INVENTORY_STOCK: "/inventory/stock",
   INVENTORY_ADJUST: "/inventory/adjust",
   INVENTORY_TRANSFER: "/inventory/transfer",
-  // HR Routes
-  HR: {
-    ATTENDANCE: "/hr/attendance",
-    LEAVES: "/hr/leaves",
-    APPLY_LEAVE: "/hr/leaves/apply",
-    PAYSLIPS: "/hr/payslips",
-    PAYROLL: "/hr/payroll",
-    EMPLOYEES: "/hr/employees",
-  },
-  PROJECTS: "/projects",
-  PROJECT_DETAIL: "/projects/:id",
   IMPORT: "/import",
   DASHBOARD: {
     SUMMARY: "/dashboard/summary",
     SALES_TREND: "/dashboard/sales-trend",
     PENDING_APPROVALS: "/dashboard/pending-approvals",
     LOW_STOCK: "/dashboard/low-stock",
-  },
-  APPROVALS: {
-    PENDING: "/approvals/pending",
-    APPROVE: "/approvals/approve",
-    REJECT: "/approvals/reject",
-    DELEGATE: "/approvals/delegate",
-  },
-  APPROVALS_UI: {
-    BASE: "/approvals",
-    PENDING: "pending",
-    DELEGATION: "delegation",
   },
   REPORTS: "/reports",
 };
