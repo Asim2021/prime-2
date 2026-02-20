@@ -72,7 +72,10 @@ const MedicineList = ({ withHeader = true }: { withHeader?: boolean }) => {
     data: data?.data || [],
     columns,
     initialState: {
-      columnPinning: INITIAL_ALL_TABLE_PINNING,
+      columnPinning: {
+        left: ["brand_name"],
+        right: ["action"],
+      },
     },
     state: { sorting, pagination, columnOrder },
     pageCount: data?.totalPages || 0,

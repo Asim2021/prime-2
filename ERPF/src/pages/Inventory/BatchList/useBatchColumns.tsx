@@ -27,21 +27,25 @@ const useBatchColumns = (deleteHandler: (id: string) => void) => {
   const columns = useMemo<ColumnDef<BatchI>[]>(
     () => [
       {
+        id: "medicine.brand_name",
+        accessorKey: "medicine.brand_name",
+        header: "Medicine",
+        minSize: 160,
+        size: 220,
+        cell: ({ row }) => (
+          <Text size="sm">{row.original.medicine?.brand_name || "N/A"}</Text>
+        ),
+      },
+      {
         id: "batch_no",
         accessorKey: "batch_no",
         header: "Batch No",
+        minSize: 80,
+        size: 100,
         cell: ({ row }) => (
           <Text size="sm" fw={500}>
             {row.original.batch_no}
           </Text>
-        ),
-      },
-      {
-        id: "medicine.brand_name",
-        accessorKey: "medicine.brand_name",
-        header: "Medicine",
-        cell: ({ row }) => (
-          <Text size="sm">{row.original.medicine?.brand_name || "N/A"}</Text>
         ),
       },
       {
@@ -58,6 +62,8 @@ const useBatchColumns = (deleteHandler: (id: string) => void) => {
         id: "quantity_available",
         accessorKey: "quantity_available",
         header: "Stock",
+        minSize: 80,
+        size: 100,
         cell: ({ row }) => (
           <Text size="sm" fw={700}>
             {row.original.quantity_available}
@@ -72,10 +78,13 @@ const useBatchColumns = (deleteHandler: (id: string) => void) => {
       },
       {
         id: "action",
+        minSize: 80,
+        size: 80,
         cell: ({ row }) => (
-          <Group gap="xs">
+          <Group gap="xs" justify="center">
             <ActionIcon
-              variant="subtle"
+              variant="light"
+              radius={"100%"}
               color="blue"
               onClick={() => {
                 setDetail(row.original);
@@ -85,7 +94,8 @@ const useBatchColumns = (deleteHandler: (id: string) => void) => {
               <MdEdit size={16} />
             </ActionIcon>
             <ActionIcon
-              variant="subtle"
+              variant="light"
+              radius={"100%"}
               color="red"
               onClick={() => {
                 modals.openConfirmModal({

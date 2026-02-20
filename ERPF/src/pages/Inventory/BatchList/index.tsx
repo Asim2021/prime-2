@@ -71,6 +71,12 @@ const BatchList = ({ withHeader = true }: { withHeader?: boolean }) => {
     columns,
     state: { sorting, pagination, columnOrder },
     pageCount: data?.totalPages || 0,
+    initialState: {
+      columnPinning: {
+        left: ["medicine.brand_name"],
+        right: ["action"],
+      },
+    },
     onPaginationChange: setPagination,
     onSortingChange: setSorting,
     onColumnOrderChange: setColumnOrder,

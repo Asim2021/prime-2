@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Button, Badge, Divider } from "@mantine/core";
+import { Button, Badge, Divider, Text } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import { fetchStockAdjustments } from "@services/inventoryService";
 import { QUERY_KEY } from "@constants/queryKeys";
@@ -19,6 +19,7 @@ import {
 } from "@tanstack/react-table";
 import { CustomTableOptions } from "@src/types/table";
 import MainHeader from "@components/Header/MainHeader";
+import dayJs from "@utils/daysJs";
 
 const StockAdjustment = ({ withHeader = true }: { withHeader?: boolean }) => {
   const [opened, { open, close }] = useDisclosure(false);
@@ -52,22 +53,42 @@ const StockAdjustment = ({ withHeader = true }: { withHeader?: boolean }) => {
   const columns = useMemo<ColumnDef<any>[]>(
     () => [
       {
-        accessorKey: "created_at",
-        header: "Date",
-        cell: (info) => new Date(info.getValue() as string).toLocaleString(),
-      },
-      {
-        accessorKey: "medicine.brand_name",
+        minSize: 160,
+        size: 220,
+        id: "batch.medicine.brand_name",
+        accessorKey: "batch.medicine.brand_name",
         header: "Medicine",
-        cell: (info) => info.row.original.medicine?.brand_name || "N/A",
+        cell: (info) => info.row.original.batch?.medicine?.brand_name || "N/A",
       },
       {
-        accessorKey: "batch.batch_no", // Changed from batch_number to batch_no to match DB
+        id: "batch.batch_no",
+        minSize: 80,
+        size: 100,
+        accessorKey: "batch.batch_no",
         header: "Batch",
         cell: (info) => info.row.original.batch?.batch_no || "N/A",
       },
       {
-        accessorKey: "quantity_change", // Changed from quantity_adjustment to quantity_change to match DB
+        id: "created_at",
+        accessorKey: "created_at",
+        header: "Date",
+        cell: (value: any) => (
+          <Text
+            size="sm"
+            title={dayJs(value.getValue() as string).format(
+              "DD-MM-YY hh:mm:ss",
+            )}
+          >
+            {dayJs(value.getValue() as string).format("DD-MM-YY")}
+          </Text>
+        ),
+      },
+
+      {
+        minSize: 80,
+        size: 120,
+        id: "quantity_change",
+        accessorKey: "quantity_change",
         header: "Adjustment",
         cell: (info) => {
           const val = info.getValue() as number;
@@ -79,8 +100,8 @@ const StockAdjustment = ({ withHeader = true }: { withHeader?: boolean }) => {
           );
         },
       },
-      { accessorKey: "reason", header: "Reason" },
-      { accessorKey: "note", header: "Note" }, // Added Note column
+      { id: "reason", accessorKey: "reason", header: "Reason" },
+      { id: "note", accessorKey: "note", header: "Note" },
     ],
     [],
   );
@@ -94,6 +115,12 @@ const StockAdjustment = ({ withHeader = true }: { withHeader?: boolean }) => {
       sorting,
       pagination,
       columnOrder,
+    },
+    initialState: {
+      columnPinning: {
+        left: ["batch.medicine.brand_name"],
+        right: ["action"],
+      },
     },
     onPaginationChange: setPagination,
     onSortingChange: setSorting,

@@ -4,8 +4,10 @@ import db, {
     PurchaseItem,
     Batch,
     StockLedger,
-    Vendor
+    Vendor,
+    Medicine
 } from '#models/index.js';
+import { Sequelize } from 'sequelize';
 
 /**
  * Get all purchases with pagination.
@@ -20,6 +22,15 @@ export const getAllPurchases = async ({ limit, offset, sortBy, order }) => {
                     {
                         model: Batch,
                         as: 'batch',
+                        attributes: [ 'mfg_date', 'exp_date', 'mrp', 'quantity_available' ],
+                        include: [
+                            {
+                                model: Medicine,
+                                as: 'medicine',
+                                attributes: [ 'brand_name' ]
+                            }
+
+                        ]
                     },
                 ],
             },

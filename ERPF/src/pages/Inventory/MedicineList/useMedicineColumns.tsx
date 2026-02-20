@@ -11,9 +11,11 @@ const useMedicineColumns = (deleteHandler: (id: string) => void) => {
   const columns = useMemo<ColumnDef<MedicineI>[]>(
     () => [
       {
-        id: "item_name",
+        id: "brand_name",
         accessorKey: "brand_name",
         header: "Brand Name",
+        minSize: 140,
+        size: 220,
         cell: ({ row }) => (
           <div>
             <Text size="sm" fw={500}>
@@ -26,6 +28,8 @@ const useMedicineColumns = (deleteHandler: (id: string) => void) => {
         ),
       },
       {
+        minSize: 160,
+        size: 240,
         id: "generic_name",
         accessorKey: "generic_name",
         header: "Generic Name",
@@ -45,6 +49,7 @@ const useMedicineColumns = (deleteHandler: (id: string) => void) => {
         id: "schedule_type",
         accessorKey: "schedule_type",
         header: "Schedule",
+        size: 100,
         cell: ({ row }) => (
           <Badge variant="outline">{row.original.schedule_type || "-"}</Badge>
         ),
@@ -53,20 +58,24 @@ const useMedicineColumns = (deleteHandler: (id: string) => void) => {
         id: "gst_percent",
         accessorKey: "gst_percent",
         header: "Tax",
+        size: 80,
         cell: ({ row }) => <Text size="sm">{row.original.gst_percent}%</Text>,
       },
       {
         id: "reorder_level",
         accessorKey: "reorder_level",
         header: "Reorder Lvl",
+        size: 80,
         cell: ({ row }) => <Text size="sm">{row.original.reorder_level}</Text>,
       },
       {
         id: "action",
+        size: 80,
         cell: ({ row }) => (
-          <Group gap="xs">
+          <Group gap="xs" justify="center">
             <ActionIcon
-              variant="subtle"
+              radius={"100%"}
+              variant="light"
               color="blue"
               onClick={() => {
                 setDetail(row.original);
@@ -76,7 +85,8 @@ const useMedicineColumns = (deleteHandler: (id: string) => void) => {
               <MdEdit size={16} />
             </ActionIcon>
             <ActionIcon
-              variant="subtle"
+              radius={"100%"}
+              variant="light"
               color="red"
               onClick={() => {
                 modals.openConfirmModal({

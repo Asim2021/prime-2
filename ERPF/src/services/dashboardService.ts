@@ -21,7 +21,7 @@ export const fetchLowStock = async (): Promise<any[]> => {
     const res = await erpApi.get("/reports/inventory");
     // Filter for low stock items
     return (res?.data || []).filter(
-      (item: any) => item.status === "LOW" || item.current_stock < 10,
+      (item: any) => Number(item.current_stock) <= Number(item.reorder_level),
     );
   } catch {
     return [];

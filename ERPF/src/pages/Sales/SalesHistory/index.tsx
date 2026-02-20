@@ -94,11 +94,13 @@ const SalesHistory = ({ withHeader = true }: { withHeader?: boolean }) => {
       },
       {
         id: "action",
+        size: 80,
         cell: () => (
-          <Group gap="xs">
+          <Group gap="xs" justify="center">
             <Tooltip label="View Invoice">
               <ActionIcon
-                variant="subtle"
+                variant="light"
+                radius={"100%"}
                 color="blue"
                 onClick={() => {}} // Placeholder for now
               >
@@ -120,6 +122,12 @@ const SalesHistory = ({ withHeader = true }: { withHeader?: boolean }) => {
     data: data?.data || [],
     columns,
     state: { sorting, pagination, columnOrder },
+    initialState: {
+      columnPinning: {
+        left: ["bill_no"],
+        right: ["action"],
+      },
+    },
     pageCount: data?.totalPages || 0,
     onPaginationChange: setPagination,
     onSortingChange: setSorting,

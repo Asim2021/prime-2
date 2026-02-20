@@ -113,8 +113,8 @@ const SalesReport = () => {
   }, [data, tableData]);
 
   return (
-    <Stack>
-      <Group justify="space-between" align="end">
+    <div className="w-full h-full pb-24 relative">
+      <Group justify="space-between" align="end" mb="sm">
         <DatePickerInput
           type="range"
           label="Date Range"
@@ -128,7 +128,7 @@ const SalesReport = () => {
         </Button>
       </Group>
 
-      <SimpleGrid cols={{ base: 1, sm: 3 }}>
+      <SimpleGrid cols={{ base: 1, sm: 3 }} mb="sm">
         <Paper withBorder p="md" radius="md">
           <Text size="xs" c="dimmed" tt="uppercase" fw={700}>
             Total Revenue
@@ -173,7 +173,7 @@ const SalesReport = () => {
         ]}
         withFooter
       />
-    </Stack>
+    </div>
   );
 };
 

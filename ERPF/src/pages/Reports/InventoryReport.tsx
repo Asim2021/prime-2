@@ -18,6 +18,7 @@ import {
   PaginationState,
 } from "@tanstack/react-table";
 import { CustomTableOptions } from "@src/types/table";
+import { usePaginationDataFetch } from "@hooks/usePaginationDataFetch";
 
 const InventoryReport = () => {
   const [pagination, setPagination] = useState<PaginationState>({
@@ -26,11 +27,12 @@ const InventoryReport = () => {
   });
   const [sorting, setSorting] = useState<SortingState>([]);
 
-  const { data, isLoading, isError, error } =
-    useQuery<InventoryReportResponseI>({
-      queryKey: [QUERY_KEY.REPORTS, "inventory"],
-      queryFn: () => fetchInventoryReport({}),
-    });
+  const { data, isLoading, isError, error } = usePaginationDataFetch({
+    queryKey: [QUERY_KEY.REPORTS, "inventory"],
+    queryFn: fetchInventoryReport,
+    limit: pagination.pageSize,
+    page: pagination.pageIndex + 1,
+  });
 
   const columns = useMemo<ColumnDef<any>[]>(
     () => [
@@ -54,10 +56,8 @@ const InventoryReport = () => {
     [],
   );
 
-  const tableData = data || [];
-
   const table = useReactTable({
-    data: tableData,
+    data: data?.data || [],
     columns,
     state: {
       sorting,
@@ -72,22 +72,23 @@ const InventoryReport = () => {
   } as CustomTableOptions<any>);
 
   return (
-    <Stack>
-      <Group justify="flex-end">
+    <div className="w-full h-full pb-24 relative">
+      <Group justify="space-between" maw={"100%"}>
+        <Paper
+          p="xs"
+          withBorder
+          bg="light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6))"
+          className="flex-1"
+        >
+          <Text size="sm">
+            <b>Total Inventory Value: </b> ₹
+            {data?.meta?.total_inventory_value?.toLocaleString() || 0}
+          </Text>
+        </Paper>
         <Button leftSection={<MdDownload />} variant="outline">
           Export CSV
         </Button>
       </Group>
-      <Paper
-        p="md"
-        withBorder
-        bg="light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6))"
-      >
-        <Text size="sm">
-          <b>Total Inventory Value:</b> ₹
-          {data?.total_value?.toLocaleString() || 0}
-        </Text>
-      </Paper>
 
       <MainTable
         id="inventory-report-table"
@@ -95,8 +96,8 @@ const InventoryReport = () => {
         isLoading={isLoading}
         isError={isError}
         error={error}
-        totalCount={tableData?.length || 0}
-        totalPages={Math.ceil(tableData.length / pagination.pageSize)}
+        totalCount={data?.totalCount || 0}
+        totalPages={data?.totalPages || 1}
         setPagination={setPagination}
         columnOrder={[
           "brand_name",
@@ -117,7 +118,7 @@ const InventoryReport = () => {
         ]}
         withFooter
       />
-    </Stack>
+    </div>
   );
 };
 

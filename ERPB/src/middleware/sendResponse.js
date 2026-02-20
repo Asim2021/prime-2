@@ -1,20 +1,24 @@
+import _ from 'lodash';
 import { HTTP_STATUS } from '#constant/httpStatus.js';
 import { SEVERITY } from '#constant/strings.js';
 
+const { isEmpty } = _
 /**
  * The function `sendSuccess` sends a successful response with data, message, and severity information.
  * @param res - The  response object.
  * @param status - The HTTP status code.
  * @param data - The data that you want to send back as a response.
  * @param message - The `message` in the JSON response when an error occurs.
+ * @param meta - The `meta` in the meta data object.
  * @returns Returns a JSON response.
  */
-function sendSuccessResponse({ res, status = 200, data = null, message }) {
+function sendSuccessResponse({ res, status = 200, data = null, message, meta }) {
   return res.status(status).json({
     data: status === HTTP_STATUS.NO_CONTENT ? [] : data,
     message: message || SEVERITY.SUCCESS,
     severity: SEVERITY.SUCCESS,
-    success: true
+    success: true,
+    ...(isEmpty(meta) ? {} : { meta })
   });
 }
 

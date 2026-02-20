@@ -10,8 +10,17 @@ import {
   ColumnDef,
   ColumnOrderState,
 } from "@tanstack/react-table";
-import { ActionIcon, Badge, Text, Button, Divider } from "@mantine/core";
-import { MdAdd, MdVisibility } from "react-icons/md";
+import {
+  ActionIcon,
+  Badge,
+  Text,
+  Button,
+  Divider,
+  HoverCard,
+  Alert,
+  Group,
+} from "@mantine/core";
+import { MdAdd, MdInfo, MdVisibility } from "react-icons/md";
 import { useNavigate } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 
@@ -55,6 +64,16 @@ const PurchaseList = ({
   const columns = useMemo<ColumnDef<PurchaseI>[]>(
     () => [
       {
+        id: "invoice_no",
+        accessorKey: "invoice_no",
+        header: "Invoice No",
+        cell: ({ row }) => (
+          <Text fw={500} size="sm">
+            {row.original.invoice_no}
+          </Text>
+        ),
+      },
+      {
         id: "invoice_date",
         accessorKey: "invoice_date",
         header: "Date",
@@ -66,16 +85,6 @@ const PurchaseList = ({
             )}
           >
             {dayJs(value.getValue() as string).format("DD-MM-YY")}
-          </Text>
-        ),
-      },
-      {
-        id: "invoice_no",
-        accessorKey: "invoice_no",
-        header: "Invoice No",
-        cell: ({ row }) => (
-          <Text fw={500} size="sm">
-            {row.original.invoice_no}
           </Text>
         ),
       },
@@ -104,16 +113,48 @@ const PurchaseList = ({
         accessorKey: "items",
         header: "Items",
         cell: ({ row }) => (
-          <Badge variant="light" color="gray">
-            {row.original.items?.length || 0} Items
-          </Badge>
+          <HoverCard>
+            <HoverCard.Target>
+              <Badge variant="light" color="gray">
+                {row.original.items?.length || 0} Items
+              </Badge>
+            </HoverCard.Target>
+            {!!row.original?.items?.length && (
+              <HoverCard.Dropdown>
+                {row.original.items?.map((ele) => {
+                  return (
+                    <Alert
+                      icon={<MdInfo />}
+                      title={ele.batch?.medicine?.brand_name || "N/A"}
+                      color="blue"
+                      variant="light"
+                    >
+                      <Group justify="space-between">
+                        <Text size="sm">
+                          Purchase Quantity: <b>{ele?.purchase_quantity}</b>
+                        </Text>
+                        <Text size="sm">
+                          Expiry:{" "}
+                          <b>
+                            {dayJs(ele?.batch?.exp_date).format("DD/MM/YYYY")}
+                          </b>
+                        </Text>
+                      </Group>
+                    </Alert>
+                  );
+                })}
+              </HoverCard.Dropdown>
+            )}
+          </HoverCard>
         ),
       },
       {
         id: "action",
+        size: 80,
         cell: ({ row }) => (
           <ActionIcon
-            variant="subtle"
+            variant="light"
+            radius={"100%"}
             color="blue"
             onClick={() => {
               navigate(`${ENDPOINT.PURCHASE.DETAILS}/${row.original.id}`);
@@ -134,6 +175,12 @@ const PurchaseList = ({
     data: data?.data || [],
     columns,
     state: { sorting, pagination, columnOrder },
+    initialState: {
+      columnPinning: {
+        left: ["invoice_no"],
+        right: ["action"],
+      },
+    },
     pageCount: data?.totalPages || 0,
     onPaginationChange: setPagination,
     onSortingChange: setSorting,

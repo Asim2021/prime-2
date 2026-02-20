@@ -175,7 +175,7 @@ const Dashboard = () => {
       {/* Stats Grid */}
       <SimpleGrid cols={{ base: 1, sm: 2, lg: 4 }} spacing="md">
         <StatCard
-          title="Total Sales"
+          title="Todays Sales"
           value={`₹${stats?.todaysSales?.toLocaleString() || 0}`}
           icon={<MdAttachMoney size={26} />}
           color="teal"
