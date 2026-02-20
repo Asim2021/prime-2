@@ -255,7 +255,7 @@ const PurchaseEntry = () => {
               <Table.Th>Batch No</Table.Th>
               <Table.Th>Mfg / Exp Date</Table.Th>
               <Table.Th>MRP</Table.Th>
-              <Table.Th>Rate</Table.Th>
+              <Table.Th>Cost Price</Table.Th>
               <Table.Th>Qty</Table.Th>
               <Table.Th>Total</Table.Th>
               <Table.Th w={50}>Action</Table.Th>
