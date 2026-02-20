@@ -32,6 +32,7 @@ export const ENDPOINT = {
     BASE: "/purchases",
     CREATE: "/purchases/create",
     DETAILS: "/purchases/details", // placeholder
+    HISTORY: "/purchases/history", // placeholder
   },
   ITEM_FIELDS: "/item-fields",
   ITEM_GROUPS: "/item-groups",

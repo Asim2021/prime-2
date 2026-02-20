@@ -30,7 +30,7 @@ const Inventory = () => {
     <div className="w-full h-full">
       <Paper radius="md" h="100dvh" className="flex flex-col">
         <Tabs value={activeTab} onChange={handleTabChange} keepMounted={false}>
-          <Tabs.List mb="md">
+          <Tabs.List>
             <Tabs.Tab
               value="medicines"
               leftSection={<MdMedication size={16} />}

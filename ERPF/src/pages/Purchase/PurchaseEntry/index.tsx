@@ -180,10 +180,9 @@ const PurchaseEntry = () => {
   };
 
   return (
-    <Stack gap="lg" pb={50}>
+    <Stack gap="md" pb={50}>
       <form onSubmit={form.onSubmit(handleSubmit)}>
-        <Group justify="space-between">
-          <Title order={3}>New Purchase Entry</Title>
+        <Group justify="end" mt={"sm"}>
           <Button
             loading={mutation.isPending}
             leftSection={<MdSave size={18} />}

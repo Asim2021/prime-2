@@ -25,10 +25,6 @@ export const sidebarData = [
     label: "Purchase",
     link: ENDPOINT.PURCHASE.BASE,
     icon: MdShoppingCart,
-    links: [
-      { label: "New Purchase", link: `${ENDPOINT.PURCHASE.BASE}/create` },
-      { label: "History", link: ENDPOINT.PURCHASE.BASE },
-    ],
   },
   {
     label: "Partners",

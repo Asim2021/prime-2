@@ -10,7 +10,7 @@ import {
   ColumnDef,
   ColumnOrderState,
 } from "@tanstack/react-table";
-import { ActionIcon, Badge, Text, Button } from "@mantine/core";
+import { ActionIcon, Badge, Text, Button, Divider } from "@mantine/core";
 import { MdAdd, MdVisibility } from "react-icons/md";
 import { useNavigate } from "react-router";
 import dayjs from "dayjs";
@@ -24,7 +24,13 @@ import { CustomTableOptions } from "@src/types/table";
 import { QUERY_KEY } from "@constants/queryKeys";
 import { useMemo } from "react";
 
-const PurchaseList = () => {
+const PurchaseList = ({
+  handleTabChange,
+  withTitle = false,
+}: {
+  handleTabChange?: (value: string | null) => void;
+  withTitle?: boolean;
+}) => {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebouncedValue(search, 400);
@@ -134,19 +140,20 @@ const PurchaseList = () => {
   return (
     <div className="w-full h-full pb-24 relative">
       <MainHeader
-        title="Purchase History"
+        title={withTitle ? "Purchase History" : ""}
         search={search}
         setSearch={setSearch}
         withSearch
         modalButton={
           <Button
             leftSection={<MdAdd size={18} />}
-            onClick={() => navigate(ENDPOINT.PURCHASE.CREATE)}
+            onClick={() => handleTabChange("new_purchase")}
           >
             Add Purchase
           </Button>
         }
       />
+      <Divider />
       <MainTable
         id="purchases-table"
         table={table}

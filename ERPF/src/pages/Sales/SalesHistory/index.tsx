@@ -1,4 +1,11 @@
-import { ActionIcon, Badge, Group, Text, Tooltip } from "@mantine/core";
+import {
+  ActionIcon,
+  Badge,
+  Divider,
+  Group,
+  Text,
+  Tooltip,
+} from "@mantine/core";
 import { useMemo, useState } from "react";
 import { MdVisibility } from "react-icons/md";
 import MainTable from "@components/Table";
@@ -133,6 +140,7 @@ const SalesHistory = ({ withHeader = true }: { withHeader?: boolean }) => {
         withSearch
         placeholder="Search Bill No, Customer..."
       />
+      <Divider />
       <MainTable
         className="flex-1 h-auto!"
         id="sales-history-table"

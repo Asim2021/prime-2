@@ -8,14 +8,15 @@ import Dashboard from "@pages/Dashboard";
 import ShopConfiguration from "@pages/Admin/ShopConfiguration";
 import VendorList from "@pages/Partners/VendorList";
 import CustomerList from "@pages/Partners/CustomerList";
-import PurchaseList from "@pages/Inventory/PurchaseList";
-import PurchaseEntry from "@pages/Inventory/PurchaseEntry";
+import PurchaseList from "@pages/Purchase/PurchaseList";
+import PurchaseEntry from "@pages/Purchase/PurchaseEntry";
 import Sales from "@pages/Sales";
 import InvoiceDetails from "@pages/Sales/SalesHistory/InvoiceDetails";
 import SalesReturn from "@pages/Sales/SalesReturn";
 import Reports from "@pages/Reports";
 import RolesManagement from "@pages/Admin/RolesManagement";
 import Inventory from "@pages/Inventory";
+import Purchase from "@pages/Purchase";
 
 const MainRouter = createBrowserRouter([
   {
@@ -33,8 +34,9 @@ const MainRouter = createBrowserRouter([
       { path: "/roles", element: <RolesManagement /> },
       { path: ENDPOINT.PARTNER_VENDORS, element: <VendorList /> },
       { path: ENDPOINT.PARTNER_CUSTOMERS, element: <CustomerList /> },
-      { path: ENDPOINT.PURCHASE.BASE, element: <PurchaseList /> },
-      { path: `${ENDPOINT.PURCHASE.BASE}/create`, element: <PurchaseEntry /> },
+      { path: ENDPOINT.PURCHASE.BASE, element: <Purchase /> },
+      { path: `${ENDPOINT.PURCHASE.HISTORY}`, element: <PurchaseList /> },
+      { path: `${ENDPOINT.PURCHASE.CREATE}`, element: <PurchaseEntry /> },
       { path: ENDPOINT.SALES.BASE, element: <Sales /> },
       { path: ENDPOINT.SALES.POS, element: <Sales /> },
       { path: ENDPOINT.SALES_RETURNS, element: <Sales /> },

@@ -31,7 +31,7 @@ const Sales = () => {
     <div className="w-full h-full">
       <Paper radius="md" h="100dvh" className="flex flex-col">
         <Tabs value={activeTab} onChange={handleTabChange} keepMounted={false}>
-          <Tabs.List mb="md">
+          <Tabs.List>
             <Tabs.Tab value="pos" leftSection={<MdPointOfSale size={16} />}>
               POS / Billing
             </Tabs.Tab>
