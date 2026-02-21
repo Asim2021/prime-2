@@ -2,10 +2,8 @@ import { randomUUID } from 'node:crypto';
 import crypto from 'crypto';
 import dayjs from 'dayjs';
 
-import db from '#models/index.js';
 import { shopSettingsService } from '../shopSettings/shopSettings.service.js';
-
-const {
+import {
     Sale,
     SaleItem,
     Batch,
@@ -13,7 +11,10 @@ const {
     AuditLog,
     InvoiceSequence,
     Customer,
-} = db;
+    Medicine
+} from '#models/index.js';
+import sequelize from '#lib/sqlConfig.js';
+
 
 /**
  * Get all sales with pagination.
@@ -52,6 +53,12 @@ export const getSaleById = async (id) => {
                     {
                         model: Batch,
                         as: 'batch',
+                        include: [
+                            {
+                                model: Medicine,
+                                as: 'medicine',
+                            },
+                        ],
                     },
                 ],
             },
@@ -62,7 +69,7 @@ export const getSaleById = async (id) => {
  * Create a new sale.
  */
 export const createSale = async (data) => {
-    return await db.sequelize.transaction(async (t) => {
+    return await sequelize.transaction(async (t) => {
         // 1. Generate Bill Number
         const now = dayjs();
         const fy =
@@ -209,7 +216,7 @@ export const createSale = async (data) => {
  * Process a sale return.
  */
 export const processReturn = async (data) => {
-    return db.sequelize.transaction(async (t) => {
+    return sequelize.transaction(async (t) => {
         const { sale_id, items, reason } = data;
         const sale = await Sale.findByPk(sale_id, { transaction: t });
         if (!sale) throw new Error('Sale not found');
@@ -221,7 +228,7 @@ export const processReturn = async (data) => {
         let totalRefund = 0;
         const returnId = randomUUID();
 
-        const salesReturn = await db.SalesReturn.create({
+        const salesReturn = await SalesReturn.create({
             id: returnId,
             sale_id,
             bill_no: sale.bill_no,
@@ -237,7 +244,7 @@ export const processReturn = async (data) => {
             if (saleItem.sale_id !== sale_id) throw new Error('Item does not belong to this sale');
 
             // Check previously returned quantity
-            const previousReturns = await db.SalesReturnItem.sum('quantity', {
+            const previousReturns = await SalesReturnItem.sum('quantity', {
                 where: { sale_item_id: item.sale_item_id },
                 transaction: t,
             }) || 0;
@@ -250,7 +257,7 @@ export const processReturn = async (data) => {
             totalRefund += refundAmount;
 
             // 1. Create Return Item
-            await db.SalesReturnItem.create({
+            await SalesReturnItem.create({
                 id: randomUUID(),
                 sales_return_id: returnId,
                 sale_item_id: item.sale_item_id,

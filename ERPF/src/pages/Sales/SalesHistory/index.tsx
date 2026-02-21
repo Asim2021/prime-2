@@ -9,6 +9,7 @@ import {
 import { useMemo, useState } from "react";
 import { MdVisibility } from "react-icons/md";
 import MainTable from "@components/Table";
+import InvoiceViewer from "./components/InvoiceViewer";
 import { fetchAllSales } from "@services/salesService";
 import { SaleI } from "@src/types/sales";
 import {
@@ -33,6 +34,7 @@ const SalesHistory = ({ withHeader = true }: { withHeader?: boolean }) => {
   });
   const [sorting, setSorting] = useState<SortingState>([]);
   const [search, setSearch] = useState("");
+  const [viewId, setViewId] = useState<string | null>(null);
 
   const { data, isError, isFetching, error } = usePaginationDataFetch({
     queryKey: [QUERY_KEY.SALES, "history"],
@@ -95,14 +97,14 @@ const SalesHistory = ({ withHeader = true }: { withHeader?: boolean }) => {
       {
         id: "action",
         size: 80,
-        cell: () => (
+        cell: ({ row }: any) => (
           <Group gap="xs" justify="center">
             <Tooltip label="View Invoice">
               <ActionIcon
                 variant="light"
                 radius={"100%"}
                 color="blue"
-                onClick={() => {}} // Placeholder for now
+                onClick={() => setViewId(row.original.id)}
               >
                 <MdVisibility size={18} />
               </ActionIcon>
@@ -169,13 +171,13 @@ const SalesHistory = ({ withHeader = true }: { withHeader?: boolean }) => {
         ]}
         withFooter
       />
-      {/* {viewId && (
+      {viewId && (
         <InvoiceViewer
           opened={!!viewId}
           onClose={() => setViewId(null)}
           saleId={viewId}
         />
-      )} */}
+      )}
     </div>
   );
 };
