@@ -22,10 +22,11 @@ import CustomerModal from "./CustomerModal";
 import { usePaginationDataFetch } from "@hooks/usePaginationDataFetch";
 import { CustomTableOptions } from "@src/types/table";
 import { QUERY_KEY } from "@constants/queryKeys";
-import { Divider } from "@mantine/core";
+import { Divider, Switch, Group } from "@mantine/core";
 
 const CustomerList = () => {
   const [search, setSearch] = useState("");
+  const [hasCreditOnly, setHasCreditOnly] = useState(false);
   const [debouncedSearch] = useDebouncedValue(search, 400);
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -60,11 +61,12 @@ const CustomerList = () => {
   });
 
   const { data, isError, isFetching, error } = usePaginationDataFetch({
-    queryKey: [QUERY_KEY.CUSTOMERS],
+    queryKey: [QUERY_KEY.CUSTOMERS, hasCreditOnly.toString()],
     queryFn: fetchAllCustomers,
     search: debouncedSearch,
     page: pagination.pageIndex + 1,
     limit: pagination.pageSize,
+    filter: hasCreditOnly ? { has_credit: true } : undefined,
   });
 
   const table = useReactTable({
@@ -102,6 +104,18 @@ const CustomerList = () => {
           >
             Add Customer
           </ModalTriggerButton>
+        }
+        extraSearchComponent={
+          <Switch
+            checked={hasCreditOnly}
+            onChange={(e) => {
+              setHasCreditOnly(e.currentTarget.checked);
+              setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+            }}
+            label="Show only customers with outstanding credit"
+            color="orange"
+            size="sm"
+          />
         }
       />
       <Divider />

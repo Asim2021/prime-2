@@ -25,6 +25,8 @@ import {
   MdReceipt,
   MdPersonAdd,
   MdTrendingUp,
+  MdAccountBalanceWallet,
+  MdMoneyOff,
 } from "react-icons/md";
 import {
   AreaChart,
@@ -174,7 +176,16 @@ const Dashboard = () => {
       </SimpleGrid>
 
       {/* Stats Grid */}
-      <SimpleGrid cols={{ base: 1, sm: 2, lg: 4 }} spacing="md">
+      <SimpleGrid cols={{ base: 1, sm: 2, lg: 5 }} spacing="md">
+        <StatCard
+          title="Total Credit"
+          value={`₹${stats?.totalOutstandingCredit?.toLocaleString() || 0}`}
+          icon={<MdAccountBalanceWallet size={26} />}
+          color="grape"
+          gradient={{ from: "grape", to: "pink", deg: 45 }}
+          subtext="Uncollected payments"
+          onClick={() => navigate(ROUTES.PARTNERS.CUSTOMERS)}
+        />
         <StatCard
           title="Todays Sales"
           value={`₹${stats?.todaysSales?.toLocaleString() || 0}`}
@@ -214,7 +225,7 @@ const Dashboard = () => {
       </SimpleGrid>
 
       {/* Middle Row: Charts & Activity */}
-      <SimpleGrid cols={{ base: 1, lg: 3 }} spacing="md">
+      <SimpleGrid cols={{ base: 1, lg: 4 }} spacing="md">
         <Card withBorder radius="md" p="md" className="lg:col-span-2 shadow-sm">
           <Group justify="space-between" mb="lg">
             <Title order={4}>Sales Trend</Title>
@@ -292,6 +303,48 @@ const Dashboard = () => {
               <Stack align="center" py="xl" c="dimmed">
                 <MdInventory size={40} opacity={0.3} />
                 <Text size="sm">Stocks are healthy!</Text>
+              </Stack>
+            )}
+          </Stack>
+        </Card>
+
+        {/* Credit Alert Widget */}
+        <Card withBorder radius="md" p="md" className="shadow-sm">
+          <Group justify="space-between" mb="md">
+            <Title order={4}>Credit Alert</Title>
+            <Button
+              variant="subtle"
+              size="xs"
+              rightSection={<MdArrowForward />}
+              onClick={() => navigate(ROUTES.PARTNERS.CUSTOMERS)}
+            >
+              View All
+            </Button>
+          </Group>
+          <Stack gap="sm">
+            {stats?.creditCustomers?.map((item: any) => (
+              <div
+                key={item.id}
+                className="flex justify-between items-center p-3 rounded-lg bg-orange-50 hover:bg-orange-100 transition-colors cursor-pointer"
+                onClick={() => navigate(ROUTES.PARTNERS.CUSTOMERS)}
+              >
+                <div>
+                  <Text size="sm" fw={600} lineClamp={1}>
+                    {item.name}
+                  </Text>
+                  <Text size="xs" c="dimmed">
+                    {item.phone || "No Phone"}
+                  </Text>
+                </div>
+                <Badge color="orange" variant="filled" size="sm">
+                  ₹{item.outstanding_balance}
+                </Badge>
+              </div>
+            ))}
+            {!stats?.creditCustomers?.length && (
+              <Stack align="center" py="xl" c="dimmed">
+                <MdMoneyOff size={40} opacity={0.3} />
+                <Text size="sm">No outstanding credit!</Text>
               </Stack>
             )}
           </Stack>

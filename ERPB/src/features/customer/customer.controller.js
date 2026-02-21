@@ -36,12 +36,15 @@ export const getCustomers = async (req, res) => {
         });
 
         const search = req.query.search ? decodeURIComponent(req.query.search).trim() : undefined;
+        const has_credit = req.query.has_credit === 'true' || req.query.filter?.has_credit === 'true';
+
         const { rows, count } = await customerService.getAllCustomers({
             limit,
             offset,
             sortBy,
             order,
             search,
+            has_credit,
         });
 
         sendSuccessResponse({

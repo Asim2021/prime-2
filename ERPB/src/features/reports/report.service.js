@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import { Sale } from '../../models/sale/sale.model.js';
 import { Batch } from '../../models/batch/batch.model.js';
 import { Medicine } from '../../models/medicine/medicine.model.js';
+import { Customer } from '../../models/customer/customer.model.js';
 
 export const reportService = {
     getDashboardMetrics: async () => {
@@ -103,13 +104,30 @@ export const reportService = {
             amount: Number(s.amount)
         }));
 
+        // 7. Credit Metrics Trackers
+        const totalOutstandingCredit = (await Customer.sum('outstanding_balance', {
+            where: {
+                outstanding_balance: { [ Op.gt ]: 0 }
+            }
+        })) || 0;
+
+        const creditCustomersRaw = await Customer.findAll({
+            where: {
+                outstanding_balance: { [ Op.gt ]: 0 }
+            },
+            order: [ [ 'outstanding_balance', 'DESC' ] ],
+            limit: 6 // For dashboard quick preview
+        });
+
         return {
             todaysSales,
             lowStockCount: lowStockMedicines.length,
             nearExpiryCount: nearExpiryBatches,
             activeBatchCount,
             stockValue: Number(stockValue),
-            salesTrend
+            salesTrend,
+            totalOutstandingCredit: Number(totalOutstandingCredit),
+            creditCustomers: creditCustomersRaw
         };
     },
     getSalesReport: async (startDate, endDate) => {

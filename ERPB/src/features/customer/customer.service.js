@@ -4,7 +4,7 @@ import { Customer } from '../../models/customer/customer.model.js';
 /**
  * Get all customers with pagination and search.
  */
-export const getAllCustomers = async ({ limit, offset, sortBy, order, search }) => {
+export const getAllCustomers = async ({ limit, offset, sortBy, order, search, has_credit }) => {
     const whereClause = {};
     if (search) {
         whereClause[ Op.or ] = [
@@ -12,6 +12,10 @@ export const getAllCustomers = async ({ limit, offset, sortBy, order, search }) 
             { phone: { [ Op.like ]: `%${search.trim()}%` } },
             { gstin: { [ Op.like ]: `%${search.trim()}%` } },
         ];
+    }
+
+    if (has_credit) {
+        whereClause.outstanding_balance = { [ Op.gt ]: 0 };
     }
 
     return Customer.findAndCountAll({

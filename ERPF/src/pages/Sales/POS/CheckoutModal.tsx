@@ -10,6 +10,7 @@ import {
   Select,
   ActionIcon,
   Tooltip,
+  Badge,
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -47,12 +48,18 @@ const CheckoutModal = ({
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebouncedValue(search, 400);
 
+  // Local state to hold the customer's balance/limit info to prevent UI flickers when search clears
+  const [selectedCustomerMeta, setSelectedCustomerMeta] = useState<{
+    credit_limit?: number;
+    outstanding_balance?: number;
+  } | null>(null);
+
   const { data: customersData } = usePaginationDataFetch({
     queryKey: [QUERY_KEY.CUSTOMERS],
     queryFn: fetchAllCustomers,
     search: debouncedSearch,
     page: 1,
-    limit: 1,
+    limit: 100,
     enabled: opened && !isNewCustomer,
   });
 
@@ -223,9 +230,14 @@ const CheckoutModal = ({
                     name: selected.name,
                     phone: selected.phone || "",
                   });
+                  setSelectedCustomerMeta({
+                    credit_limit: selected.credit_limit,
+                    outstanding_balance: selected.outstanding_balance,
+                  });
                 } else {
                   // setSearch(val)
                   setCustomer({ id: null, name: "CASH CUSTOMER", phone: "" });
+                  setSelectedCustomerMeta(null);
                 }
               }}
               clearable
@@ -233,11 +245,35 @@ const CheckoutModal = ({
           )}
 
           {/* Quick display of selected customer if existing, but only if an ID is selected */}
-          {!isNewCustomer && customer.id && (
-            <Text size="xs" c="dimmed">
-              Selected: {customer.name} ({customer.phone || "No Phone"})
-            </Text>
-          )}
+          {!isNewCustomer &&
+            customer.id &&
+            (() => {
+              return (
+                <Stack gap={4}>
+                  <Text size="xs" c="dimmed">
+                    Selected: {customer.name} ({customer.phone || "No Phone"})
+                  </Text>
+                  {selectedCustomerMeta && (
+                    <Group gap="xs">
+                      <Badge color="blue" variant="light" size="xs">
+                        Limit: ₹{selectedCustomerMeta.credit_limit || 0}
+                      </Badge>
+                      <Badge
+                        color={
+                          (selectedCustomerMeta.outstanding_balance || 0) > 0
+                            ? "orange"
+                            : "gray"
+                        }
+                        variant="light"
+                        size="xs"
+                      >
+                        Owed: ₹{selectedCustomerMeta.outstanding_balance || 0}
+                      </Badge>
+                    </Group>
+                  )}
+                </Stack>
+              );
+            })()}
         </Stack>
 
         <Stack gap="xs">

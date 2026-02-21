@@ -188,6 +188,18 @@ export const createSale = async (data) => {
             { transaction: t },
         );
 
+        // 2b. Update Customer Outstanding Balance if Credit Sale
+        if (data.is_credit && data.customer_id) {
+            const creditCustomer = await Customer.findByPk(data.customer_id, { transaction: t, lock: true });
+            if (creditCustomer) {
+                const newBalance = creditCustomer.outstanding_balance + data.total_amount;
+                if (creditCustomer.credit_limit > 0 && newBalance > creditCustomer.credit_limit) {
+                    throw new Error(`Credit limit exceeded. Customer credit limit is ₹${creditCustomer.credit_limit}, but their outstanding balance will become ₹${newBalance}.`);
+                }
+                await creditCustomer.increment('outstanding_balance', { by: data.total_amount, transaction: t });
+            }
+        }
+
         // 3. Process Items
         for (const item of data.items) {
             const batch = await Batch.findByPk(item.batch_id, { transaction: t, lock: true });
