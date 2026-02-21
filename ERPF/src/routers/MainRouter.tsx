@@ -1,7 +1,6 @@
 import Logout from "@pages/Auth/Logout";
 import AppShellComponent from "@components/Layout/AppShellComponent";
 import NotFound from "@pages/Common/NotFound";
-import Users from "@pages/Admin/UserManagement";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { ENDPOINT } from "@constants/endpoints";
 import Dashboard from "@pages/Dashboard";
@@ -18,6 +17,7 @@ import RolesManagement from "@pages/Admin/RolesManagement";
 import Inventory from "@pages/Inventory";
 import Purchase from "@pages/Purchase";
 import Partners from "@pages/Partners";
+import Admin from "@pages/Admin";
 
 const MainRouter = createBrowserRouter([
   {
@@ -30,21 +30,21 @@ const MainRouter = createBrowserRouter([
         element: <Navigate to={ENDPOINT.BASE} replace />,
       },
       { path: ENDPOINT.AUTH.LOGOUT, element: <Logout /> },
-      { path: ENDPOINT.USERS.BASE, element: <Users /> },
+      // { path: ENDPOINT.USERS.BASE, element: <Users /> },
+      { path: ENDPOINT.ADMIN, element: <Admin /> },
       { path: ENDPOINT.SHOP, element: <ShopConfiguration /> },
       { path: ENDPOINT.ROLES, element: <RolesManagement /> },
       { path: ENDPOINT.PARTNERS, element: <Partners /> },
       { path: ENDPOINT.PARTNER_VENDORS, element: <VendorList /> },
       { path: ENDPOINT.PARTNER_CUSTOMERS, element: <CustomerList /> },
       { path: ENDPOINT.PURCHASE.BASE, element: <Purchase /> },
-      { path: `${ENDPOINT.PURCHASE.HISTORY}`, element: <PurchaseList /> },
-      { path: `${ENDPOINT.PURCHASE.CREATE}`, element: <PurchaseEntry /> },
+      { path: ENDPOINT.PURCHASE.HISTORY, element: <PurchaseList /> },
+      { path: ENDPOINT.PURCHASE.CREATE, element: <PurchaseEntry /> },
       { path: ENDPOINT.SALES.BASE, element: <Sales /> },
       { path: ENDPOINT.SALES.POS, element: <Sales /> },
       { path: ENDPOINT.SALES_RETURNS, element: <Sales /> },
       { path: `${ENDPOINT.SALES.ORDERS}/:id`, element: <InvoiceDetails /> },
       { path: `${ENDPOINT.SALES.ORDERS}/:id/return`, element: <SalesReturn /> },
-      // Inventory Routes Consolidated
       { path: "/inventory", element: <Inventory /> },
       { path: ENDPOINT.INVENTORY_ITEMS, element: <Inventory /> },
       { path: ENDPOINT.INVENTORY_ADJUST, element: <Inventory /> },

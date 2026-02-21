@@ -30,10 +30,6 @@ export const sidebarData = [
     label: "Partners",
     link: ENDPOINT.PARTNERS,
     icon: MdPeople,
-    // links: [
-    //   { label: "Vendors", link: ENDPOINT.PARTNER_VENDORS },
-    //   { label: "Customers", link: ENDPOINT.PARTNER_CUSTOMERS },
-    // ],
   },
   {
     label: "Reports",
@@ -42,11 +38,7 @@ export const sidebarData = [
   },
   {
     label: "Admin",
-    link: ENDPOINT.USERS.BASE,
+    link: ENDPOINT.ADMIN,
     icon: MdAdminPanelSettings,
-    links: [
-      { label: "Users", link: ENDPOINT.USERS.BASE },
-      { label: "Shop Settings", link: ENDPOINT.SHOP },
-    ],
   },
 ];

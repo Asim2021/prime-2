@@ -1,6 +1,7 @@
 import { Tabs, Paper } from "@mantine/core";
 import { useState } from "react";
-import { MdMedication, MdLayers } from "react-icons/md";
+import { BsFillPeopleFill } from "react-icons/bs";
+import { IoStorefront } from "react-icons/io5";
 import VendorList from "./VendorList";
 import CustomerList from "./CustomerList";
 
@@ -16,10 +17,13 @@ const Partners = () => {
       <Paper radius="md" h="100dvh" className="flex flex-col">
         <Tabs value={activeTab} onChange={handleTabChange} keepMounted={false}>
           <Tabs.List>
-            <Tabs.Tab value="vendors" leftSection={<MdMedication size={16} />}>
+            <Tabs.Tab value="vendors" leftSection={<IoStorefront size={16} />}>
               Vendors
             </Tabs.Tab>
-            <Tabs.Tab value="customers" leftSection={<MdLayers size={16} />}>
+            <Tabs.Tab
+              value="customers"
+              leftSection={<BsFillPeopleFill size={16} />}
+            >
               Customers
             </Tabs.Tab>
           </Tabs.List>

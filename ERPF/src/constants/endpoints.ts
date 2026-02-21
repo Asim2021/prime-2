@@ -13,6 +13,7 @@ export const ENDPOINT = {
     VERIFY: "/auth/verify",
   },
   BASE: "/",
+  ADMIN: "/admin",
   ITEMS: "/medicines",
   // BATCHES: "/batches", // Not implemented on backend yet
   // BATCHES: "/batches",

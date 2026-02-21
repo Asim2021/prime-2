@@ -25,7 +25,7 @@ const Users = () => {
       <MainHeader
         search={searchUser}
         setSearch={setSearchUser}
-        title="Users"
+        title=""
         placeholder="Search User..."
         withSearch
         modalButton={

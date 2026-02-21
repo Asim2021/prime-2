@@ -129,14 +129,14 @@ const UserSection = ({ collapseSidebar }: { collapseSidebar: boolean }) => {
         </UnstyledButton>
       </Menu.Target>
       <Menu.Dropdown ml={4}>
-        <Menu.Label>User Options</Menu.Label>
-        <Menu.Item
+        {/* <Menu.Label>User Options</Menu.Label> */}
+        {/* <Menu.Item
           leftSection={<MdSettings size={18} />}
           className={classes.user_option}
           onClick={() => navigate(ENDPOINT.SETTINGS)}
         >
           Settings
-        </Menu.Item>
+        </Menu.Item> */}
         <Menu.Item
           color={"red"}
           leftSection={<MdLogout size={18} />}

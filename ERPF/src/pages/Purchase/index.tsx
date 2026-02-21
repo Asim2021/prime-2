@@ -1,6 +1,6 @@
 import { Tabs, Paper } from "@mantine/core";
 import { useState } from "react";
-import { MdMedication, MdLayers } from "react-icons/md";
+import { MdShoppingCart, MdHistory } from "react-icons/md";
 import PurchaseEntry from "./PurchaseEntry";
 import PurchaseList from "./PurchaseList";
 
@@ -18,13 +18,13 @@ const Purchase = () => {
           <Tabs.List>
             <Tabs.Tab
               value="new_purchase"
-              leftSection={<MdMedication size={16} />}
+              leftSection={<MdShoppingCart size={16} />}
             >
               New Purchase
             </Tabs.Tab>
             <Tabs.Tab
               value="purchase_history"
-              leftSection={<MdLayers size={16} />}
+              leftSection={<MdHistory size={16} />}
             >
               Purchase History
             </Tabs.Tab>

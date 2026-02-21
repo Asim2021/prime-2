@@ -202,7 +202,7 @@ const PurchaseList = ({
         modalButton={
           <Button
             leftSection={<MdAdd size={18} />}
-            onClick={() => handleTabChange("new_purchase")}
+            onClick={() => handleTabChange && handleTabChange("new_purchase")}
           >
             Add Purchase
           </Button>

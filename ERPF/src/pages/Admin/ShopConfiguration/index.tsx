@@ -92,8 +92,6 @@ const ShopConfiguration = () => {
         visible={isLoading || mutation.isPending}
         overlayProps={{ radius: "sm", blur: 2 }}
       />
-      <MainHeader title="Shop Configuration" />
-      <Divider />
 
       <Paper
         p="md"
