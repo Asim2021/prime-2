@@ -12,7 +12,7 @@ const POS = ({ withHeader = true }: { withHeader?: boolean }) => {
   useHotkeys([["F2", () => setCheckoutOpen(true)]]);
 
   return (
-    <div className={`h-full w-full ${withHeader ? "p-4" : ""}`}>
+    <div className={`h-full w-full mt-3 ${withHeader ? "p-4" : ""}`}>
       <Grid h="100%" gutter="lg">
         {/* Left Side: Search & Product Selection */}
         <Grid.Col span={8} h="100%">

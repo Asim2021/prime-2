@@ -21,13 +21,12 @@ import {
   Group,
 } from "@mantine/core";
 import { MdAdd, MdInfo, MdVisibility } from "react-icons/md";
-import { useNavigate } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 
 import MainHeader from "@components/Header/MainHeader";
 import MainTable from "@components/Table";
-import { ENDPOINT } from "@constants/endpoints";
 import { fetchAllPurchases } from "@services/purchaseService";
+import PurchaseViewer from "./components/PurchaseViewer";
 import { CustomTableOptions } from "@src/types/table";
 import { QUERY_KEY } from "@constants/queryKeys";
 import { useMemo } from "react";
@@ -40,9 +39,9 @@ const PurchaseList = ({
   handleTabChange?: (value: string | null) => void;
   withTitle?: boolean;
 }) => {
-  const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebouncedValue(search, 400);
+  const [viewId, setViewId] = useState<string | null>(null);
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -156,9 +155,7 @@ const PurchaseList = ({
             variant="light"
             radius={"100%"}
             color="blue"
-            onClick={() => {
-              navigate(`${ENDPOINT.PURCHASE.DETAILS}/${row.original.id}`);
-            }}
+            onClick={() => setViewId(row.original.id as string)}
           >
             <MdVisibility size={16} />
           </ActionIcon>
@@ -223,6 +220,14 @@ const PurchaseList = ({
         columnIdsToSort={["invoice_date", "invoice_no", "total_amount"]}
         withFooter
       />
+
+      {viewId && (
+        <PurchaseViewer
+          opened={!!viewId}
+          onClose={() => setViewId(null)}
+          purchaseId={viewId}
+        />
+      )}
     </div>
   );
 };

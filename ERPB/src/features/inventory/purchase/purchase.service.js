@@ -22,7 +22,7 @@ export const getAllPurchases = async ({ limit, offset, sortBy, order }) => {
                     {
                         model: Batch,
                         as: 'batch',
-                        attributes: [ 'mfg_date', 'exp_date', 'mrp', 'quantity_available' ],
+                        attributes: [ 'batch_no', 'mfg_date', 'exp_date', 'mrp', 'quantity_available', 'purchase_rate' ],
                         include: [
                             {
                                 model: Medicine,
@@ -60,8 +60,21 @@ export const getPurchaseById = async (id) => {
                     {
                         model: Batch,
                         as: 'batch',
+                        attributes: [ 'batch_no', 'mfg_date', 'exp_date', 'mrp', 'quantity_available', 'purchase_rate' ],
+                        include: [
+                            {
+                                model: Medicine,
+                                as: 'medicine',
+                                attributes: [ 'brand_name', 'generic_name' ]
+                            }
+                        ]
                     },
                 ],
+            },
+            {
+                model: Vendor,
+                as: 'vendor',
+                attributes: [ 'name', 'phone', 'address', 'gst_number' ],
             },
         ],
     });

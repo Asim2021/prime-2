@@ -7,13 +7,18 @@ import {
   Stack,
   Text,
   TextInput,
+  Select,
+  ActionIcon,
+  Tooltip,
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCartStore } from "@stores/cartStore";
 import { createSale } from "@services/salesService";
-import { useQueryClient } from "@tanstack/react-query";
+import { addCustomer, fetchAllCustomers } from "@services/partnerService";
 import { QUERY_KEY } from "@constants/queryKeys";
+import { useState } from "react";
+import { MdAdd, MdClose } from "react-icons/md";
 
 const CheckoutModal = ({
   opened,
@@ -33,6 +38,39 @@ const CheckoutModal = ({
   } = useCartStore();
   const queryClient = useQueryClient();
   const totals = getTotals();
+
+  const [isNewCustomer, setIsNewCustomer] = useState(false);
+  const [newCustomerName, setNewCustomerName] = useState("");
+  const [newCustomerPhone, setNewCustomerPhone] = useState("");
+
+  const { data: customersData } = useQuery({
+    queryKey: [QUERY_KEY.CUSTOMERS, "all"],
+    queryFn: () => fetchAllCustomers({ page: 1, limit: 1 }),
+    enabled: opened && !isNewCustomer,
+  });
+
+  const addCustomerMutation = useMutation({
+    mutationFn: addCustomer,
+    onSuccess: (data) => {
+      setCustomer({ id: data.id, name: data.name, phone: data.phone });
+      setIsNewCustomer(false);
+      setNewCustomerName("");
+      setNewCustomerPhone("");
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.CUSTOMERS] });
+      notifications.show({
+        title: "Success",
+        message: "Customer created successfully!",
+        color: "green",
+      });
+    },
+    onError: (err: any) => {
+      notifications.show({
+        title: "Error",
+        message: err?.response?.data?.message || "Failed to create customer",
+        color: "red",
+      });
+    },
+  });
 
   const mutation = useMutation({
     mutationFn: createSale,
@@ -82,24 +120,114 @@ const CheckoutModal = ({
   };
 
   return (
-    <Modal opened={opened} onClose={onClose} title="Complete Sale" size="md">
+    <Modal
+      opened={opened}
+      onClose={onClose}
+      title="Complete Sale"
+      size="md"
+      closeOnClickOutside={false}
+    >
       <Stack gap="md">
         <Stack gap="xs">
-          <Text size="sm" fw={500}>
-            Customer Details
-          </Text>
-          <TextInput
-            placeholder="Customer Name"
-            value={customer.name}
-            onChange={(e) => setCustomer({ ...customer, name: e.target.value })}
-          />
-          <TextInput
-            placeholder="Phone Number"
-            value={customer.phone}
-            onChange={(e) =>
-              setCustomer({ ...customer, phone: e.target.value })
-            }
-          />
+          <Group justify="space-between">
+            <Text size="sm" fw={500}>
+              Customer Details
+            </Text>
+            {!isNewCustomer ? (
+              <Tooltip label="Create New Customer">
+                <ActionIcon
+                  variant="light"
+                  color="blue"
+                  onClick={() => setIsNewCustomer(true)}
+                >
+                  <MdAdd size={16} />
+                </ActionIcon>
+              </Tooltip>
+            ) : (
+              <Tooltip label="Cancel">
+                <ActionIcon
+                  variant="light"
+                  color="red"
+                  onClick={() => setIsNewCustomer(false)}
+                >
+                  <MdClose size={16} />
+                </ActionIcon>
+              </Tooltip>
+            )}
+          </Group>
+
+          {isNewCustomer ? (
+            <Card withBorder bg="var(--mantine-color-gray-0)" p="sm">
+              <Stack gap="xs">
+                <TextInput
+                  placeholder="Customer Name"
+                  value={newCustomerName}
+                  onChange={(e) => setNewCustomerName(e.target.value)}
+                  data-autofocus
+                />
+                <TextInput
+                  placeholder="Phone Number"
+                  value={newCustomerPhone}
+                  onChange={(e) => setNewCustomerPhone(e.target.value)}
+                />
+                <Button
+                  size="sm"
+                  loading={addCustomerMutation.isPending}
+                  onClick={() =>
+                    addCustomerMutation.mutate({
+                      name: newCustomerName,
+                      phone: newCustomerPhone,
+                      credit_limit: 0,
+                    })
+                  }
+                  disabled={!newCustomerName.trim()}
+                >
+                  Save & Select
+                </Button>
+              </Stack>
+            </Card>
+          ) : (
+            <Select
+              placeholder="Search by Name or Phone..."
+              data={
+                customersData?.data?.map((c) => ({
+                  value: c.id,
+                  label: `${c.name} - ${c.phone || "No Phone"}`,
+                })) || []
+              }
+              searchable
+              nothingFoundMessage="No customers found"
+              value={customer.id}
+              filter={({ options, search }) => {
+                const s = search.toLowerCase().trim();
+                return (options as any[]).filter((opt) =>
+                  opt.label.toLowerCase().includes(s),
+                );
+              }}
+              onChange={(val) => {
+                const selected = customersData?.data?.find(
+                  (c: any) => c.id === val,
+                );
+                if (selected) {
+                  setCustomer({
+                    id: selected.id,
+                    name: selected.name,
+                    phone: selected.phone || "",
+                  });
+                } else {
+                  setCustomer({ id: null, name: "CASH CUSTOMER", phone: "" });
+                }
+              }}
+              clearable
+            />
+          )}
+
+          {/* Quick display of selected customer if existing, but only if an ID is selected */}
+          {!isNewCustomer && customer.id && (
+            <Text size="xs" c="dimmed">
+              Selected: {customer.name} ({customer.phone || "No Phone"})
+            </Text>
+          )}
         </Stack>
 
         <Stack gap="xs">
