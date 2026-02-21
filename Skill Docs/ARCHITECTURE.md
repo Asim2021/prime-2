@@ -37,7 +37,7 @@ erp-project/
 - **Type**: MySQL
 - **ORM**: Sequelize
 - **Primary Key**: UUID v4 string (`id`)
-- **Timestamps**: `createdAt`, `updatedAt` (auto-managed)
+- **Timestamps**: `created_at`, `updated_at` (auto-managed)
 - **Naming**: camelCase for tables and columns
 - **Migrations**: Managed via Sequelize CLI
 - **Soft Delete**: Not used by default

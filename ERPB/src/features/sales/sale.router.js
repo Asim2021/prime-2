@@ -16,14 +16,6 @@ router.get(
   joiValidate(getAllSaleSchema, JOI_TYPES.QUERY),
   getSales,
 );
-router.get(ENDPOINT.ID, verifyUserRole([ 'admin', 'pharmacist', 'cashier' ]), getSaleById);
-router.post(
-  ENDPOINT.BASE,
-  verifyUserRole([ 'admin', 'pharmacist', 'cashier' ]),
-  joiValidate(createSaleSchema, JOI_TYPES.BODY),
-  createSale,
-);
-
 router.get(
   '/returns',
   verifyUserRole([ 'admin', 'pharmacist', 'cashier' ]),
@@ -36,6 +28,14 @@ router.post(
   verifyUserRole([ 'admin', 'pharmacist', 'cashier' ]),
   joiValidate(returnSaleSchema, JOI_TYPES.BODY),
   returnSale,
+);
+
+router.get(ENDPOINT.ID, verifyUserRole([ 'admin', 'pharmacist', 'cashier' ]), getSaleById);
+router.post(
+  ENDPOINT.BASE,
+  verifyUserRole([ 'admin', 'pharmacist', 'cashier' ]),
+  joiValidate(createSaleSchema, JOI_TYPES.BODY),
+  createSale,
 );
 
 export default router;

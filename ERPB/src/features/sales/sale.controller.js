@@ -160,6 +160,7 @@ export const returnSale = async (req, res) => {
     } catch (error) {
         sendErrorResponse({
             res,
+            error,
             status: error.statusCode || HTTP_STATUS.SERVER_ERROR,
             message: error.message || error,
         });

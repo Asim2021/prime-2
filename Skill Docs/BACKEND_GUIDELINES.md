@@ -102,7 +102,7 @@ ERPB/
 - Default `page`: 1
 - Default `limit`: 20
 - Max `limit`: 100
-- Default `sortBy`: `createdAt` (unless feature defines otherwise)
+- Default `sortBy`: `created_at` (unless feature defines otherwise)
 - Default `order`: `DESC`
 - For paginated list endpoints, use `getPaginationParams` from `@utils/helpers`.
 
@@ -299,6 +299,7 @@ export const list = async (req, res) => {
 	} catch (error) {
 		sendErrorResponse({
 			res,
+			error,
 			status: error.statusCode || HTTP_STATUS.SERVER_ERROR,
 			message: error.message || error,
 		});

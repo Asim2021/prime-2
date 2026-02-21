@@ -37,5 +37,6 @@ SalesReturn.init({
   sequelize,
   tableName: 'sales_returns',
   timestamps: true,
-  updatedAt: false,
+  createdAt: 'created_at',
+  updatedAt: 'updated_at',
 });

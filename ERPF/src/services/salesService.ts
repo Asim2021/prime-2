@@ -44,3 +44,11 @@ export const createSalesReturn = async (payload: any) => {
   const response = await erpApi.post(`${ENDPOINT.SALES.BASE}/return`, payload);
   return response.data;
 };
+
+export const fetchAllSalesReturns = async (
+  params?: any,
+): Promise<PaginationResponseI<any[]>> => {
+  const url = ENDPOINT.SALES_RETURNS + paramsToQueryString(params);
+  const response: AxiosResponse = await erpApi.get(url);
+  return response.data;
+};

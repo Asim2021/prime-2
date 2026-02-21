@@ -12,7 +12,8 @@ import {
     InvoiceSequence,
     Customer,
     Medicine,
-    SalesReturn
+    SalesReturn,
+    SalesReturnItem
 } from '#models/index.js';
 import sequelize from '#lib/sqlConfig.js';
 

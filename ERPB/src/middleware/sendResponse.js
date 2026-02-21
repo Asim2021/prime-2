@@ -31,11 +31,12 @@ function sendSuccessResponse({ res, status = 200, data = null, message, meta }) 
  * @param args - The `args` is an Object having key-value pairs that are passed to the response as extra params.
  * @returns Returns a JSON response.
  */
-function sendErrorResponse({ res, status, message = 'Server error', args = {}, internalError }) {
+function sendErrorResponse({ res, status, error, message = 'Server error', args = {}, internalError }) {
   if (internalError) {
     console.error('Error ~ Failure: ', internalError);
   } else {
     console.error('Error ~ Failure: ', message);
+    console.error('Error ~ Failure: ', error);
   }
 
   return res.status(status).json({
