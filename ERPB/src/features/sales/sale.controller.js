@@ -53,6 +53,55 @@ export const getSales = async (req, res) => {
     }
 };
 
+export const getSalesReturns = async (req, res) => {
+    try {
+        const { page, limit, offset, sortBy, order } = getPaginationParams({
+            page: req.query.page,
+            limit: req.query.limit,
+            sortBy: req.query.sortBy,
+            order: req.query.order,
+            defaultLimit: 20,
+            maxLimit: 100,
+            defaultSortBy: 'return_date',
+            defaultOrder: 'DESC',
+        });
+
+        const { rows, count } = await saleService.getAllSalesReturns({
+            limit,
+            offset,
+            sortBy,
+            order,
+        });
+
+        sendSuccessResponse({
+            res,
+            status: HTTP_STATUS.OK,
+            message: 'Sales Returns fetched successfully',
+            data: _.isEmpty(rows)
+                ? {
+                    data: [],
+                    totalCount: 0,
+                    count: 0,
+                    currentPage: 1,
+                    totalPages: 1,
+                }
+                : {
+                    data: rows,
+                    totalCount: count,
+                    count: rows.length,
+                    currentPage: page,
+                    totalPages: Math.ceil(count / limit),
+                },
+        });
+    } catch (error) {
+        sendErrorResponse({
+            res,
+            status: error.statusCode || HTTP_STATUS.SERVER_ERROR,
+            message: error.message || error,
+        });
+    }
+};
+
 export const getSaleById = async (req, res) => {
     try {
         const sale = await saleService.getSaleById(req.params.id);

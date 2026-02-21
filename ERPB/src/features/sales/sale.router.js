@@ -3,7 +3,7 @@ import { Router } from 'express';
 import { verifyAccessToken, verifyUserRole } from '#middleware/verifyTokens.js';
 import { JOI_TYPES, joiValidate } from '#utils/joiValidator.js';
 import { ENDPOINT } from '#constant/endpoints.js';
-import { createSale, getSaleById, getSales, returnSale } from './sale.controller.js';
+import { createSale, getSaleById, getSales, returnSale, getSalesReturns } from './sale.controller.js';
 import { createSaleSchema, returnSaleSchema, getAllSaleSchema } from './sale.schema.js';
 
 const router = Router();
@@ -22,6 +22,13 @@ router.post(
   verifyUserRole([ 'admin', 'pharmacist', 'cashier' ]),
   joiValidate(createSaleSchema, JOI_TYPES.BODY),
   createSale,
+);
+
+router.get(
+  '/returns',
+  verifyUserRole([ 'admin', 'pharmacist', 'cashier' ]),
+  joiValidate(getAllSaleSchema, JOI_TYPES.QUERY),
+  getSalesReturns,
 );
 
 router.post(

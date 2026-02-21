@@ -7,9 +7,10 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { useMemo, useState } from "react";
-import { MdVisibility } from "react-icons/md";
+import { MdVisibility, MdKeyboardReturn } from "react-icons/md";
 import MainTable from "@components/Table";
 import InvoiceViewer from "./components/InvoiceViewer";
+import SalesReturnModal from "./components/SalesReturnModal";
 import { fetchAllSales } from "@services/salesService";
 import { SaleI } from "@src/types/sales";
 import {
@@ -35,6 +36,7 @@ const SalesHistory = ({ withHeader = true }: { withHeader?: boolean }) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [search, setSearch] = useState("");
   const [viewId, setViewId] = useState<string | null>(null);
+  const [returnId, setReturnId] = useState<string | null>(null);
 
   const { data, isError, isFetching, error } = usePaginationDataFetch({
     queryKey: [QUERY_KEY.SALES, "history"],
@@ -96,7 +98,7 @@ const SalesHistory = ({ withHeader = true }: { withHeader?: boolean }) => {
       },
       {
         id: "action",
-        size: 80,
+        size: 100,
         cell: ({ row }: any) => (
           <Group gap="xs" justify="center">
             <Tooltip label="View Invoice">
@@ -107,6 +109,17 @@ const SalesHistory = ({ withHeader = true }: { withHeader?: boolean }) => {
                 onClick={() => setViewId(row.original.id)}
               >
                 <MdVisibility size={18} />
+              </ActionIcon>
+            </Tooltip>
+            {/* Process Return Action */}
+            <Tooltip label="Process Return">
+              <ActionIcon
+                variant="light"
+                radius={"100%"}
+                color="orange"
+                onClick={() => setReturnId(row.original.id)}
+              >
+                <MdKeyboardReturn size={18} />
               </ActionIcon>
             </Tooltip>
           </Group>
@@ -176,6 +189,13 @@ const SalesHistory = ({ withHeader = true }: { withHeader?: boolean }) => {
           opened={!!viewId}
           onClose={() => setViewId(null)}
           saleId={viewId}
+        />
+      )}
+      {returnId && (
+        <SalesReturnModal
+          opened={!!returnId}
+          onClose={() => setReturnId(null)}
+          saleId={returnId}
         />
       )}
     </div>

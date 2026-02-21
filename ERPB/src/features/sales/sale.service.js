@@ -11,7 +11,8 @@ import {
     AuditLog,
     InvoiceSequence,
     Customer,
-    Medicine
+    Medicine,
+    SalesReturn
 } from '#models/index.js';
 import sequelize from '#lib/sqlConfig.js';
 
@@ -29,6 +30,36 @@ export const getAllSales = async ({ limit, offset, sortBy, order }) => {
                     {
                         model: Batch,
                         as: 'batch',
+                    },
+                ],
+            },
+        ],
+        order: [ [ sortBy, order ] ],
+        limit,
+        offset,
+        distinct: true,
+    });
+};
+
+/**
+ * Get all sales returns with pagination.
+ */
+export const getAllSalesReturns = async ({ limit, offset, sortBy, order }) => {
+    return SalesReturn.findAndCountAll({
+        include: [
+            {
+                model: SalesReturnItem,
+                as: 'items',
+                include: [
+                    {
+                        model: Batch,
+                        as: 'batch',
+                        include: [
+                            {
+                                model: Medicine,
+                                as: 'medicine',
+                            },
+                        ],
                     },
                 ],
             },
