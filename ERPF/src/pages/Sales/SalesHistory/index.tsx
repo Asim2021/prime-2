@@ -77,6 +77,20 @@ const SalesHistory = ({ withHeader = true }: { withHeader?: boolean }) => {
         id: "total_amount",
         accessorKey: "total_amount",
         header: "Amount",
+        cell: (info: any) => {
+          const row = info.row.original;
+          const isReturned = row.returns && row.returns.length > 0;
+          return (
+            <Group gap="xs" wrap="nowrap">
+              <Text>₹{Number(row.total_amount).toFixed(2)}</Text>
+              {isReturned && (
+                <Badge color="red" variant="light" size="xs">
+                  Returned
+                </Badge>
+              )}
+            </Group>
+          );
+        },
       },
       {
         id: "payment_mode",

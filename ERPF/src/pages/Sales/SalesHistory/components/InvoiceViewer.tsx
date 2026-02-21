@@ -75,6 +75,11 @@ const InvoiceViewer: FC<InvoiceViewerProps> = ({ opened, onClose, saleId }) => {
                       CREDIT OUTSTANDING
                     </Badge>
                   )}
+                  {sale.returns && sale.returns.length > 0 && (
+                    <Badge color="red" variant="light" size="sm">
+                      RETURNED
+                    </Badge>
+                  )}
                 </Group>
                 {sale.customer_phone ? (
                   <Text size="sm" c="dimmed">
@@ -138,6 +143,11 @@ const InvoiceViewer: FC<InvoiceViewerProps> = ({ opened, onClose, saleId }) => {
                   {sale.is_credit && (
                     <Badge color="red" variant="filled" size="sm">
                       CREDIT OUTSTANDING
+                    </Badge>
+                  )}
+                  {sale.returns && sale.returns.length > 0 && (
+                    <Badge color="red" variant="light" size="sm">
+                      RETURNED
                     </Badge>
                   )}
                 </Group>
@@ -327,6 +337,24 @@ const InvoiceViewer: FC<InvoiceViewerProps> = ({ opened, onClose, saleId }) => {
 
                   <Divider my="xs" />
 
+                  {sale.returns && sale.returns.length > 0 && (
+                    <Group justify="space-between" mb={4}>
+                      <Text size="sm" c="red.6" fw={600}>
+                        Total Refunded
+                      </Text>
+                      <Text size="sm" c="red.6" fw={600}>
+                        - ₹
+                        {Number(
+                          sale.returns.reduce(
+                            (sum: number, r: any) =>
+                              sum + Number(r.total_refund),
+                            0,
+                          ),
+                        ).toFixed(2)}
+                      </Text>
+                    </Group>
+                  )}
+
                   <Group justify="space-between">
                     <Title order={4} c="dark.8">
                       Total Amount
@@ -386,6 +414,24 @@ const InvoiceViewer: FC<InvoiceViewerProps> = ({ opened, onClose, saleId }) => {
                   )}
 
                   <Divider my="xs" />
+
+                  {sale.returns && sale.returns.length > 0 && (
+                    <Group justify="space-between" mb={4}>
+                      <Text size="sm" c="red.4" fw={600}>
+                        Total Refunded
+                      </Text>
+                      <Text size="sm" c="red.4" fw={600}>
+                        - ₹
+                        {Number(
+                          sale.returns.reduce(
+                            (sum: number, r: any) =>
+                              sum + Number(r.total_refund),
+                            0,
+                          ),
+                        ).toFixed(2)}
+                      </Text>
+                    </Group>
+                  )}
 
                   <Group justify="space-between">
                     <Title order={4} c="gray.1">

@@ -34,6 +34,11 @@ export const getAllSales = async ({ limit, offset, sortBy, order }) => {
                     },
                 ],
             },
+            {
+                model: SalesReturn,
+                as: 'returns',
+                required: false,
+            },
         ],
         order: [ [ sortBy, order ] ],
         limit,
@@ -93,6 +98,17 @@ export const getSaleById = async (id) => {
                         ],
                     },
                 ],
+            },
+            {
+                model: SalesReturn,
+                as: 'returns',
+                required: false,
+                include: [
+                    {
+                        model: SalesReturnItem,
+                        as: 'items'
+                    }
+                ]
             },
         ],
     });

@@ -28,6 +28,7 @@ export interface SaleI {
   created_at: string;
   created_by: string;
   items?: SaleItemI[];
+  returns?: any[];
 }
 
 export interface CartItemI extends BatchI {
