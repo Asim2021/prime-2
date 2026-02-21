@@ -1,15 +1,27 @@
-import { Tabs, Paper } from "@mantine/core";
 import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Tabs, Paper } from "@mantine/core";
 import { MdSupervisedUserCircle } from "react-icons/md";
 import { IoSettings } from "react-icons/io5";
 import Users from "./UserManagement";
 import ShopConfiguration from "./ShopConfiguration";
+import { ROUTES } from "@constants/endpoints";
 
 const Admin = () => {
-  const [activeTab, setActiveTab] = useState<string | null>("users");
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const getActiveTab = () => {
+    if (location.pathname.includes(ROUTES.ADMIN.SETTINGS)) return "settings";
+    return "users";
+  };
+
+  const [activeTab, setActiveTab] = useState<string | null>(getActiveTab());
 
   const handleTabChange = (value: string | null) => {
     setActiveTab(value);
+    if (value === "users") navigate(ROUTES.ADMIN.USERS);
+    if (value === "settings") navigate(ROUTES.ADMIN.SETTINGS);
   };
 
   return (

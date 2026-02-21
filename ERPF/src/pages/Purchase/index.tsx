@@ -1,14 +1,28 @@
-import { Tabs, Paper } from "@mantine/core";
 import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Tabs, Paper } from "@mantine/core";
 import { MdShoppingCart, MdHistory } from "react-icons/md";
+
 import PurchaseEntry from "./PurchaseEntry";
 import PurchaseList from "./PurchaseList";
+import { ROUTES } from "@constants/endpoints";
 
 const Purchase = () => {
-  const [activeTab, setActiveTab] = useState<string | null>("new_purchase");
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const getActiveTab = () => {
+    if (location.pathname.includes(ROUTES.PURCHASES.HISTORY))
+      return "purchase_history";
+    return "new_purchase";
+  };
+
+  const [activeTab, setActiveTab] = useState<string | null>(getActiveTab());
 
   const handleTabChange = (value: string | null) => {
     setActiveTab(value);
+    if (value === "purchase_history") navigate(ROUTES.PURCHASES.HISTORY);
+    if (value === "new_purchase") navigate(ROUTES.PURCHASES.NEW);
   };
 
   return (
@@ -17,16 +31,16 @@ const Purchase = () => {
         <Tabs value={activeTab} onChange={handleTabChange} keepMounted={false}>
           <Tabs.List>
             <Tabs.Tab
-              value="new_purchase"
-              leftSection={<MdShoppingCart size={16} />}
-            >
-              New Purchase
-            </Tabs.Tab>
-            <Tabs.Tab
               value="purchase_history"
               leftSection={<MdHistory size={16} />}
             >
               Purchase History
+            </Tabs.Tab>
+            <Tabs.Tab
+              value="new_purchase"
+              leftSection={<MdShoppingCart size={16} />}
+            >
+              New Purchase
             </Tabs.Tab>
           </Tabs.List>
 

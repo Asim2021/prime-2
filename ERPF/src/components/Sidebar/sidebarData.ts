@@ -7,38 +7,38 @@ import {
   MdDashboard,
   MdBarChart,
 } from "react-icons/md";
-import { ENDPOINT } from "@constants/endpoints";
+import { ROUTES } from "@constants/endpoints";
 
 export const sidebarData = [
-  { label: "Dashboard", link: ENDPOINT.BASE, icon: MdDashboard },
+  { label: "Dashboard", link: ROUTES.HOME.BASE, icon: MdDashboard },
   {
     label: "Inventory",
-    link: "/inventory",
+    link: ROUTES.INVENTORY.MEDICINES,
     icon: MdInventory,
   },
   {
     label: "Sales",
-    link: ENDPOINT.SALES.BASE,
+    link: ROUTES.SALES.HISTORY,
     icon: MdPointOfSale,
   },
   {
     label: "Purchase",
-    link: ENDPOINT.PURCHASE.BASE,
+    link: ROUTES.PURCHASES.HISTORY,
     icon: MdShoppingCart,
   },
   {
     label: "Partners",
-    link: ENDPOINT.PARTNERS,
+    link: ROUTES.PARTNERS.VENDORS,
     icon: MdPeople,
   },
   {
     label: "Reports",
-    link: ENDPOINT.REPORTS,
+    link: ROUTES.REPORTS.SALES,
     icon: MdBarChart,
   },
   {
     label: "Admin",
-    link: ENDPOINT.ADMIN,
+    link: ROUTES.ADMIN.USERS,
     icon: MdAdminPanelSettings,
   },
 ];

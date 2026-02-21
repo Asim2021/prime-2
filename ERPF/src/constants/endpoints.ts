@@ -1,58 +1,93 @@
 export const ENDPOINT = {
+  ADMIN: "/admin",
   ALL: "*",
+  AUDIT_LOGS: "/audit-logs",
   AUTH: {
     FORGET_PASS: "/auth/forget-password",
+    FORGET_PASSWORD: "/auth/forget-password",
     GET_ME: "/auth/getme",
     LOGIN: "/auth/login",
     LOGOUT: "/auth/logout",
     REFRESH_TOKEN: "/auth/refresh",
     REGISTER: "/auth/register",
-    VALIDATE_OTP: "/auth/validate-otp",
-    FORGET_PASSWORD: "/auth/forget-password",
     RESET_PASSWORD: "/auth/reset-password",
+    VALIDATE_OTP: "/auth/validate-otp",
     VERIFY: "/auth/verify",
   },
   BASE: "/",
-  ADMIN: "/admin",
+  DASHBOARD: {
+    LOW_STOCK: "/dashboard/low-stock",
+    PENDING_APPROVALS: "/dashboard/pending-approvals",
+    SALES_TREND: "/dashboard/sales-trend",
+    SUMMARY: "/dashboard/summary",
+  },
+  IMPORT: "/import",
+  INVENTORY_ADJUST: "/inventory/adjust",
+  INVENTORY_ITEMS: "/medicines",
+  INVENTORY_STOCK: "/inventory/stock",
+  INVENTORY_TRANSFER: "/inventory/transfer",
   ITEMS: "/medicines",
-  // BATCHES: "/batches", // Not implemented on backend yet
-  // BATCHES: "/batches",
+  PARTNER_CUSTOMERS: "/customers",
+  PARTNER_VENDORS: "/vendors",
+  PARTNERS: "/partners",
   PURCHASE: {
     BASE: "/purchases",
     CREATE: "/purchases/create",
-    DETAILS: "/purchases/details", // placeholder
-    HISTORY: "/purchases/history", // placeholder
+    DETAILS: "/purchases/details",
+    HISTORY: "/purchases/history",
   },
-  PARTNERS: "/partners",
-  PARTNER_VENDORS: "/vendors",
-  PARTNER_CUSTOMERS: "/customers",
-  INVENTORY_ITEMS: "/medicines",
+  REPORTS: "/reports",
+  ROLES: "/roles",
+  SALES: {
+    BASE: "/sales",
+    ORDERS: "/sales",
+    POS: "/sales/pos",
+  },
+  SALES_RETURNS: "/sales/returns",
+  SETTINGS: "/settings",
+  SHOP: "/shop-settings",
   USERS: {
     BASE: "/users",
     PROFILE: "/users/profile",
   },
   VENDOR_MASTER: "/vendor-master",
-  // Sales Routes
+};
+
+export const ROUTES = {
+  ADMIN: {
+    BASE: "/admin",
+    SETTINGS: "/admin/settings",
+    USERS: "/admin/users",
+  },
+  DASHBOARD: {
+    BASE: "/dashboard",
+  },
+  HOME: { BASE: "/" },
+  INVENTORY: {
+    BASE: "/inventory",
+    BATCHES: "/inventory/batches",
+    MEDICINES: "/inventory/medicines",
+    STOCK_ADJ: "/inventory/stock_adjustmet",
+  },
+  PARTNERS: {
+    BASE: "/partners",
+    CUSTOMERS: "/partners/customers",
+    VENDORS: "/partners/vendors",
+  },
+  PURCHASES: {
+    BASE: "/purchases",
+    HISTORY: "/purchases/history",
+    NEW: "/purchases/new",
+  },
+  REPORTS: {
+    BASE: "/reports",
+    INVENTORY: "/reports/inventory",
+    SALES: "/reports/sales",
+  },
   SALES: {
     BASE: "/sales",
-    POS: "/sales/pos",
-    ORDERS: "/sales", // History
+    BILLING: "/sales/biling",
+    HISTORY: "/sales/history",
+    RETURNS: "/sales/returns",
   },
-  SALES_RETURNS: "/sales/returns",
-  SETTINGS: "/settings",
-  ROLES: "/roles",
-  SHOP: "/shop-settings",
-  AUDIT_LOGS: "/audit-logs",
-  // Inventory Routes
-  INVENTORY_STOCK: "/inventory/stock",
-  INVENTORY_ADJUST: "/inventory/adjust",
-  INVENTORY_TRANSFER: "/inventory/transfer",
-  IMPORT: "/import",
-  DASHBOARD: {
-    SUMMARY: "/dashboard/summary",
-    SALES_TREND: "/dashboard/sales-trend",
-    PENDING_APPROVALS: "/dashboard/pending-approvals",
-    LOW_STOCK: "/dashboard/low-stock",
-  },
-  REPORTS: "/reports",
 };

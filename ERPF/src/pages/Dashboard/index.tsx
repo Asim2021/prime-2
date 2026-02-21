@@ -36,6 +36,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { useNavigate } from "react-router-dom"; // Fixed import from react-router
+import { ROUTES } from "@constants/endpoints";
 
 // Modern Stat Card with Gradient & Click
 const StatCard = ({
@@ -150,25 +151,25 @@ const Dashboard = () => {
           icon={<MdReceipt size={22} />}
           label="New Sale"
           color="teal"
-          onClick={() => navigate("/sales/pos")}
+          onClick={() => navigate(ROUTES.SALES.BILLING)}
         />
         <QuickAction
           icon={<MdAddShoppingCart size={22} />}
           label="Purchase Entry"
           color="blue"
-          onClick={() => navigate("/purchases/create")}
+          onClick={() => navigate(ROUTES.PURCHASES.NEW)}
         />
         <QuickAction
           icon={<MdInventory size={22} />}
           label="Add Medicine"
           color="violet"
-          onClick={() => navigate("/medicines")}
+          onClick={() => navigate(ROUTES.INVENTORY.MEDICINES)}
         />
         <QuickAction
           icon={<MdPersonAdd size={22} />}
           label="Add Customer"
           color="orange"
-          onClick={() => navigate("/customers")}
+          onClick={() => navigate(ROUTES.PARTNERS.CUSTOMERS)}
         />
       </SimpleGrid>
 
@@ -181,7 +182,7 @@ const Dashboard = () => {
           color="teal"
           gradient={{ from: "teal", to: "green", deg: 45 }}
           subtext="Total revenue today"
-          onClick={() => navigate("/reports")}
+          onClick={() => navigate(ROUTES.REPORTS.SALES)}
         />
         <StatCard
           title="Stock Value"
@@ -190,7 +191,7 @@ const Dashboard = () => {
           color="blue"
           gradient={{ from: "blue", to: "cyan", deg: 45 }}
           subtext="Current inventory value"
-          onClick={() => navigate("/inventory")}
+          onClick={() => navigate(ROUTES.REPORTS.INVENTORY)}
         />
         <StatCard
           title="Low Stock"
@@ -199,7 +200,7 @@ const Dashboard = () => {
           color="orange"
           gradient={{ from: "orange", to: "yellow", deg: 45 }}
           subtext="Items below reorder level"
-          onClick={() => navigate("/inventory")}
+          onClick={() => navigate(ROUTES.REPORTS.INVENTORY)}
         />
         <StatCard
           title="Expiring Soon"
@@ -208,7 +209,7 @@ const Dashboard = () => {
           color="red"
           gradient={{ from: "red", to: "pink", deg: 45 }}
           subtext="Batches expiring in 90 days"
-          onClick={() => navigate("/inventory/batches")}
+          onClick={() => navigate(ROUTES.INVENTORY.BATCHES)}
         />
       </SimpleGrid>
 

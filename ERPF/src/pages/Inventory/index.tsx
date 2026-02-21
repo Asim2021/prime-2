@@ -1,18 +1,20 @@
 import { Tabs, Paper } from "@mantine/core";
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import MedicineList from "./MedicineList";
 import BatchList from "./BatchList";
 import StockAdjustment from "./StockAdjustment";
 import { MdMedication, MdLayers, MdHistory } from "react-icons/md";
+import { ROUTES } from "@constants/endpoints";
 
 const Inventory = () => {
   const location = useLocation();
+  const navigate = useNavigate();
 
-  // Determine active tab based on URL or default to 'medicines'
   const getActiveTab = () => {
-    if (location.pathname.includes("/batches")) return "batches";
-    if (location.pathname.includes("/adjustments")) return "adjustments";
+    if (location.pathname.includes(ROUTES.INVENTORY.BATCHES)) return "batches";
+    if (location.pathname.includes(ROUTES.INVENTORY.STOCK_ADJ))
+      return "adjustments";
     return "medicines";
   };
 
@@ -20,10 +22,10 @@ const Inventory = () => {
 
   const handleTabChange = (value: string | null) => {
     setActiveTab(value);
-    // Optional: Update URL on tab change for deep linking
-    // if (value === "medicines") navigate("/inventory");
-    // if (value === "batches") navigate("/inventory/batches");
-    // if (value === "adjustments") navigate("/inventory/adjustments");
+
+    if (value === "medicines") navigate(ROUTES.INVENTORY.MEDICINES);
+    if (value === "batches") navigate(ROUTES.INVENTORY.BATCHES);
+    if (value === "adjustments") navigate(ROUTES.INVENTORY.STOCK_ADJ);
   };
 
   return (

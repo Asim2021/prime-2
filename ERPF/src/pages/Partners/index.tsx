@@ -1,15 +1,28 @@
-import { Tabs, Paper } from "@mantine/core";
 import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Tabs, Paper } from "@mantine/core";
 import { BsFillPeopleFill } from "react-icons/bs";
 import { IoStorefront } from "react-icons/io5";
 import VendorList from "./VendorList";
 import CustomerList from "./CustomerList";
+import { ROUTES } from "@constants/endpoints";
 
 const Partners = () => {
-  const [activeTab, setActiveTab] = useState<string | null>("vendors");
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const getActiveTab = () => {
+    if (location.pathname.includes(ROUTES.PARTNERS.CUSTOMERS))
+      return "customers";
+    return "vendors";
+  };
+
+  const [activeTab, setActiveTab] = useState<string | null>(getActiveTab());
 
   const handleTabChange = (value: string | null) => {
     setActiveTab(value);
+    if (value === "vendors") navigate(ROUTES.PARTNERS.VENDORS);
+    if (value === "customers") navigate(ROUTES.PARTNERS.CUSTOMERS);
   };
 
   return (

@@ -5,7 +5,7 @@ import POS from "./POS";
 import SalesHistory from "./SalesHistory";
 import SalesReturn from "./SalesReturn";
 import { MdPointOfSale, MdHistory, MdKeyboardReturn } from "react-icons/md";
-import { ENDPOINT } from "@constants/endpoints";
+import { ROUTES } from "@constants/endpoints";
 
 const Sales = () => {
   const location = useLocation();
@@ -13,8 +13,8 @@ const Sales = () => {
 
   // Determine active tab based on URL
   const getActiveTab = () => {
-    if (location.pathname.includes("/pos")) return "pos";
-    if (location.pathname.includes("/returns")) return "returns";
+    if (location.pathname.includes(ROUTES.SALES.BILLING)) return "pos";
+    if (location.pathname.includes(ROUTES.SALES.RETURNS)) return "returns";
     return "history";
   };
 
@@ -22,9 +22,9 @@ const Sales = () => {
 
   const handleTabChange = (value: string | null) => {
     setActiveTab(value);
-    if (value === "pos") navigate(ENDPOINT.SALES.POS);
-    else if (value === "returns") navigate(ENDPOINT.SALES_RETURNS);
-    else navigate(ENDPOINT.SALES.ORDERS);
+    if (value === "pos") navigate(ROUTES.SALES.BILLING);
+    else if (value === "returns") navigate(ROUTES.SALES.RETURNS);
+    else navigate(ROUTES.SALES.HISTORY);
   };
 
   return (
@@ -32,11 +32,11 @@ const Sales = () => {
       <Paper radius="md" h="100dvh" className="flex flex-col">
         <Tabs value={activeTab} onChange={handleTabChange} keepMounted={false}>
           <Tabs.List>
-            <Tabs.Tab value="pos" leftSection={<MdPointOfSale size={16} />}>
-              POS / Billing
-            </Tabs.Tab>
             <Tabs.Tab value="history" leftSection={<MdHistory size={16} />}>
               Sales History
+            </Tabs.Tab>
+            <Tabs.Tab value="pos" leftSection={<MdPointOfSale size={16} />}>
+              POS / Billing
             </Tabs.Tab>
             <Tabs.Tab
               value="returns"
