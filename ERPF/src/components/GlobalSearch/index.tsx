@@ -27,6 +27,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchAllMedicines } from "@services/inventoryService";
 import { fetchAllCustomers, fetchAllVendors } from "@services/partnerService";
 import { QUERY_KEY } from "@constants/queryKeys";
+import { ROUTES } from "@constants/endpoints";
 
 interface SearchResultI {
   id: string;
@@ -74,21 +75,21 @@ const GlobalSearch = () => {
       title: m.brand_name,
       description: `Generic: ${m.generic_name} | Stock: ${m.current_stock || 0}`,
       type: "MEDICINE" as const,
-      link: `/medicines`, // Ideally deep link, but for now list
+      link: ROUTES.INVENTORY.MEDICINES, // Ideally deep link, but for now list
     })) || []),
     ...(customers?.data?.map((c: any) => ({
       id: c.id,
       title: c.name,
       description: `Ph: ${c.phone}`,
       type: "CUSTOMER" as const,
-      link: `/partners/customers`,
+      link: ROUTES.PARTNERS.CUSTOMERS,
     })) || []),
     ...(vendors?.data?.map((v: any) => ({
       id: v.id,
       title: v.name,
       description: `Credit Days: ${v.credit_days || 0}`,
       type: "VENDOR" as const,
-      link: `/partners/vendors`,
+      link: ROUTES.PARTNERS.VENDORS,
     })) || []),
   ];
 

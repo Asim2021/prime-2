@@ -7,10 +7,9 @@ import {
   Group,
   ScrollArea,
   Text,
-  ThemeIcon,
   Tooltip,
 } from "@mantine/core";
-import { MdChevronRight, MdRocketLaunch } from "react-icons/md";
+import { MdChevronRight } from "react-icons/md";
 
 import DarkModeIconBtn from "../button/DarkModeButton/DarkModeIconBtn";
 import classes from "./sidebar.module.css";
@@ -89,11 +88,7 @@ export function Sidebar({
             />
           ) : companyName && !collapseSidebar ? (
             <Text className={classes.company_name}>{companyName}</Text>
-          ) : (
-            <ThemeIcon radius="md" size="lg">
-              <MdRocketLaunch size="1.1rem" />
-            </ThemeIcon>
-          )}
+          ) : null}
           <Group justify="flex-end" h="100%">
             <GlobalSearch />
           </Group>
