@@ -21,7 +21,6 @@ import useMedicineColumns from "./useMedicineColumns";
 import MedicineModal from "./MedicineModal";
 import { usePaginationDataFetch } from "@hooks/usePaginationDataFetch";
 import { CustomTableOptions } from "@src/types/table";
-import { INITIAL_ALL_TABLE_PINNING } from "@constants/items";
 import { QUERY_KEY } from "@constants/queryKeys";
 import { Divider } from "@mantine/core";
 

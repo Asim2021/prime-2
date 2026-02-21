@@ -44,10 +44,12 @@ const useVendorColumns = (deleteHandler: (id: string) => void) => {
       },
       {
         id: "action",
+        size: 120,
         cell: ({ row }) => (
           <Group gap="xs">
             <ActionIcon
-              variant="subtle"
+              variant="light"
+              radius={"100%"}
               color="blue"
               onClick={() => {
                 setDetail(row.original);
@@ -57,7 +59,8 @@ const useVendorColumns = (deleteHandler: (id: string) => void) => {
               <MdEdit size={16} />
             </ActionIcon>
             <ActionIcon
-              variant="subtle"
+              variant="light"
+              radius={"100%"}
               color="red"
               onClick={() => {
                 modals.openConfirmModal({

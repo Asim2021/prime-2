@@ -70,7 +70,7 @@ const useMedicineColumns = (deleteHandler: (id: string) => void) => {
       },
       {
         id: "action",
-        size: 80,
+        size: 120,
         cell: ({ row }) => (
           <Group gap="xs" justify="center">
             <ActionIcon

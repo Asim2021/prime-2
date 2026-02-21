@@ -106,8 +106,7 @@ const useUserColumn = (onEdit: (user: UserI) => void) => {
       },
       {
         id: USER_COLUMNS.ACTION,
-        minSize: 80,
-        maxSize: 114,
+        size: 120,
         cell: ({ row }) => (
           <Flex gap={8} justify={"center"}>
             <ActionIcon

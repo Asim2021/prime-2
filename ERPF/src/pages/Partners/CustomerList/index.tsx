@@ -71,6 +71,12 @@ const CustomerList = () => {
     data: data?.data || [],
     columns,
     state: { sorting, pagination, columnOrder },
+    initialState: {
+      columnPinning: {
+        left: ["name"],
+        right: ["action"],
+      },
+    },
     pageCount: data?.totalPages || 0,
     onPaginationChange: setPagination,
     onSortingChange: setSorting,
