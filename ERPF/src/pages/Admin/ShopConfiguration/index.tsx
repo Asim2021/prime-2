@@ -15,7 +15,6 @@ import {
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { QUERY_KEY } from "@constants/queryKeys";
 import { notifications } from "@mantine/notifications";
-import MainHeader from "@components/Header/MainHeader";
 import { fetchShopSettings, updateShopSettings } from "@services/shopService";
 
 const ShopConfiguration = () => {
@@ -82,8 +81,32 @@ const ShopConfiguration = () => {
     },
   });
 
-  const handleSubmit = (values: Partial<ShopSettingsI>) => {
-    mutation.mutate(values);
+  const handleSubmit = (values: Partial<any>) => {
+    // Strictly whitelist only the fields that the form manages and Joi allows
+    const safePayload: any = {
+      shop_name: values.shop_name,
+      gst_number: values.gst_number,
+      drug_license_no: values.drug_license_no,
+      address_line_1: values.address_line_1,
+      city: values.city,
+      state: values.state,
+      pincode: values.pincode,
+      phone: values.phone,
+      email: values.email,
+      invoice_prefix: values.invoice_prefix,
+      paper_width_mm: values.paper_width_mm,
+      near_expiry_days: values.near_expiry_days,
+      logo_url: values.logo_url ?? null,
+      address_line_2: values.address_line_2 ?? null,
+      invoice_footer_text: values.invoice_footer_text ?? null,
+    };
+
+    // Clean up purely undefined values just in case
+    Object.keys(safePayload).forEach((key) =>
+      safePayload[key] === undefined ? delete safePayload[key] : {},
+    );
+
+    mutation.mutate(safePayload);
   };
 
   return (

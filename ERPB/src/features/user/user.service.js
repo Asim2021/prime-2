@@ -89,6 +89,10 @@ export const updateUser = async (id, data) => {
       throw createError('Email already exists', HTTP_STATUS.CONFLICT);
     }
   }
+  if (data.password) {
+    data.password_hash = await bcrypt.hash(data.password, 12);
+    delete data.password;
+  }
   await user.update(data);
   return getUserById(id);
 };

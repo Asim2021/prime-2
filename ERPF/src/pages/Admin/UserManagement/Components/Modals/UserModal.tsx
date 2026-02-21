@@ -15,6 +15,7 @@ import { notifications } from "@mantine/notifications";
 import { fetchAllRoles } from "@services/roleService";
 import { addUser, editUser } from "@services/userService";
 import { QUERY_KEY } from "@constants/queryKeys";
+import { usePaginationDataFetch } from "@hooks/usePaginationDataFetch";
 
 interface UserModalProps {
   opened: boolean;
@@ -26,9 +27,11 @@ interface UserModalProps {
 const UserModal = ({ opened, close, action, detail }: UserModalProps) => {
   const queryClient = useQueryClient();
 
-  const { data: rolesData } = useQuery({
+  const { data: rolesData } = usePaginationDataFetch({
     queryKey: [QUERY_KEY.ROLES],
-    queryFn: () => fetchAllRoles({ page: 1, limit: 100 }),
+    queryFn: fetchAllRoles,
+    page: 1,
+    limit: 100,
     enabled: opened,
   });
 
@@ -49,8 +52,15 @@ const UserModal = ({ opened, close, action, detail }: UserModalProps) => {
     validate: {
       username: (value) => (value.length < 3 ? "Username too short" : null),
       email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
-      password: (value) =>
-        action === "ADD" && value.length < 6 ? "Password too short" : null,
+      password: (value) => {
+        if (action === "ADD")
+          return value.length < 6
+            ? "Password must be at least 6 characters"
+            : null;
+        if (action === "EDIT" && value && value.length < 6)
+          return "Password must be at least 6 characters";
+        return null;
+      },
       role_id: (value) => (value ? null : "Role is required"),
     },
   });
@@ -98,7 +108,11 @@ const UserModal = ({ opened, close, action, detail }: UserModalProps) => {
   });
 
   const handleSubmit = (values: typeof form.values) => {
-    mutation.mutate(values);
+    const payload = { ...values };
+    if (action === "EDIT") {
+      payload.is_active = !!values.is_active;
+    }
+    mutation.mutate(payload);
   };
 
   return (
@@ -142,7 +156,10 @@ const UserModal = ({ opened, close, action, detail }: UserModalProps) => {
           {action === "EDIT" && (
             <Switch
               label="Is Active"
-              {...form.getInputProps("is_active", { type: "checkbox" })}
+              checked={form.values.is_active}
+              onChange={(event) =>
+                form.setFieldValue("is_active", event.currentTarget.checked)
+              }
             />
           )}
 

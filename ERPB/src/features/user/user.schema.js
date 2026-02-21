@@ -13,6 +13,7 @@ export const updateUserSchema = Joi.object({
     email: Joi.string().email().optional(),
     role_id: Joi.string().uuid().optional(),
     is_active: Joi.boolean().optional(),
+    password: Joi.string().min(6).max(128).optional(),
 }).min(1);
 export const userIdParamSchema = Joi.object({
     id: Joi.string().uuid().required(),

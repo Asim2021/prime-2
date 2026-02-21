@@ -31,7 +31,7 @@ export const editUser = async (
   id: string | null,
   payload: Partial<UserI>,
 ): Promise<UserI> => {
-  const res: AxiosResponse = await erpApi.put(
+  const res: AxiosResponse = await erpApi.patch(
     `${ENDPOINT.USERS.BASE}/${id}`,
     payload,
   );

@@ -10,6 +10,7 @@ import customerRouter from './customer/customer.router.js';
 import settingsRouter from './shopSettings/shopSettings.router.js';
 import batchRouter from './inventory/batch/batch.router.js';
 import stockAdjustmentRouter from './inventory/stockAdjustment/stockAdjustment.router.js';
+import roleRouter from './role/role.router.js';
 import { ENDPOINT } from '#constant/endpoints.js';
 
 const v1Router = Router();
@@ -22,6 +23,7 @@ v1Router.use('/medicines', medicineRouter);
 v1Router.use('/purchases', purchaseRouter);
 v1Router.use('/batches', batchRouter); // Mounted
 v1Router.use('/sales', saleRouter);
+v1Router.use('/roles', roleRouter);
 v1Router.use('/reports', reportRouter);
 v1Router.use('/stock-adjustments', stockAdjustmentRouter);
 

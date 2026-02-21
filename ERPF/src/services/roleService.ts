@@ -6,7 +6,7 @@ export const fetchAllRoles = async (
 ): Promise<PaginationResponseI<RoleI[]>> => {
   const url = "/roles" + paramsToQueryString(params);
   const res = await erpApi.get(url);
-  return res as any;
+  return res.data;
 };
 
 export const updateRolePermissions = async (
