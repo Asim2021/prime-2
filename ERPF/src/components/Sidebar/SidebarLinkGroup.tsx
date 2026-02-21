@@ -16,16 +16,20 @@ import {
 } from "@mantine/core";
 
 import classes from "./sidebar.module.css";
+import { IconType } from "react-icons/lib";
 
 interface LinksGroupProps {
-  icon: React.ElementType;
+  icon: IconType;
+  key?: string;
   label: string;
   link: string;
   currentOpen: string[];
   setCurrentOpen: React.Dispatch<React.SetStateAction<string[]>>;
-  links?: { label: string; link: string }[];
+  links?: { label: string; link: string }[] | undefined;
   singleOpen?: boolean | 1 | 0;
-  collapseSidebar: boolean;
+  collapseSidebar?: boolean;
+  forRole?: "all" | string[];
+  highlightFor?: string;
 }
 
 export const SidebarLinkGroup = ({
@@ -115,7 +119,7 @@ export const SidebarLinkGroup = ({
             id="main_menu_group"
             className={clsx(
               "overflow-x-hidden",
-              (pathname === link || subLinkActive) &&
+              (pathname.includes(label.toLowerCase()) || subLinkActive) &&
                 !collapseSidebar &&
                 classes.main_menu_active,
             )}
@@ -133,13 +137,14 @@ export const SidebarLinkGroup = ({
               <Tooltip label={label}>
                 <ThemeIcon
                   variant={
-                    (pathname === link || subLinkActive) && collapseSidebar
+                    (pathname.includes(label.toLowerCase()) || subLinkActive) &&
+                    collapseSidebar
                       ? "outline"
                       : "transparent"
                   }
                   size="lg"
                   className={clsx(
-                    (pathname === link || subLinkActive) &&
+                    (pathname.includes(label.toLowerCase()) || subLinkActive) &&
                       collapseSidebar &&
                       classes.main_icon,
                   )}
@@ -182,7 +187,7 @@ export const SidebarLinkGroup = ({
                     <MdExpandCircleDown size={18} className="-rotate-90" />
                   </ThemeIcon>
                 </Menu.Target>
-                <Menu.Dropdown className="!shadow-lg" id="sub_menu_dd">
+                <Menu.Dropdown className="shadow-lg!" id="sub_menu_dd">
                   {menuItems}
                 </Menu.Dropdown>
               </Menu>

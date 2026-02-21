@@ -8,9 +8,24 @@ import {
   MdBarChart,
 } from "react-icons/md";
 import { ROUTES } from "@constants/endpoints";
+import { IconType } from "react-icons/lib";
 
-export const sidebarData = [
-  { label: "Dashboard", link: ROUTES.HOME.BASE, icon: MdDashboard },
+interface SidebarDataI {
+  label: string;
+  link: string;
+  icon: IconType;
+  links?: string[] | { label: string; link: string }[];
+  forRole?: "all" | string[];
+  highlightFor?: string;
+}
+
+export const sidebarData: SidebarDataI[] = [
+  {
+    label: "Dashboard",
+    link: ROUTES.HOME.BASE,
+    icon: MdDashboard,
+    forRole: "all",
+  },
   {
     label: "Inventory",
     link: ROUTES.INVENTORY.MEDICINES,

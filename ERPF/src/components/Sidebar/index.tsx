@@ -20,11 +20,12 @@ import clsx from "clsx";
 import GlobalSearch from "@components/GlobalSearch";
 
 interface SidebarProps {
-  isCompanyImage: boolean;
+  isCompanyImage?: boolean;
   companyName?: string;
   singleOpen?: boolean | 1 | 0;
   collapseSidebar: boolean;
   setCollapseSidebar: (arg: boolean) => void;
+  links?: string[] | { label: string; link: string }[];
 }
 
 /**
@@ -59,7 +60,7 @@ export function Sidebar({
     <AppShell.Navbar>
       <Tooltip label={collapseSidebar ? "Expand" : "Collapse"}>
         <ActionIcon
-          className={"!absolute -right-3 top-[50px] !rounded-full z-50"}
+          className={"absolute! -right-3 top-[50px] rounded-full! z-50"}
           aria-label={"Collapse Sidebar"}
           variant="filled"
           size={"sm"}
