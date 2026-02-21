@@ -52,7 +52,7 @@ const CheckoutModal = ({
     queryFn: fetchAllCustomers,
     search: debouncedSearch,
     page: 1,
-    limit: 50,
+    limit: 1,
     enabled: opened && !isNewCustomer,
   });
 
@@ -211,6 +211,8 @@ const CheckoutModal = ({
                   opt.label.toLowerCase().includes(s),
                 );
               }}
+              searchValue={search}
+              onSearchChange={setSearch}
               onChange={(val) => {
                 const selected = customersData?.data?.find(
                   (c: any) => c.id === val,
@@ -222,6 +224,7 @@ const CheckoutModal = ({
                     phone: selected.phone || "",
                   });
                 } else {
+                  // setSearch(val)
                   setCustomer({ id: null, name: "CASH CUSTOMER", phone: "" });
                 }
               }}
