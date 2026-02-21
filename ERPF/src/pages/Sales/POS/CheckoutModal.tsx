@@ -12,13 +12,15 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCartStore } from "@stores/cartStore";
 import { createSale } from "@services/salesService";
 import { addCustomer, fetchAllCustomers } from "@services/partnerService";
 import { QUERY_KEY } from "@constants/queryKeys";
 import { useState } from "react";
 import { MdAdd, MdClose } from "react-icons/md";
+import { usePaginationDataFetch } from "@hooks/usePaginationDataFetch";
+import { useDebouncedValue } from "@mantine/hooks";
 
 const CheckoutModal = ({
   opened,
@@ -42,10 +44,15 @@ const CheckoutModal = ({
   const [isNewCustomer, setIsNewCustomer] = useState(false);
   const [newCustomerName, setNewCustomerName] = useState("");
   const [newCustomerPhone, setNewCustomerPhone] = useState("");
+  const [search, setSearch] = useState("");
+  const [debouncedSearch] = useDebouncedValue(search, 400);
 
-  const { data: customersData } = useQuery({
-    queryKey: [QUERY_KEY.CUSTOMERS, "all"],
-    queryFn: () => fetchAllCustomers({ page: 1, limit: 1 }),
+  const { data: customersData } = usePaginationDataFetch({
+    queryKey: [QUERY_KEY.CUSTOMERS],
+    queryFn: fetchAllCustomers,
+    search: debouncedSearch,
+    page: 1,
+    limit: 50,
     enabled: opened && !isNewCustomer,
   });
 
