@@ -34,7 +34,7 @@ const POSCart = ({ onCheckout }: { onCheckout: () => void }) => {
 
       <Card withBorder radius="md" flex={1} p={0} className="overflow-hidden">
         <ScrollArea h="100%">
-          <Table verticalSpacing="xs" striped>
+          <Table verticalSpacing="xs" striped style={{ minWidth: 400 }}>
             <Table.Thead>
               <Table.Tr>
                 <Table.Th>Item</Table.Th>
@@ -107,8 +107,12 @@ const POSCart = ({ onCheckout }: { onCheckout: () => void }) => {
             <Text fw={600}>₹{totals.taxable.toFixed(2)}</Text>
           </Group>
           <Group justify="space-between">
-            <Text size="sm">Tax (GST)</Text>
-            <Text fw={600}>₹{totals.gst.toFixed(2)}</Text>
+            <Text size="sm" c="dimmed">
+              Tax (GST)
+            </Text>
+            <Text fw={600} c="dimmed">
+              ₹{totals.gst.toFixed(2)}
+            </Text>
           </Group>
           <Group
             justify="space-between"
@@ -118,7 +122,11 @@ const POSCart = ({ onCheckout }: { onCheckout: () => void }) => {
             }}
           >
             <Title order={3}>Total</Title>
-            <Title order={3} c="blue">
+            <Title
+              order={3}
+              variant="gradient"
+              gradient={{ from: "blue", to: "cyan", deg: 45 }}
+            >
               ₹{totals.total.toFixed(2)}
             </Title>
           </Group>
@@ -126,7 +134,8 @@ const POSCart = ({ onCheckout }: { onCheckout: () => void }) => {
           <Button
             fullWidth
             size="md"
-            color="green"
+            variant="gradient"
+            gradient={{ from: "teal", to: "green", deg: 105 }}
             mt="md"
             disabled={items.length === 0}
             onClick={onCheckout}

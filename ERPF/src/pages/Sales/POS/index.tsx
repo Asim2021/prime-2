@@ -15,14 +15,14 @@ const POS = ({ withHeader = true }: { withHeader?: boolean }) => {
     <div className={`h-full w-full mt-3 ${withHeader ? "p-4" : ""}`}>
       <Grid h="100%" gutter="lg">
         {/* Left Side: Search & Product Selection */}
-        <Grid.Col span={8} h="100%">
+        <Grid.Col span={{ base: 12, lg: 8 }} h={{ base: "auto", lg: "100%" }}>
           <Paper withBorder p="md" h="100%" shadow="sm" radius="md">
             <ProductSearch />
           </Paper>
         </Grid.Col>
 
         {/* Right Side: Cart & Summary */}
-        <Grid.Col span={4} h="100%">
+        <Grid.Col span={{ base: 12, lg: 4 }} h={{ base: "auto", lg: "100%" }}>
           <POSCart onCheckout={() => setCheckoutOpen(true)} />
         </Grid.Col>
       </Grid>

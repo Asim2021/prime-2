@@ -15,11 +15,7 @@ export interface OptionI {
   value: string | number | any;
 }
 
-export type OnChangeI =
-  | string
-  | number
-  | Array<string | number>
-  | null;
+export type OnChangeI = string | number | Array<string | number> | null;
 export type SelectValueI = OptionI | OptionI[] | null | undefined;
 
 interface ERPSelectProps {
@@ -46,7 +42,7 @@ interface ERPSelectProps {
   isLoading?: boolean;
   isOptionSelected?: (
     option: OptionI,
-    selectValue: Options<OptionI>
+    selectValue: Options<OptionI>,
   ) => boolean;
   searchable?: boolean;
   hideSelectedOptions?: boolean;
@@ -114,12 +110,12 @@ const ERPSelect: FC<ERPSelectProps> = ({
       backgroundColor: state.isSelected
         ? theme.colors[theme.primaryColor][6]
         : state.isFocused
-        ? isDark
-          ? theme.colors.dark[7]
-          : theme.colors.gray[0]
-        : isDark
-        ? theme.colors.dark[6]
-        : theme.white,
+          ? isDark
+            ? theme.colors.dark[7]
+            : theme.colors.gray[0]
+          : isDark
+            ? theme.colors.dark[6]
+            : theme.white,
       color: isDark ? theme.white : theme.black,
       "&:active": {
         backgroundColor: theme.colors[theme.primaryColor][6],
@@ -169,7 +165,7 @@ const ERPSelect: FC<ERPSelectProps> = ({
           htmlFor={name}
           className={clsx(
             "mantine-Select-label text-sm font-medium",
-            labelClass
+            labelClass,
           )}
           style={labelStyle}
         >
@@ -180,7 +176,7 @@ const ERPSelect: FC<ERPSelectProps> = ({
               c="var(--mantine-color-error)"
               ml={4}
               title="Field is required"
-              className="!text-sm"
+              className="text-sm!"
             >
               *
             </Text>

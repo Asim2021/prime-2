@@ -48,8 +48,10 @@ const ProductSearch = () => {
   return (
     <Stack gap="md" h="100%">
       <Autocomplete
+        size="md"
+        radius="md"
         placeholder="Search Medicine (Brand, Generic)..."
-        leftSection={<MdSearch size={16} />}
+        leftSection={<MdSearch size={18} />}
         rightSection={
           search && (
             <ActionIcon variant="transparent" onClick={() => setSearch("")}>
@@ -86,8 +88,16 @@ const ProductSearch = () => {
                 <Group
                   key={batch.id}
                   justify="space-between"
-                  p="xs"
-                  className="border rounded hover:bg-gray-50"
+                  p="sm"
+                  style={{
+                    border:
+                      "1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4))",
+                    backgroundColor:
+                      "light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6))",
+                    borderRadius: "var(--mantine-radius-md)",
+                    transition: "background-color 0.2s ease",
+                  }}
+                  className="hover:bg-gray-100 dark:hover:bg-dark-5"
                 >
                   <Stack gap={0}>
                     <Text fw={500} size="sm">
