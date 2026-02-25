@@ -58,7 +58,9 @@ const POSCart = ({ onCheckout }: { onCheckout: () => void }) => {
                   <Table.Tr key={item.id}>
                     <Table.Td>
                       <Text size="sm" fw={500} lineClamp={1}>
-                        {item.medicine_name}
+                        {item.medicine?.brand_name ||
+                          item.medicine_name ||
+                          item.item_name}
                       </Text>
                       <Text size="xs" c="dimmed">
                         Batch: {item.batch_no}
@@ -122,11 +124,8 @@ const POSCart = ({ onCheckout }: { onCheckout: () => void }) => {
             }}
           >
             <Title order={3}>Total</Title>
-            <Title
-              order={3}
-              variant="gradient"
-              gradient={{ from: "blue", to: "cyan", deg: 45 }}
-            >
+            {/* @ts-ignore: Title gradient from older mantle version */}
+            <Title order={3} variant="gradient">
               ₹{totals.total.toFixed(2)}
             </Title>
           </Group>

@@ -14,7 +14,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { QueryCache, useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { MdLogout, MdSettings } from "react-icons/md";
+import { MdLogout } from "react-icons/md";
 import { apiErrNotification } from "@utils/sendNotification";
 import { getMe, logoutUser } from "@services/authService";
 import { useEffect } from "react";

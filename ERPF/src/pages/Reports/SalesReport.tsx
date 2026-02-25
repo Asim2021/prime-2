@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Button, Group, Stack, Text, Paper, SimpleGrid } from "@mantine/core";
+import { Button, Group, Text, Paper, SimpleGrid } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { useQuery } from "@tanstack/react-query";
 import { MdDownload } from "react-icons/md";

@@ -22,7 +22,7 @@ import CustomerModal from "./CustomerModal";
 import { usePaginationDataFetch } from "@hooks/usePaginationDataFetch";
 import { CustomTableOptions } from "@src/types/table";
 import { QUERY_KEY } from "@constants/queryKeys";
-import { Divider, Switch, Group } from "@mantine/core";
+import { Divider, Switch } from "@mantine/core";
 
 const CustomerList = () => {
   const [search, setSearch] = useState("");

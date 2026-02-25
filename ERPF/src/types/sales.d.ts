@@ -1,5 +1,3 @@
-import { BatchI } from "./inventory";
-
 export interface SaleItemI {
   id: string;
   sale_id: string;
@@ -34,6 +32,7 @@ export interface SaleI {
 export interface CartItemI extends BatchI {
   cartQty: number;
   cartPrice: number; // selling_price
+  medicine_name?: string;
 }
 
 export interface SalesStatI {

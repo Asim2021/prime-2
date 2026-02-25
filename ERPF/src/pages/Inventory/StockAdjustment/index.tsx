@@ -21,7 +21,11 @@ import { CustomTableOptions } from "@src/types/table";
 import MainHeader from "@components/Header/MainHeader";
 import dayJs from "@utils/daysJs";
 
-const StockAdjustment = ({ withHeader = true }: { withHeader?: boolean }) => {
+const StockAdjustment = ({
+  withHeader: _withHeader = true,
+}: {
+  withHeader?: boolean;
+}) => {
   const [opened, { open, close }] = useDisclosure(false);
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,

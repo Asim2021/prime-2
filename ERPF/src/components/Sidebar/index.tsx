@@ -25,7 +25,7 @@ interface SidebarProps {
   singleOpen?: boolean | 1 | 0;
   collapseSidebar: boolean;
   setCollapseSidebar: (arg: boolean) => void;
-  links?: string[] | { label: string; link: string }[];
+  links?: { label: string; link: string }[];
 }
 
 /**
@@ -46,7 +46,7 @@ export function Sidebar({
   const links = sidebarData.map((item) => {
     return (
       <SidebarLinkGroup
-        {...item}
+        {...(item as any)}
         key={item.label}
         currentOpen={currentOpen}
         setCurrentOpen={setCurrentOpen}

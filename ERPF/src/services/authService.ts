@@ -2,7 +2,6 @@ import { AxiosResponse } from "axios";
 
 import { ENDPOINT } from "@constants/endpoints";
 import erpApi from "@lib/axiosInstance";
-import { MutationFunction } from "@tanstack/react-query";
 
 export const loginUser = async (
   values: LoginDataI,
@@ -31,56 +30,19 @@ export const getMe = async (): Promise<UserI> => {
   return user as UserI;
 };
 
-export const sendForgetPasswordEmail: MutationFunction<
-  null,
-  { email: string }
-> = async (values: { email: string }): Promise<null> => {
+export const sendForgetPasswordEmail = async (values: {
+  email: string;
+}): Promise<null> => {
   await erpApi.post(`${ENDPOINT.AUTH.FORGET_PASS}`, values);
   return null;
 };
 
-export const verifyOTP: MutationFunction<
-  UserDataI,
-  { otp: string; email: string }
-> = async (values: { otp: string; email: string }): Promise<UserDataI> => {
+export const verifyOTP = async (values: {
+  otp: string;
+  email: string;
+}): Promise<UserDataI> => {
   const res = await erpApi.post(`${ENDPOINT.AUTH.VALIDATE_OTP}`, values);
   const user = res?.data.user as UserI;
   const accessToken = res?.data.accessToken as string;
   return { user, accessToken };
-};
-
-// 2FA Services
-export const get2FAStatus = async (): Promise<{ enabled: boolean }> => {
-  const res: AxiosResponse = await erpApi.get(`${ENDPOINT.TWO_FACTOR.STATUS}`);
-  return res.data;
-};
-
-export const generate2FASecret = async (): Promise<{
-  secret: string;
-  qrCodeUrl: string;
-}> => {
-  const res: AxiosResponse = await erpApi.post(
-    `${ENDPOINT.TWO_FACTOR.GENERATE}`,
-  );
-  return res.data;
-};
-
-export const enable2FA = async (token: string): Promise<void> => {
-  await erpApi.post(`${ENDPOINT.TWO_FACTOR.ENABLE}`, { token });
-};
-
-export const disable2FA = async (token: string): Promise<void> => {
-  await erpApi.post(`${ENDPOINT.TWO_FACTOR.DISABLE}`, { token });
-};
-
-export const verify2FALogin = async (
-  userId: string,
-  token: string,
-  remember: boolean,
-): Promise<ErpResponseI<UserDataI>> => {
-  const res: AxiosResponse = await erpApi.post(
-    `${ENDPOINT.TWO_FACTOR.VERIFY}`,
-    { userId, token, remember },
-  );
-  return res.data;
 };

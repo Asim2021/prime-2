@@ -10,7 +10,7 @@ import {
   Switch,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { notifications } from "@mantine/notifications";
 import { fetchAllRoles } from "@services/roleService";
 import { addUser, editUser } from "@services/userService";

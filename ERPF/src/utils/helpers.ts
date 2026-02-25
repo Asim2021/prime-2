@@ -123,7 +123,11 @@ export const formValuesToString = <T extends Record<string, any>>({
   }).join(` ${separator} `);
 };
 
-export const formValuesToJson = ({ formValues }: { formValues: ItemI }) => {
+export const formValuesToJson = ({
+  formValues,
+}: {
+  formValues: Record<string, any>;
+}) => {
   const data = pickBy(formValues, (value) => isEmpty(value) && value !== "");
   return JSON.stringify(data ?? "{}");
 };

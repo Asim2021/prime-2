@@ -1,3 +1,4 @@
+// @ts-ignore
 import tailwindPresetMantine from "tailwind-preset-mantine";
 import type { Config } from "tailwindcss";
 

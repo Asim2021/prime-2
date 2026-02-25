@@ -1,11 +1,7 @@
 import { useState, useMemo } from "react";
-import { Button, Group, Stack, Text, Paper, Badge } from "@mantine/core";
-import { useQuery } from "@tanstack/react-query";
+import { Button, Group, Text, Paper, Badge } from "@mantine/core";
 import MainTable from "@components/Table";
-import {
-  fetchInventoryReport,
-  InventoryReportResponseI,
-} from "@services/reportService";
+import { fetchInventoryReport } from "@services/reportService";
 import { QUERY_KEY } from "@constants/queryKeys";
 import { MdDownload } from "react-icons/md";
 import {

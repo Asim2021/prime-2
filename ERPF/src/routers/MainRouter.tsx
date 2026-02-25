@@ -5,14 +5,13 @@ import AppShellComponent from "@components/Layout/AppShellComponent";
 import Logout from "@pages/Auth/Logout";
 import NotFound from "@pages/Common/NotFound";
 import Dashboard from "@pages/Dashboard";
-import ShopConfiguration from "@pages/Admin/ShopConfiguration";
+
 import Sales from "@pages/Sales";
 import Reports from "@pages/Reports";
 import Inventory from "@pages/Inventory";
 import Purchase from "@pages/Purchase";
 import Partners from "@pages/Partners";
 import Admin from "@pages/Admin";
-import Users from "@pages/Admin/UserManagement";
 
 const MainRouter = createBrowserRouter([
   {

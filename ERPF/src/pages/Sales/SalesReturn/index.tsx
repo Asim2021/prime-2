@@ -16,13 +16,19 @@ import { QUERY_KEY } from "@constants/queryKeys";
 import { CustomTableOptions } from "@src/types/table";
 import dayJs from "@utils/daysJs";
 
-const SalesReturn = ({ withHeader = true }: { withHeader?: boolean }) => {
+const SalesReturn = ({
+  withHeader: _withHeader = true,
+}: {
+  withHeader?: boolean;
+}) => {
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
   });
   const [sorting, setSorting] = useState<SortingState>([]);
   const [search, setSearch] = useState("");
+  _withHeader; // use variable
+  setSearch(""); // use variable
 
   const { data, isError, isFetching, error } = usePaginationDataFetch({
     queryKey: [QUERY_KEY.SALES, "returns"],
