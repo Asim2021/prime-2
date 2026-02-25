@@ -6,6 +6,7 @@ import config from '#lib/config.js';
 import { logoutUser, sanitizeUser } from '#utils/helpers.js';
 import { sendErrorResponse, sendUnauthorizedResponse } from './sendResponse.js';
 import { Role, User } from '#models/index.js';
+import { Sequelize } from 'sequelize';
 
 const getUser = async (id) => {
   const user = await User.findOne({
@@ -13,9 +14,13 @@ const getUser = async (id) => {
     raw: true,
     nest: true,
     attributes: {
-      exclude: ['password', ''],
+      exclude: [ 'password', '' ],
+      include: [
+        [ Sequelize.col('role.name'), 'role_name' ],
+        [ Sequelize.col('role.code'), 'role_code' ],
+      ],
     },
-    include: [{ model: Role, as: 'role', attributes: ['name', 'code'] }],
+    include: [ { model: Role, as: 'role', attributes: [] } ],
   });
 
   return user;
@@ -23,7 +28,7 @@ const getUser = async (id) => {
 
 const verifyAccessToken = async (req, res, next) => {
   try {
-    const accessTokenFromReq = req.headers.authorization?.split(' ')[1];
+    const accessTokenFromReq = req.headers.authorization?.split(' ')[ 1 ];
 
     if (!accessTokenFromReq) {
       return sendUnauthorizedResponse({
@@ -79,7 +84,7 @@ const verifyAccessToken = async (req, res, next) => {
 
 const verifyRefreshToken = async (req, res, next) => {
   try {
-    const refreshTokenFromReq = req.cookies[TOKEN.REFRESH];
+    const refreshTokenFromReq = req.cookies[ TOKEN.REFRESH ];
 
     if (!refreshTokenFromReq) {
       return sendUnauthorizedResponse({
@@ -146,7 +151,7 @@ const verifyUserRole = (allowedRoles = []) => {
     });
   }
   return (req, res, next) => {
-    if (!req.user || !req.user.role.code) {
+    if (!req.user || !req.user.role_code) {
       return sendUnauthorizedResponse({
         res,
         status: HTTP_STATUS.UNAUTHORIZED,
@@ -155,7 +160,7 @@ const verifyUserRole = (allowedRoles = []) => {
       });
     }
 
-    if (!allowedRoles.includes(req.user.role.code)) {
+    if (!allowedRoles.includes(req.user.role_code)) {
       return sendUnauthorizedResponse({
         res,
         status: HTTP_STATUS.FORBIDDEN,

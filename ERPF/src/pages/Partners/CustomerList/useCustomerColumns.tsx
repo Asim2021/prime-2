@@ -55,7 +55,7 @@ const useCustomerColumns = (deleteHandler: (id: string) => void) => {
         id: "action",
         size: 120,
         cell: ({ row }) => (
-          <Group gap="xs">
+          <Group gap="xs" justify="center">
             <ActionIcon
               variant="light"
               radius={"100%"}

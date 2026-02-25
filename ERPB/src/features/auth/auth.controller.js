@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import { Op } from 'sequelize';
+import { Op, Sequelize } from 'sequelize';
 import jwt from 'jsonwebtoken';
 
 import { HTTP_STATUS } from '#constant/httpStatus.js';
@@ -9,13 +9,13 @@ import config from '#lib/config.js';
 import { sendErrorResponse, sendSuccessResponse } from '#middleware/sendResponse.js';
 import { sanitizeUser } from '#utils/helpers.js';
 
-const getPayload = (user)=> {
-      return  {
-        id: user.id,
-        username: user.username,
-        role_code: user.role.code,
-        role_name: user.role.name,
-      };
+const getPayload = (user) => {
+  return {
+    id: user.id,
+    username: user.username,
+    role_code: user.role_code,
+    role_name: user.role_name,
+  };
 }
 
 //////// ------- USER REGISTRATION/SIGNUP -----------//////////
@@ -80,9 +80,15 @@ export const authLogin = async (req, res) => {
       raw: true,
       nest: true, // to create role as an object
       where: {
-        [Op.or]: [{ email: username }, { username: username }],
+        [ Op.or ]: [ { email: username }, { username: username } ],
       },
-      include: [{ model: Role, as: 'role', attributes: ['id', 'name', 'code'] }],
+      attributes: {
+        include: [
+          [ Sequelize.col('role.name'), 'role_name' ],
+          [ Sequelize.col('role.code'), 'role_code' ],
+        ],
+      },
+      include: [ { model: Role, as: 'role', attributes: [] } ],
     });
 
     if (!user) {
