@@ -128,7 +128,7 @@ const SalesReport = () => {
         </Button>
       </Group>
 
-      <SimpleGrid cols={{ base: 1, sm: 3 }} mb="sm">
+      <SimpleGrid cols={{ base: 2, sm: 3 }} mb="sm">
         <Paper withBorder p="md" radius="md">
           <Text size="xs" c="dimmed" tt="uppercase" fw={700}>
             Total Revenue
