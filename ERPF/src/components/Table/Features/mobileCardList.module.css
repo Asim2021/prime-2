@@ -1,0 +1,58 @@
+.cardListContainer {
+  padding: 0;
+  margin: 0;
+}
+
+.card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  overflow: visible;
+  /* To allow inner popovers or tooltips to show */
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.clickable:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--mantine-shadow-md);
+}
+
+.normalCell {
+  padding-bottom: 8px;
+  border-bottom: 1px dashed var(--mantine-color-gray-3);
+}
+
+.normalCell:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.actionCell {
+  padding-top: 8px;
+  border-bottom: none !important;
+}
+
+.label {
+  min-width: 40%;
+  max-width: 50%;
+  word-break: break-word;
+}
+
+.valueBox {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  text-align: right;
+  word-break: break-word;
+}
+
+/* Force specific structural values for buttons inside the cards as requested */
+/* We target standard ActionIcon from mantine */
+:global(.mantine-ActionIcon-root) {
+  min-height: 36px;
+  min-width: 36px;
+}
+
+/* Make badges light explicitly */
+/* Make badges light explicitly via React props instead of CSS hacking here */

@@ -52,4 +52,5 @@ interface MainTableI<TData extends object>
   noDataFoundDescription?: string | undefined;
   noDataFoundChildren?: React.ReactElement;
   className?: string;
+  mobileBreakpoint?: number;
 }

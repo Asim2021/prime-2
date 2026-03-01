@@ -13,6 +13,7 @@ import {
 } from "@dnd-kit/core";
 import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { ScrollArea } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 import NoDataFound from "@components/NoDataFound";
 import { CustomTableOptions, MainTableI } from "@src/types/table";
 import {
@@ -24,6 +25,7 @@ import {
 import Footer from "./Features/Footer";
 import TableBody from "./Features/TableBody";
 import TableHead from "./Features/TableHead";
+import MobileCardList from "./Features/MobileCardList";
 import classes from "./table.module.css";
 
 /** @format */
@@ -55,8 +57,12 @@ const MainTable = <TData extends object>({
   noDataFoundDescription = undefined,
   noDataFoundChildren = undefined,
   className,
+  mobileBreakpoint = 768,
 }: MainTableI<TData>) => {
   const tableId = (table.options as CustomTableOptions<TData>)?.tableId;
+  const isMobile = useMediaQuery(`(max-width: ${mobileBreakpoint}px)`, false, {
+    getInitialValueInEffect: false,
+  });
 
   useEffect(() => {
     const visibilityKey = `${tableId}-${LOCAL_STORAGE_KEYS.COLUMN_VISIBILITY}`;
@@ -149,38 +155,60 @@ const MainTable = <TData extends object>({
         id={id + "-dnd-container"}
       >
         <ScrollArea id={id + "-container"} className={classes.tableContainer}>
-          <table id={id} className="border-collapse">
-            <TableHead
-              table={table}
-              columnOrder={columnOrder}
-              columnIdsToSort={columnIdsToSort}
-              persistColumnSorting={persistColumnSorting}
-            />
-            {isError ? (
+          {isMobile ? (
+            isError ? (
               <span className="absolute content-center w-full h-full text-lg text-center">
                 {`Error: ${error?.message || "Something went wrong!"}`}
               </span>
             ) : table?.getRowModel()?.rows?.length === 0 ? (
-              <span className="absolute !h-full !w-full">
+              <span className="absolute h-full! w-full!">
                 {notFoundPage ? (
                   notFoundPage
                 ) : (
                   <NoDataFound
-                    className="!absolute"
+                    className="absolute!"
                     description={noDataFoundDescription}
                     children={noDataFoundChildren}
                   />
                 )}
               </span>
             ) : (
-              <TableBody
+              <MobileCardList table={table} />
+            )
+          ) : (
+            <table id={id} className="border-collapse">
+              <TableHead
                 table={table}
-                hasSubComponent={hasSubComponent}
-                renderSubComponent={renderSubComponent}
-                trClasses={trClasses}
+                columnOrder={columnOrder}
+                columnIdsToSort={columnIdsToSort}
+                persistColumnSorting={persistColumnSorting}
               />
-            )}
-          </table>
+              {isError ? (
+                <span className="absolute content-center w-full h-full text-lg text-center">
+                  {`Error: ${error?.message || "Something went wrong!"}`}
+                </span>
+              ) : table?.getRowModel()?.rows?.length === 0 ? (
+                <span className="absolute h-full! w-full!">
+                  {notFoundPage ? (
+                    notFoundPage
+                  ) : (
+                    <NoDataFound
+                      className="absolute!"
+                      description={noDataFoundDescription}
+                      children={noDataFoundChildren}
+                    />
+                  )}
+                </span>
+              ) : (
+                <TableBody
+                  table={table}
+                  hasSubComponent={hasSubComponent}
+                  renderSubComponent={renderSubComponent}
+                  trClasses={trClasses}
+                />
+              )}
+            </table>
+          )}
         </ScrollArea>
         {withFooter && (
           <Footer
