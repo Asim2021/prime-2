@@ -16,24 +16,18 @@ import { QUERY_KEY } from "@constants/queryKeys";
 import { CustomTableOptions } from "@src/types/table";
 import dayJs from "@utils/daysJs";
 
-const SalesReturn = ({
-  withHeader: _withHeader = true,
-}: {
-  withHeader?: boolean;
-}) => {
+const SalesReturn = () => {
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
   });
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [search, setSearch] = useState("");
-  _withHeader; // use variable
-  setSearch(""); // use variable
+  // const [search, setSearch] = useState("");
 
   const { data, isError, isFetching, error } = usePaginationDataFetch({
     queryKey: [QUERY_KEY.SALES, "returns"],
     queryFn: fetchAllSalesReturns,
-    search: search,
+    // search: search,
     page: pagination.pageIndex + 1,
     limit: pagination.pageSize,
   });
@@ -77,7 +71,7 @@ const SalesReturn = ({
     [],
   );
 
-  const [columnOrder, setColumnOrder] = useState<ColumnOrderState>(
+  const [columnOrder, setColumnOrder] = useState<ColumnOrderState>(() =>
     columns.map((c) => c.id as string),
   );
 
@@ -97,6 +91,7 @@ const SalesReturn = ({
     onColumnOrderChange: setColumnOrder,
     manualPagination: true,
     pageCount: data?.meta?.totalPages || -1,
+    tableId: "sales-return-table",
   } as CustomTableOptions<any>);
 
   // we use width/height handling to sit perfectly within the Tabs Panel just like SalesHistory

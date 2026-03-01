@@ -55,7 +55,7 @@ const Sales = () => {
           </Tabs.Panel>
 
           <Tabs.Panel value="returns" h="calc(100dvh - 48px)">
-            <SalesReturn withHeader={false} />
+            <SalesReturn />
           </Tabs.Panel>
         </Tabs>
       </Paper>
