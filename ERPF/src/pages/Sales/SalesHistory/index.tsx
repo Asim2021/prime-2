@@ -52,6 +52,7 @@ const SalesHistory = ({ withHeader = true }: { withHeader?: boolean }) => {
         id: "bill_no",
         accessorKey: "bill_no",
         header: "Bill No",
+        cell: (value: any) => <Text size="sm">{value.getValue()}</Text>,
       },
       {
         id: "bill_date",
@@ -72,6 +73,7 @@ const SalesHistory = ({ withHeader = true }: { withHeader?: boolean }) => {
         id: "customer_name",
         accessorKey: "customer_name",
         header: "Customer",
+        cell: (value: any) => <Text size="sm">{value.getValue()}</Text>,
       },
       {
         id: "total_amount",
@@ -82,7 +84,7 @@ const SalesHistory = ({ withHeader = true }: { withHeader?: boolean }) => {
           const isReturned = row.returns && row.returns.length > 0;
           return (
             <Group gap="xs" wrap="nowrap">
-              <Text>₹{Number(row.total_amount).toFixed(2)}</Text>
+              <Text size="sm">₹{Number(row.total_amount).toFixed(2)}</Text>
               {isReturned && (
                 <Badge color="red" variant="light" size="xs">
                   Returned

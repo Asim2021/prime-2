@@ -26,6 +26,7 @@ interface SidebarProps {
   collapseSidebar: boolean;
   setCollapseSidebar: (arg: boolean) => void;
   links?: { label: string; link: string }[];
+  wrapInNavbar?: boolean;
 }
 
 /**
@@ -33,6 +34,7 @@ interface SidebarProps {
  * @param {boolean} isCompanyImage - Flag to determine if company image should be displayed.
  * @param {string} companyName - The name of the company.
  * @param {boolean} singleOpen - Flag to determine if only one link can be opened at a time.
+ * @param {boolean} wrapInNavbar - Whether to wrap the sidebar in an AppShell.Navbar (default: true)
  * @return {JSX.Element} The Sidebar component JSX element.
  */
 export function Sidebar({
@@ -41,6 +43,7 @@ export function Sidebar({
   singleOpen,
   collapseSidebar = true,
   setCollapseSidebar = () => void 0,
+  wrapInNavbar = true,
 }: SidebarProps) {
   const [currentOpen, setCurrentOpen] = useState<string[]>([]);
   const links = sidebarData.map((item) => {
@@ -56,24 +59,31 @@ export function Sidebar({
     );
   });
 
-  return (
-    <AppShell.Navbar>
-      <Tooltip label={collapseSidebar ? "Expand" : "Collapse"}>
-        <ActionIcon
-          className={"absolute! -right-3 top-[50px] rounded-full! z-50"}
-          aria-label={"Collapse Sidebar"}
-          variant="filled"
-          size={"sm"}
-          onClick={() => setCollapseSidebar(!collapseSidebar)}
-        >
-          <MdChevronRight
-            className={clsx(
-              "transition-all duration-300",
-              !collapseSidebar && "rotate-180",
-            )}
-          />
-        </ActionIcon>
-      </Tooltip>
+  const content = (
+    <>
+      {wrapInNavbar && (
+        <Tooltip label={collapseSidebar ? "Expand" : "Collapse"}>
+          <ActionIcon
+            className={"z-50"}
+            aria-label={"Collapse Sidebar"}
+            variant="filled"
+            onClick={() => setCollapseSidebar(!collapseSidebar)}
+            radius="100%"
+            pos="absolute"
+            right="-12px"
+            top="50px"
+            size="xs"
+          >
+            <MdChevronRight
+              style={{ width: "70%", height: "70%" }}
+              className={clsx(
+                "transition-all duration-300",
+                !collapseSidebar && "rotate-180",
+              )}
+            />
+          </ActionIcon>
+        </Tooltip>
+      )}
       <AppShell.Section className={classes.sidebar_header}>
         <Group
           justify={collapseSidebar ? "center" : "space-between"}
@@ -110,6 +120,12 @@ export function Sidebar({
       <AppShell.Section className={classes.footer}>
         <UserSection collapseSidebar={collapseSidebar} />
       </AppShell.Section>
-    </AppShell.Navbar>
+    </>
   );
+
+  if (!wrapInNavbar) {
+    return <div className="flex flex-col h-dvh w-full">{content}</div>;
+  }
+
+  return <AppShell.Navbar>{content}</AppShell.Navbar>;
 }
