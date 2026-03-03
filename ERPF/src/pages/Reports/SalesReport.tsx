@@ -90,7 +90,7 @@ const SalesReport = () => {
       pagination,
     },
     initialState: {
-      columnPinning: { left: ["bill_no"], right: ["total_amount"] },
+      columnPinning: { left: ["bill_no"] },
     },
     onPaginationChange: setPagination,
     onSortingChange: setSorting,

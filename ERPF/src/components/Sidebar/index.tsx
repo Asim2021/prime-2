@@ -66,12 +66,12 @@ export function Sidebar({
           <ActionIcon
             className={"z-50"}
             aria-label={"Collapse Sidebar"}
-            variant="filled"
+            variant="light"
             onClick={() => setCollapseSidebar(!collapseSidebar)}
             radius="100%"
             pos="absolute"
-            right="-12px"
-            top="50px"
+            right="-16px"
+            top="45px"
             size="xs"
           >
             <MdChevronRight

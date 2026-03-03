@@ -27,6 +27,7 @@ import { QUERY_KEY } from "@constants/queryKeys";
 import { CustomTableOptions } from "@src/types/table";
 import MainHeader from "@components/Header/MainHeader";
 import dayJs from "@utils/daysJs";
+import { INITIAL_ALL_TABLE_PINNING } from "@constants/items";
 
 const SalesHistory = ({ withHeader = true }: { withHeader?: boolean }) => {
   const [pagination, setPagination] = useState<PaginationState>({
@@ -154,10 +155,7 @@ const SalesHistory = ({ withHeader = true }: { withHeader?: boolean }) => {
     columns,
     state: { sorting, pagination, columnOrder },
     initialState: {
-      columnPinning: {
-        left: ["bill_no"],
-        right: ["action"],
-      },
+      columnPinning: INITIAL_ALL_TABLE_PINNING,
     },
     pageCount: data?.totalPages || 0,
     onPaginationChange: setPagination,

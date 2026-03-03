@@ -20,6 +20,7 @@ import {
 import { CustomTableOptions } from "@src/types/table";
 import MainHeader from "@components/Header/MainHeader";
 import dayJs from "@utils/daysJs";
+import { INITIAL_ALL_TABLE_PINNING } from "@constants/items";
 
 const StockAdjustment = ({
   withHeader: _withHeader = true,
@@ -121,10 +122,7 @@ const StockAdjustment = ({
       columnOrder,
     },
     initialState: {
-      columnPinning: {
-        left: ["batch.medicine.brand_name"],
-        right: ["action"],
-      },
+      columnPinning: INITIAL_ALL_TABLE_PINNING,
     },
     onPaginationChange: setPagination,
     onSortingChange: setSorting,

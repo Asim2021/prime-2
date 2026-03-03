@@ -23,6 +23,7 @@ import { usePaginationDataFetch } from "@hooks/usePaginationDataFetch";
 import { CustomTableOptions } from "@src/types/table";
 import { QUERY_KEY } from "@constants/queryKeys";
 import { Divider, Switch } from "@mantine/core";
+import { INITIAL_ALL_TABLE_PINNING } from "@constants/items";
 
 const CustomerList = () => {
   const [search, setSearch] = useState("");
@@ -74,10 +75,7 @@ const CustomerList = () => {
     columns,
     state: { sorting, pagination, columnOrder },
     initialState: {
-      columnPinning: {
-        left: ["name"],
-        right: ["action"],
-      },
+      columnPinning: INITIAL_ALL_TABLE_PINNING,
     },
     pageCount: data?.totalPages || 0,
     onPaginationChange: setPagination,

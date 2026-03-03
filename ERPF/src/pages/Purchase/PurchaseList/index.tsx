@@ -31,6 +31,7 @@ import { CustomTableOptions } from "@src/types/table";
 import { QUERY_KEY } from "@constants/queryKeys";
 import { useMemo } from "react";
 import dayJs from "@utils/daysJs";
+import { INITIAL_ALL_TABLE_PINNING } from "@constants/items";
 
 const PurchaseList = ({
   handleTabChange,
@@ -173,10 +174,7 @@ const PurchaseList = ({
     columns,
     state: { sorting, pagination, columnOrder },
     initialState: {
-      columnPinning: {
-        left: ["invoice_no"],
-        right: ["action"],
-      },
+      columnPinning: INITIAL_ALL_TABLE_PINNING,
     },
     pageCount: data?.totalPages || 0,
     onPaginationChange: setPagination,

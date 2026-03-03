@@ -23,6 +23,7 @@ import { usePaginationDataFetch } from "@hooks/usePaginationDataFetch";
 import { CustomTableOptions } from "@src/types/table";
 import { QUERY_KEY } from "@constants/queryKeys";
 import { Divider } from "@mantine/core";
+import { INITIAL_ALL_TABLE_PINNING } from "@constants/items";
 
 const MedicineList = ({ withHeader = true }: { withHeader?: boolean }) => {
   const [search, setSearch] = useState("");
@@ -71,10 +72,7 @@ const MedicineList = ({ withHeader = true }: { withHeader?: boolean }) => {
     data: data?.data || [],
     columns,
     initialState: {
-      columnPinning: {
-        left: ["brand_name"],
-        right: ["action"],
-      },
+      columnPinning: INITIAL_ALL_TABLE_PINNING,
     },
     state: { sorting, pagination, columnOrder },
     pageCount: data?.totalPages || 0,
